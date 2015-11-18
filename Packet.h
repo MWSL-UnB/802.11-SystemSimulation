@@ -78,7 +78,7 @@ public:
        Terminal* from = 0,        // source terminal
        Terminal* to = 0,          // target terminal
        unsigned priority = 0,     // traffic identifier
-       timestamp gen_time = 0     // time that packet was generated
+       timestamp gen_time = timestamp(0)     // time that packet was generated
        );
 
   unsigned  get_nbytes()        const {return nbytes_data;}
@@ -111,7 +111,7 @@ public:
        Terminal* to = 0,          // target terminal
        double p = 0,              // transmit power in dBm
        transmission_mode r = M0,  // transmission mode
-       timestamp nav = 0          // NAV
+       timestamp nav = timestamp(0)          // NAV
        );
 
   transmission_mode get_mode()       const {return mode;}
@@ -141,7 +141,7 @@ public:
             Terminal* to = 0,
             double p = 0,
             transmission_mode r = M6,
-            timestamp nav = 0,
+            timestamp nav = timestamp(0),
             unsigned priority = 0,
             unsigned frag = 1,
             unsigned nfrags = 1,
@@ -154,7 +154,7 @@ public:
             unsigned nfrags = 1,                     
             double p = 0,
             transmission_mode r = M6,
-            timestamp nav = 0
+            timestamp nav = timestamp(0)
            );
   // creates a DataMPDU inheriting parameters of a given MSDU 'pck'
                             
