@@ -4,7 +4,7 @@
 % Simulation control parameters
 
 MaxSimTime = 20  % maximum simulation time in seconds
-TempOutputInterval = 5 % interval between temporary outputs
+TempOutputInterval = 1 % interval between temporary outputs
 TransientTime = .1 % ignore first TransientTime seconds 
 Confidence = .95 % for calculation of confidence interval (if more than one seed), default = .95
 Log = SETUP, MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or SCHEDULER)
@@ -34,14 +34,14 @@ Seed = 11
 %
 % No terminal movement supported so far.
 
-NumberAPs = 2 % number of access points
+NumberAPs = 1 % number of access points
 NumberStas = 5 % number of mobile terminals 
 Radius = 40 % cell radius in meters
 
 
 % if NumberAPs > 1
-APPosition_0 = (-20;0)
-APPosition_1 = (20;0)
+%APPosition_0 = (-20;0)
+%APPosition_1 = (20;0)
 
 
 %%%%%%%%%%%%%%%%%%%%%

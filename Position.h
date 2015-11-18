@@ -2,6 +2,7 @@
 #define _Position_h 1
 
 #include <ostream>
+#include <istream>
 
 using namespace std;
 
