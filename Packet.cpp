@@ -160,8 +160,8 @@ long_integer Packet::packet_count = 0;
 // MSDU Constructor                                                           //
 ////////////////////////////////////////////////////////////////////////////////
 MSDU::MSDU(unsigned n, Terminal* from , Terminal* to, unsigned priority,
-           timestamp gen_time)
-           : nbytes_data(n), tid(priority), time_created(gen_time) {
+           timestamp gen_time, accessCategory aC)
+           : nbytes_data(n), tid(priority), time_created(gen_time), accCat(aC) {
 
   source = from;
   target = to;
@@ -170,9 +170,9 @@ MSDU::MSDU(unsigned n, Terminal* from , Terminal* to, unsigned priority,
 ////////////////////////////////////////////////////////////////////////////////
 // MPDU Constructor                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
+MPDU::MPDU(packet_type tp, accessCategory aC, Terminal* from, Terminal* to, double p,
            transmission_mode r, timestamp nav)
-           : t(tp), mode(r), tx_power(p), net_all_vec(nav) {
+           : t(tp), acCat(aC), mode(r), tx_power(p), net_all_vec(nav) {
 
   source = from;
   target = to;
@@ -202,13 +202,14 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
 // DataMPDU Constructors                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p, 
-                    transmission_mode r, timestamp nav, unsigned priority,
+                    transmission_mode r, accessCategory aC, timestamp nav, unsigned priority,
                     unsigned frag, unsigned nfrags,unsigned mid) 
                     : nbytes_data(n), tid(priority), frag_number(frag),
                       frag_total(nfrags), msdu_id(mid){
 
   t = DATA;
   mode = r;
+  acCat = aC;
   source = from;
   target = to;
   tx_power = p;
@@ -221,12 +222,13 @@ DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p,
 
 ////////////////////////////////////////////////////////////////////////////////
 DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
-                    transmission_mode r, timestamp nav)
+                    transmission_mode r, accessCategory aC, timestamp nav)
                     : frag_number(frag), frag_total(nfrags) {
 
   t = DATA;
   nbytes_data = (n >= 0)? n : pck.get_nbytes();
   mode = r;
+  acCat = aC;
   source = pck.get_source();
   target = pck.get_target();
   tid = pck.get_tid();

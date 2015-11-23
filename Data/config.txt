@@ -7,7 +7,7 @@ MaxSimTime = 0.1025  % maximum simulation time in seconds
 TempOutputInterval = 1 % interval between temporary outputs
 TransientTime = .1 % ignore first TransientTime seconds 
 Confidence = .95 % for calculation of confidence interval (if more than one seed), default = .95
-Log = SCHEDULER  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or SCHEDULER)
+Log = PHY  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or SCHEDULER)
              % unlike the other parameters the simulation will not iterate over this parameter
              % , the log output will be a combination of the desired elements for all iterations
 

@@ -29,8 +29,8 @@
 // IEEE 802.11a constant parameters                                           //
 ////////////////////////////////////////////////////////////////////////////////
 const timestamp aSlotTime = timestamp(9.0e-6);
-const unsigned aCWmin = 16;
-const unsigned aCWmax = 1024;
+const unsigned aCWmin = 16;   // MUST CHANGE FOR EDCA !!
+const unsigned aCWmax = 1024; // MUST CHANGE FOR EDCA !!
 const timestamp DIFS = timestamp(34.0e-6);
 const timestamp SIFS = timestamp(16.0e-6);
 
@@ -140,7 +140,7 @@ BEGIN_PROF("MAC::begin_countdown")
   // DIFS + contention window
   backoff_counter = randgen->discrete_uniform(0,contention_window-1);
 
-  time_to_send = ptr2sch->now() + DIFS + timestamp(backoff_counter) * aSlotTime;
+  time_to_send = ptr2sch->now() + DIFS + timestamp(backoff_counter) * aSlotTime; // WILL CHANGE WITH EDCA
 
   if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term 
                       << ": begin countdown, CW = " << contention_window
@@ -205,7 +205,7 @@ BEGIN_PROF("MAC::phyCCA_free")
   if (countdown_flag) {
     // resume countdown
 
-    time_to_send = now + DIFS + timestamp(backoff_counter) * aSlotTime;
+    time_to_send = now + DIFS + timestamp(backoff_counter) * aSlotTime; // EDCA CHANGE!!
     ptr2sch->schedule(Event(time_to_send, (void*)(&wrapper_to_transmit),
                             (void*)this));
 

@@ -45,6 +45,13 @@ typedef enum {OPT,    // optimal genie-aided adaptative-rate scheme
               M48,    //           , 48Mbps
               M54     //           , 54Mbps
               } transmission_mode;
+              
+typedef enum {AC_BK, // backgroud
+			  AC_BE, // best effort
+			  AC_VI, // video
+			  AC_VO, // voice
+			  legacy,// legacy CW and DIFS
+} accessCategory; // for simplicity TCs were named ACs in this context
 
 double tx_mode_to_double (transmission_mode tm);
 // conversion to double
@@ -92,6 +99,7 @@ public:
 class MSDU : public Packet {
   timestamp time_created;
   timestamp tx_time;
+  accessCategory acCat;
   unsigned tid; // traffic identifier
   unsigned nbytes_data;     // number of data bytes  
   
@@ -100,13 +108,15 @@ public:
        Terminal* from = 0,        // source terminal
        Terminal* to = 0,          // target terminal
        unsigned priority = 0,     // traffic identifier
-       timestamp gen_time = timestamp(0)     // time that packet was generated
+       timestamp gen_time = timestamp(0),     // time that packet was generated
+       accessCategory aC
        );
 
   unsigned  get_nbytes()        const {return nbytes_data;}
   timestamp get_time_created()  const {return time_created;}
   timestamp get_tx_time()       const {return tx_time;}
   unsigned  get_tid()           const {return tid;}
+  accessCategoty get_acCAt()	const {return acCar;}
   
   void set_tx_time(timestamp t) {tx_time = t;}
 };
@@ -121,6 +131,7 @@ protected:
 
   transmission_mode mode;
   packet_type t;
+  accessCategory acCat;
 
   double tx_power; // transmit power in dBm
 
@@ -129,6 +140,7 @@ protected:
 
 public:
   MPDU(packet_type tp = DUMMY,    // packet type
+  	   accessCategory = legacy,	  // access category
        Terminal* from = 0,        // source terminal
        Terminal* to = 0,          // target terminal
        double p = 0,              // transmit power in dBm
@@ -141,7 +153,8 @@ public:
   timestamp         get_nav()        const {return net_all_vec;}
   unsigned          get_nbits()      const {return nbits;}
   double            get_power ()     const {return tx_power;}
-  packet_type       get_type()       const {return t;}       
+  packet_type       get_type()       const {return t;}
+  accessCategory	get_acCat()		 const {return acCat;}     
   
   friend ostream& operator << (ostream& os, const MPDU& p);
   
@@ -163,6 +176,7 @@ public:
             Terminal* to = 0,
             double p = 0,
             transmission_mode r = M6,
+            accessCategory aC = legacy,
             timestamp nav = timestamp(0),
             unsigned priority = 0,
             unsigned frag = 1,
@@ -176,6 +190,7 @@ public:
             unsigned nfrags = 1,                     
             double p = 0,
             transmission_mode r = M6,
+            accessCategory = legacy,
             timestamp nav = timestamp(0)
            );
   // creates a DataMPDU inheriting parameters of a given MSDU 'pck'

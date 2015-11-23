@@ -1,6 +1,6 @@
 # Link files
 
-#*.o
+*.o
 
 # Windows image file caches
 Thumbs.db
