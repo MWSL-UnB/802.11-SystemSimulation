@@ -40,8 +40,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // param_vec_::init                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-template <class T>
-void param_vec_<T>::init(const string& s, T val, const string& u) {
+template <class T> void param_vec_<T>::init(const string& s, T val, const string& u) {
   name = s;
   unit = u;
   vec.assign(1,val);
@@ -306,6 +305,26 @@ bool Parameters::assign (string s1,string s2) {
     which_param = &UseRxMode;
     if (!UseRxMode.read_vec(s2)) return false;
 
+  } else if (!s1.compare("numAC_BK")) {
+	  which_param = &numAC_BK;
+	  if (!numAC_BK.read_vec(s2)) return false;
+
+  } else if (!s1.compare("numAC_BE")) {
+  	  which_param = &numAC_BE;
+  	  if (!numAC_BE.read_vec(s2)) return false;
+
+  } else if (!s1.compare("numAC_VI")) {
+  	  which_param = &numAC_VI;
+  	  if (!numAC_VI.read_vec(s2)) return false;
+
+  } else if (!s1.compare("numAC_VO")) {
+  	  which_param = &numAC_VO;
+  	  if (!numAC_VO.read_vec(s2)) return false;
+
+  } else if (!s1.compare("numLegacy")) {
+  	  which_param = &numLegacy;
+  	  if (!numLegacy.read_vec(s2)) return false;
+
   } else {
     return false;
   }
@@ -372,6 +391,14 @@ void Parameters::default_config () {
   RetryLimit.init("retry limit",10);
   FragmentationThresh.init("fragmentation threshold",2312);
   QueueSize.init("queue size",100);
+
+  // IEEE802.11n EDCA parameters
+  numAC_BK.init("number of AC_BKs",0);
+  numAC_BE.init("number of AC_BEs",0);
+  numAC_VI.init("number of AC_VIs",0);
+  numAC_VO.init("number of AC_VOs",0);
+  numLegacy.init("number of legacies",NumberStas.current());
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////

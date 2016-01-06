@@ -29,8 +29,8 @@
 // IEEE 802.11a constant parameters                                           //
 ////////////////////////////////////////////////////////////////////////////////
 const timestamp aSlotTime = timestamp(9.0e-6);
-const unsigned aCWmin = 16;
-const unsigned aCWmax = 1024;
+const unsigned aCWmin = 15;
+const unsigned aCWmax = 1023;
 const timestamp DIFS = timestamp(34.0e-6);
 const timestamp SIFS = timestamp(16.0e-6);
 
@@ -62,6 +62,7 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac) {
   mylog = l;
   logflag = (*mylog)(log_type::mac);
 
+  // PLACE WHERE MAC STRUCT IS USED
   retry_limit = mac.retry;
   RTS_threshold = mac.RTS_thresh;
   frag_thresh = mac.frag_thresh;

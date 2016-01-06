@@ -56,6 +56,7 @@ Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
   id = nterm++;
   
   myphy = new PHY(this, p, c, r, s, l, phy);
+  // PLACE WHERE MAC STRUCT IS USED
   mymac = new MAC(this, s, r, l, mac);
 
   myphy->connect(mymac);

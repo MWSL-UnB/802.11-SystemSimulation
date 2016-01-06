@@ -7,7 +7,7 @@ MaxSimTime = 0.1025  % maximum simulation time in seconds
 TempOutputInterval = 1 % interval between temporary outputs
 TransientTime = .1 % ignore first TransientTime seconds 
 Confidence = .95 % for calculation of confidence interval (if more than one seed), default = .95
-Log = MAC,PHY  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or SCHEDULER)
+Log = MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or SCHEDULER)
              % unlike the other parameters the simulation will not iterate over this parameter
              % , the log output will be a combination of the desired elements for all iterations
 
@@ -42,6 +42,18 @@ Radius = 10 % cell radius in meters
 % if NumberAPs > 1
 %APPosition_0 = (-20;0)
 %APPosition_1 = (20;0)
+
+
+%%%%%%%%%%%%%%%%%%%%%
+% Access category parameters
+% 
+% Number of stations belonging to each access category.
+
+numAC_BK = 0
+numAC_BE = 0
+numAC_VI = 0
+numAC_VO = 0
+numLegacy = 1
 
 
 %%%%%%%%%%%%%%%%%%%%%

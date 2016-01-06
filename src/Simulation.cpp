@@ -353,6 +353,7 @@ void Simulation::init_terminals(){
                       sim_par.get_TargetPER(),sim_par.get_LAMaxSucceedCounter(),
                       sim_par.get_LAFailLimit(), sim_par.get_UseRxMode());
 
+// PLACE WHERE MAC STRUCT IS CREATED
   mac_struct mac(sim_par.get_RetryLimit(), sim_par.get_RTSThreshold(),
                  sim_par.get_FragmentationThresh(), sim_par.get_QueueSize());
 
@@ -365,8 +366,6 @@ void Simulation::init_terminals(){
                        sim_par.get_ArrivalTime());
 
   timestamp tr_time = sim_par.get_TransientTime();
-
-
 
   for (int i = 0; i < sim_par.get_NumberAPs(); i++) {
     AccessPoint* ap = new AccessPoint(sim_par.get_APPosition(i), &main_sch, ch,

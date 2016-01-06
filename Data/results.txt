@@ -5,12 +5,12 @@ Iteration 1
 
 Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   0   (  0;  0)  0.0    15.748       43.76    0.52       5       5  0.0000   0.0000   129.6     54.00      3.4
-   1   ( 10;  0) 10.0    12.598       40.35    0.51       4       4  0.0000   0.0000   129.7     54.00      3.6
+   0   (  0;  0)  0.0     6.284       33.89    1.07       2       2  0.0000   0.0000   101.0     54.00      3.5
+   1   ( 10;  0) 10.0    21.995       39.33    0.35       7       7  0.0000   0.0000   132.2     54.00      3.5
 
- Total throughput = 28.3465 Mbps
- Average transfer time = 0.0420532s
- Average transmission time = 0.00051375s
+ Total throughput = 28.2797 Mbps
+ Average transfer time = 0.0366134s
+ Average transmission time = 0.00071425s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -21,19 +21,19 @@ Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss over
 
 
 Throughput (Mbps)
-mean           =     28.346 
+mean           =     28.280 
 
 Transfer time (ms)
-mean           =     42.053 
+mean           =     36.613 
 
 Standard deviation of transfer time (ms)
-mean           =      0.450 
+mean           =      0.343 
 
 Transmission time (ms)
-mean           =      0.514 
+mean           =      0.714 
 
 Standard deviation of transmission time (ms)
-mean           =      0.293 
+mean           =      0.192 
 
 Packet loss rate
 mean           =      0.000 
@@ -42,7 +42,7 @@ Queue overflow rate
 mean           =      0.000 
 
 Average queue length
-mean           =    129.619 
+mean           =    116.583 
 
 Average transmission power (mW)
-mean           =      3.490 
+mean           =      3.519 
