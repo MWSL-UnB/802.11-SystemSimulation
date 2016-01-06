@@ -47,7 +47,9 @@ Radius = 10 % cell radius in meters
 %%%%%%%%%%%%%%%%%%%%%
 % Access category parameters
 % 
-% Number of stations belonging to each access category.
+% Number of mobile stations belonging to each access category.
+% If the sum of mobile stations belonging to each access category is different from
+% the total number of mobile stations defined above a configuration error happens.
 
 numAC_BK = 0
 numAC_BE = 0

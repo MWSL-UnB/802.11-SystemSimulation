@@ -421,6 +421,11 @@ Position Parameters::get_APPosition(int which_ap) {
 // checks consistency of parameters                                           //
 ////////////////////////////////////////////////////////////////////////////////
 bool Parameters::is_consistent() {
+	if(numAC_BK.current()+numAC_BE.current()+numAC_VI.current()+numAC_VO.current()+
+			numLegacy.current() != NumberStas.current()) {
+		return false;
+	}
+
   return true;
 }
 
