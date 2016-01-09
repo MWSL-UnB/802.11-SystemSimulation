@@ -367,7 +367,7 @@ void Simulation::init_terminals(){
 
 	timestamp tr_time = sim_par.get_TransientTime();
 
-	accCat AP_AC = AC_BK;
+	accCat AP_AC = legacy;
 
 	for (int i = 0; i < sim_par.get_NumberAPs(); i++) {
 		AccessPoint* ap = new AccessPoint(sim_par.get_APPosition(i), &main_sch, ch,
