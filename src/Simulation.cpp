@@ -415,7 +415,7 @@ void Simulation::init_terminals(){
 				break;
 			}
 			numAC = 0;
-		default:
+		case legacy:
 			if(numAC != sim_par.get_numLegacy()){
 				AC = legacy;
 				numAC++;

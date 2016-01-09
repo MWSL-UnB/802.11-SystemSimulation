@@ -81,7 +81,13 @@ protected:
   unsigned  RTS_threshold;
   unsigned  frag_thresh;
   unsigned  max_queue_size;
+
+  // EDCA parameters
   accCat	ACat;
+  unsigned aCWmin;
+  unsigned aCWmax;
+  unsigned AIFSN;
+  timestamp AIFS;
 
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts
