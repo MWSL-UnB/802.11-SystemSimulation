@@ -54,7 +54,7 @@ const timestamp CTS_Timeout = SIFS + cts_duration + 5;
 ////////////////////////////////////////////////////////////////////////////////
 // MAC constructor                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac) {
+MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, accCat AC){
   term = t;
   ptr2sch = s;
   randgen = r;
@@ -62,11 +62,12 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac) {
   mylog = l;
   logflag = (*mylog)(log_type::mac);
 
-  // PLACE WHERE MAC STRUCT IS USED
   retry_limit = mac.retry;
   RTS_threshold = mac.RTS_thresh;
   frag_thresh = mac.frag_thresh;
   max_queue_size = mac.queue_size;
+
+  ACat = AC;
 
   NAV = timestamp(0);
   nfrags = 1;

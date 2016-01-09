@@ -32,13 +32,13 @@
 class PHY;
 class Terminal;
 
-//typedef enum{
-//	legacy,
-//	AC_BK,
-//	AC_BE,
-//	AC_VI,
-//	AC_VO
-//}accessCat;
+typedef enum{
+	AC_BK,
+	AC_BE,
+	AC_VI,
+	AC_VO,
+	legacy
+}accCat;
 
 ////////////////////////////////////////////////////////////////////////////////
 // class MAC_private                                                          //
@@ -81,7 +81,7 @@ protected:
   unsigned  RTS_threshold;
   unsigned  frag_thresh;
   unsigned  max_queue_size;
-//  accessCat	aCat;
+  accCat	ACat;
 
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts
