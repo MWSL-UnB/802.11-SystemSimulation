@@ -877,12 +877,20 @@ void MAC_private::tx_attempt() {
 	END_PROF("MAC::tx_attempt")
 }
 
-/* */
-ostream& operator << (ostream& os, const accCat& ts) {
-   if (ts.is_not_a_timestamp()) {
-    return os << "not_a_timestamp";
-   } else {
-//    return os << ts.t << '(' << double(aux_ts) << "sec.)";
-     return os << double(ts);
+// Output operator <<
+ostream& operator << (ostream& os, const accCat& AC) {
+   switch(AC){
+   case AC_BK:
+	   return os << "AC_BK";
+   case AC_BE:
+   	   return os << "AC_BE";
+   case AC_VI:
+   	   return os << "AC_VI";
+   case AC_VO:
+   	   return os << "AC_VO";
+   case legacy:
+   	   return os << "legacy";
+   default:
+	   return os << "UNDEFINED AC";
    }
 }

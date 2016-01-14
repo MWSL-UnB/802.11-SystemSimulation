@@ -91,7 +91,7 @@ public:
   // returns queue size
   
   friend ostream& operator << (ostream& os, const accCat& AC);
-  // Overload of output operator for accCat type
+  // Overload of output operator for accCat types
 
 };
 
