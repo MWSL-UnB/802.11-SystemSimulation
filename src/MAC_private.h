@@ -92,6 +92,7 @@ protected:
   timestamp TXOPmax;
   timestamp TXOPend;
   bool TXOPflag;
+  bool TXOPla_win; // Flag that indicates if link adaptation will be successful or not after TXOP
 
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts

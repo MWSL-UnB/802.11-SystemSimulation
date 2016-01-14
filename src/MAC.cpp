@@ -100,6 +100,7 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, accC
 	AIFS = SIFS + timestamp(AIFSN)*aSlotTime;
 	TXOPflag = false;
 	TXOPend = ptr2sch->now();
+	TXOPla_win = true;
 
 	NAV = timestamp(0);
 	nfrags = 1;
@@ -120,6 +121,12 @@ void MAC_private::ack_timed_out () {
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 	<< ": ACK time out for packet " << pck.get_id() << endl;
+
+/*	if (TXOPflag) { // If during TXOP
+		TXOPla_win = false; // Indicate that LA failed
+	} else {
+		term->la_failed(msdu.get_target()); // link adaptation
+	}*/
 
 	term->la_failed(msdu.get_target()); // link adaptation
 
@@ -684,12 +691,13 @@ void MAC_private::timeTXOP() {
 				DataMPDU auxpckLast (lastpl, term, auxmsdu.get_target(), power_dBm, which_mode);
 
 				// Update TXOPend accordingly
-				TXOPend = TXOPend + (auxNfrags-1)*auxpck.get_duration() + auxpckLast.get_duration()
-						 + auxNfrags*ack_duration(which_mode) + (2*auxNfrags - 1)*SIFS;
+				TXOPend = TXOPend + timestamp(auxNfrags-1)*auxpck.get_duration() +
+						auxpckLast.get_duration() + timestamp(auxNfrags)*ack_duration(which_mode) +
+						timestamp(2*auxNfrags - 1)*SIFS;
 
 				if(auxpck.get_nbytes_mac() >= RTS_threshold){ //If an RTS/CTS is needed:
 					// For not the last packet
-					TXOPend = TXOPend + (auxNfrags-1)*(rts_duration + cts_duration +
+					TXOPend = TXOPend + timestamp(auxNfrags-1)*(rts_duration + cts_duration +
 							2*SIFS + 1);
 
 					// For the last packet
@@ -703,6 +711,11 @@ void MAC_private::timeTXOP() {
 			if(TXOPend > now + TXOPmax) TXOPend = now + TXOPmax;
 			ptr2sch->schedule(Event(TXOPend,(void*)&wrapper_to_end_TXOP,(void*)this));
 
+			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+					<< ", of Access Category " << ACat << " begins TXOP scheduled to end at "
+					<< TXOPend << "sec." << " TXOP duration = " << (TXOPend - now) <<  "sec."
+					<< endl;
+
 		}
 
 	END_PROF("MAC::timeTXOP")
@@ -715,6 +728,9 @@ void MAC_private::timeTXOP() {
 void MAC_private::end_TXOP() {
 	TXOPflag = false;
 	TXOPend = timestamp(0);
+
+	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+		<< ", of Access Category " << ACat << " ends TXOP." << endl;
 }
 
 
@@ -877,8 +893,8 @@ void MAC_private::tx_attempt() {
 	END_PROF("MAC::tx_attempt")
 }
 
-// Output operator <<
-ostream& operator << (ostream& os, const accCat& AC) {
+// Output operator << for accCat type
+ostream & operator<<(ostream & os, const accCat AC) {
    switch(AC){
    case AC_BK:
 	   return os << "AC_BK";

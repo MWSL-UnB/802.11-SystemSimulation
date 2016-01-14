@@ -90,7 +90,7 @@ public:
   // attempt to transmit MSDU 'p', put it in queue
   // returns queue size
   
-  friend ostream& operator << (ostream& os, const accCat& AC);
+  friend ostream& operator << (ostream& os, const accCat AC);
   // Overload of output operator for accCat types
 
 };
