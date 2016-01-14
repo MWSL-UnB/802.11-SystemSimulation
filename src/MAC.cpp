@@ -877,3 +877,12 @@ void MAC_private::tx_attempt() {
 	END_PROF("MAC::tx_attempt")
 }
 
+/* */
+ostream& operator << (ostream& os, const accCat& ts) {
+   if (ts.is_not_a_timestamp()) {
+    return os << "not_a_timestamp";
+   } else {
+//    return os << ts.t << '(' << double(aux_ts) << "sec.)";
+     return os << double(ts);
+   }
+}
