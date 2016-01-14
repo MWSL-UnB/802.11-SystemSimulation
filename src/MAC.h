@@ -46,7 +46,7 @@ struct mac_struct {
 ////////////////////////////////////////////////////////////////////////////////
 // class MAC                                                                  //
 //                                                                            // 
-// implements the MAC layer of IEEE 802.11a (DCF only).                       //
+// implements the MAC layer of IEEE 802.11a (DCF only) with 802.11e EDCA      //
 //                                                                            //
 // Usage:                                                                     //
 //                                                                            //

@@ -32,19 +32,16 @@ const timestamp aSlotTime = timestamp(9.0e-6);
 const timestamp DIFS = timestamp(34.0e-6);
 const timestamp SIFS = timestamp(16.0e-6);
 
-///////////////////////////////////
 // Duration of signalling packets
 const timestamp cts_duration = (MPDU(CTS, 0, 0, 0, M6)).get_duration();
 const timestamp rts_duration = (MPDU(RTS, 0, 0, 0, M6)).get_duration();
 
-//////////////////////
 // timeout intervals
 inline timestamp ACK_Timeout(transmission_mode m) {
 	return SIFS + ack_duration(m) + 5;
 }
 const timestamp CTS_Timeout = SIFS + cts_duration + 5;
 
-////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 // class MAC                                                                  //
 ////////////////////////////////////////////////////////////////////////////////
@@ -72,30 +69,37 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, accC
 		aCWmin = 31;
 		aCWmax = 1023;
 		AIFSN = 7;
+		TXOPmax = timestamp(0);
 		break;
 	case AC_BE:
 		aCWmin = 31;
 		aCWmax = 1023;
 		AIFSN = 3;
+		TXOPmax = timestamp(0);
 		break;
 	case AC_VI:
 		aCWmin = 15;
 		aCWmax = 31;
 		AIFSN = 2;
+		TXOPmax = timestamp(3.008e-3);
 		break;
 	case AC_VO:
 		aCWmin = 7;
 		aCWmax = 15;
 		AIFSN = 2;
+		TXOPmax = timestamp(1.504e-3);
 		break;
 	case legacy:
 		aCWmin = 15;
 		aCWmax = 1023;
 		AIFSN = 2;
+		TXOPmax = timestamp(0);
 		break;
 	}
 
-	AIFS = timestamp(SIFS + AIFSN*aSlotTime);
+	AIFS = SIFS + timestamp(AIFSN)*aSlotTime;
+	TXOPflag = false;
+	TXOPend = ptr2sch->now();
 
 	NAV = timestamp(0);
 	nfrags = 1;
@@ -114,14 +118,13 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, accC
 void MAC_private::ack_timed_out () {
 	BEGIN_PROF("MAC::ack_timed_out")
 
-												  if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-												  << ": ACK time out for packet " << pck.get_id() << endl;
+	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+	<< ": ACK time out for packet " << pck.get_id() << endl;
 
 	term->la_failed(msdu.get_target()); // link adaptation
 
 #ifdef _SAVE_RATE_ADAPT
-	timestamp t_aux = ptr2sch->now() - pck.get_duration()
-                    												- ACK_Timeout(pck.get_mode());
+	timestamp t_aux = ptr2sch->now() - pck.get_duration() - ACK_Timeout(pck.get_mode());
 	if (pck.get_nbytes_mac() >= RTS_threshold) {
 		t_aux = t_aux - rts_duration - cts_duration - 2*SIFS;
 	}
@@ -140,7 +143,7 @@ void MAC_private::ack_timed_out () {
 
 		term->macUnitdataMaxRetry(msdu);
 
-		packet_queue.pop();
+		packet_queue.pop_front();
 		if (packet_queue.size()) new_msdu();
 
 	} else {
@@ -167,16 +170,15 @@ void MAC_private::begin_countdown() {
 	BEGIN_PROF("MAC::begin_countdown")
 
 	// if channel is free now, schedule transmission for time
-	// DIFS + contention window
+	// AIFS + contention window
 	backoff_counter = randgen->discrete_uniform(0,contention_window-1);
-
 	time_to_send = ptr2sch->now() + AIFS + timestamp(backoff_counter) * aSlotTime;
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-			<< ": begin countdown, CW = " << contention_window
-			<< ", backoff counter = " << backoff_counter
-			<< ", schedule function transmit at time "
-			<< time_to_send << endl;
+		<< ": begin countdown, CW = " << contention_window
+		<< ", backoff counter = " << backoff_counter
+		<< ", schedule function transmit at time "
+		<< time_to_send << endl;
 
 	ptr2sch->schedule(Event(time_to_send,(void*)&wrapper_to_transmit,
 			(void*)this));
@@ -274,13 +276,15 @@ void MAC_private::check_nav () {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// MAC_private::cts_timed_out                                                 //
+// MAC_private::cts_timed_out
+//
+// Change contention window if CTS is not received.
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::cts_timed_out () {
 	BEGIN_PROF("MAC::cts_timed_out")
 
 #ifdef _SAVE_RATE_ADAPT
-												  timestamp t_aux = ptr2sch->now() - CTS_Timeout - rts_duration;
+	timestamp t_aux = ptr2sch->now() - CTS_Timeout - rts_duration;
 	rate_adapt_file_rt << setw(10) << double(t_aux) << ','
 			<< setw(6) << get_id() << ','
 			<< setw(6) << (msdu.get_target())->get_id() << ','
@@ -300,7 +304,7 @@ void MAC_private::cts_timed_out () {
 
 		term->macUnitdataMaxRetry(msdu);
 
-		packet_queue.pop();
+		packet_queue.pop_front();
 		if (packet_queue.size()) new_msdu();
 
 	} else {
@@ -366,7 +370,7 @@ void MAC_private::end_nav() {
 
 		myphy->notify_busy_channel();
 
-	} else {
+	} else { // or beging contdown againg
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 				<< ", channel released according to NAV"
@@ -378,7 +382,11 @@ void MAC_private::end_nav() {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-// MAC::phyRxEndInd                                                           //
+// MAC::phyRxEndInd
+//
+// Check if packet is for this station or not.
+// If not, receive_bc (receive for other station).
+// If so, receive_this (receive for this station).
 ////////////////////////////////////////////////////////////////////////////////
 void MAC::phyRxEndInd(MPDU p) {
 
@@ -476,7 +484,7 @@ void MAC_private::receive_this(MPDU p) {
 
 			term->la_success(msdu.get_target(), true);
 
-			packet_queue.pop();
+			packet_queue.pop_front();
 			if (packet_queue.size()) new_msdu();
 
 			break;
@@ -495,13 +503,11 @@ void MAC_private::receive_this(MPDU p) {
 				pl = msdu.get_nbytes() % frag_thresh;
 				if (!pl) pl = frag_thresh;
 
-				newnav = now + 2*SIFS + pck.get_duration()
-                												   + ack_duration(p.get_mode());
+				newnav = now + 2*SIFS + pck.get_duration() + ack_duration(p.get_mode());
 			}
 			else {
 				pl = frag_thresh;
-				newnav = now + 4*SIFS + 2*pck.get_duration()
-                												   + 2*ack_duration(p.get_mode());
+				newnav = now + 4*SIFS + 2*pck.get_duration() + 2*ack_duration(p.get_mode());
 			}
 
 			if (logflag) *mylog << "    schedule transmission of fragment "
@@ -643,12 +649,84 @@ void MAC_private::send_data() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// MAC_private::timeTXOP                                                     //
+//                                                                            //
+// Start TXOP time counting                                //
+////////////////////////////////////////////////////////////////////////////////
+void MAC_private::timeTXOP() {
+	BEGIN_PROF("MAC::timeTXOP")
+
+		if(!TXOPflag && TXOPmax != 0){ // If not during TXOP and AC has a TXOP
+
+			unsigned count = 0;
+		    unsigned auxNfrags = 0;
+			unsigned lastpl = 0;
+
+			timestamp now = ptr2sch->now();
+
+			TXOPflag = true;
+			TXOPend = now;
+
+			while(TXOPend < now + TXOPmax && count < packet_queue.size()){
+
+				MSDU auxmsdu = packet_queue[count];
+
+				// Determine number of fragments
+				auxNfrags = auxmsdu.get_nbytes() / frag_thresh;
+				if (auxmsdu.get_nbytes()%frag_thresh) ++auxNfrags;
+
+				// determine packet and duration of last fragment
+				lastpl = auxmsdu.get_nbytes() % frag_thresh;
+				if (!lastpl) lastpl = frag_thresh;
+
+				transmission_mode which_mode = term->get_current_mode(msdu.get_target(),frag_thresh);
+				DataMPDU auxpck (frag_thresh, term, auxmsdu.get_target(), power_dBm, which_mode);
+				DataMPDU auxpckLast (lastpl, term, auxmsdu.get_target(), power_dBm, which_mode);
+
+				// Update TXOPend accordingly
+				TXOPend = TXOPend + (auxNfrags-1)*auxpck.get_duration() + auxpckLast.get_duration()
+						 + auxNfrags*ack_duration(which_mode) + (2*auxNfrags - 1)*SIFS;
+
+				if(auxpck.get_nbytes_mac() >= RTS_threshold){ //If an RTS/CTS is needed:
+					// For not the last packet
+					TXOPend = TXOPend + (auxNfrags-1)*(rts_duration + cts_duration +
+							2*SIFS + 1);
+
+					// For the last packet
+					if(auxpckLast.get_nbytes_mac() >= RTS_threshold) {
+						TXOPend = TXOPend + rts_duration + cts_duration + 2*SIFS;
+					}
+				}
+				count++;
+			}
+
+			if(TXOPend > now + TXOPmax) TXOPend = now + TXOPmax;
+			ptr2sch->schedule(Event(TXOPend,(void*)&wrapper_to_end_TXOP,(void*)this));
+
+		}
+
+	END_PROF("MAC::timeTXOP")
+}
+////////////////////////////////////////////////////////////////////////////////
+// MAC_private::end_TXOP                                                      //
+//                                                                            //
+// Finishes counting the TXOP time			                                  //
+////////////////////////////////////////////////////////////////////////////////
+void MAC_private::end_TXOP() {
+	TXOPflag = false;
+	TXOPend = timestamp(0);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // MAC_private::transmit                                                      //
 //                                                                            //
 // send data packet if basic DCF or begin RTS                                 //
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::transmit() {
 	BEGIN_PROF("MAC::transmit")
+
+	timeTXOP();
 
 	// determine packet length
 	unsigned pl;
@@ -667,9 +745,8 @@ void MAC_private::transmit() {
 
 	DataMPDU auxpck (pl, term, msdu.get_target(), power_dBm, which_mode);
 
-	if (auxpck.get_nbytes_mac() < RTS_threshold) {
+	if (auxpck.get_nbytes_mac() < RTS_threshold) { // Basic DCF protocol, without RTS/CTS exchange
 
-		// Basic DCF protocol
 		timestamp auxnav = ptr2sch->now() + auxpck.get_duration() + SIFS
 				+ ack_duration(which_mode);
 		pck = DataMPDU (msdu, pl, current_frag, nfrags, power_dBm, which_mode,
@@ -687,16 +764,15 @@ void MAC_private::transmit() {
 		send_data();
 
 	} else {
-		/////////////////////
-		// RTS/CTS Protocol
 
+		// RTS/CTS Protocol
 		NAV = ptr2sch->now() + rts_duration;
 
 		timestamp newnav;
-		if (current_frag == nfrags) {
+		if (current_frag == nfrags) { // If this is the last fragment:
 			newnav = ptr2sch->now() + rts_duration + cts_duration +
 					auxpck.get_duration() + ack_duration(which_mode) + 3*SIFS + 1;
-		} else {
+		} else { // If there are other fragments after this one
 			newnav = ptr2sch->now() + rts_duration + cts_duration +
 					2*auxpck.get_duration() + 2*ack_duration(which_mode) +
 					5*SIFS + 1;
@@ -742,7 +818,7 @@ unsigned MAC::macUnitdataReq(MSDU p) {
 	if (packet_queue.size() >= max_queue_size) {
 		term->macUnitdataQueueOverflow(p);
 	} else {
-		packet_queue.push(p);
+		packet_queue.push_back(p);
 
 		if (packet_queue.size() == 1) new_msdu();
 	}

@@ -3,7 +3,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Simulation control parameters
 
-MaxSimTime = 0.1025  % maximum simulation time in seconds
+MaxSimTime = 1 %0.1025  % maximum simulation time in seconds
 TempOutputInterval = 1 % interval between temporary outputs
 TransientTime = .1 % ignore first TransientTime seconds 
 Confidence = .95 % for calculation of confidence interval (if more than one seed), default = .95
@@ -35,7 +35,7 @@ Seed = 7
 % No terminal movement supported so far.
 
 NumberAPs = 1 % number of access points
-NumberStas = 1 % number of mobile terminals 
+NumberStas = 2 % number of mobile terminals 
 Radius = 10 % cell radius in meters
 
 
@@ -53,7 +53,7 @@ Radius = 10 % cell radius in meters
 
 numAC_BK = 1
 numAC_BE = 0
-numAC_VI = 0
+numAC_VI = 1
 numAC_VO = 0
 numLegacy = 0
 
