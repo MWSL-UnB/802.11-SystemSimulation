@@ -122,13 +122,11 @@ void MAC_private::ack_timed_out () {
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 	<< ": ACK time out for packet " << pck.get_id() << endl;
 
-/*	if (TXOPflag) { // If during TXOP
+	if (TXOPflag) { // If during TXOP
 		TXOPla_win = false; // Indicate that LA failed
 	} else {
 		term->la_failed(msdu.get_target()); // link adaptation
-	}*/
-
-	term->la_failed(msdu.get_target()); // link adaptation
+	}
 
 #ifdef _SAVE_RATE_ADAPT
 	timestamp t_aux = ptr2sch->now() - pck.get_duration() - ACK_Timeout(pck.get_mode());
@@ -299,6 +297,7 @@ void MAC_private::cts_timed_out () {
 			<< -1 << endl;
 #endif
 
+	// Since a RTS/CTS exchange will happen in the begining of the TXOP, RTS will not fail during it
 	term->la_rts_failed(msdu.get_target()); // link adaptation
 
 	if (retry_count++ >= retry_limit) {
@@ -419,7 +418,7 @@ void MAC_private::new_msdu() {
 	current_frag = 0;
 
 	msdu.set_tx_time(ptr2sch->now());
-	tx_attempt();
+	ptr2sch->schedule(Event(ptr2sch->now()+1,(void*)&wrapper_to_tx_attempt,(void*)this));
 }    
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -489,7 +488,8 @@ void MAC_private::receive_this(MPDU p) {
 
 			term->macUnitdataStatusInd(msdu, p.get_duration() + SIFS);
 
-			term->la_success(msdu.get_target(), true);
+			// Indicate LA success if not during TXOP
+			if(!TXOPflag) term->la_success(msdu.get_target(), true);
 
 			packet_queue.pop_front();
 			if (packet_queue.size()) new_msdu();
@@ -498,6 +498,7 @@ void MAC_private::receive_this(MPDU p) {
 
 		} else {
 
+			// If it is not the last fragment, still perform link adaptation
 			term->la_success(msdu.get_target(), false);
 
 			// schedule transmission of next packet
@@ -665,13 +666,13 @@ void MAC_private::timeTXOP() {
 
 		if(!TXOPflag && TXOPmax != 0){ // If not during TXOP and AC has a TXOP
 
+			TXOPflag = true;
+
 			unsigned count = 0;
 		    unsigned auxNfrags = 0;
 			unsigned lastpl = 0;
 
 			timestamp now = ptr2sch->now();
-
-			TXOPflag = true;
 			TXOPend = now;
 
 			while(TXOPend < now + TXOPmax && count < packet_queue.size()){
@@ -708,13 +709,20 @@ void MAC_private::timeTXOP() {
 				count++;
 			}
 
+			// TXOPend must account for RTS/CTS exchanged in the beigining of TXOP
+			//TXOPend = TXOPend + rts_duration + cts_duration + 2*SIFS;
+
 			if(TXOPend > now + TXOPmax) TXOPend = now + TXOPmax;
+			TXOPend = TXOPend + 1;
 			ptr2sch->schedule(Event(TXOPend,(void*)&wrapper_to_end_TXOP,(void*)this));
 
-			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+			if (logflag) *mylog << "\n >> " << ptr2sch->now() << "sec., " << *term
 					<< ", of Access Category " << ACat << " begins TXOP scheduled to end at "
 					<< TXOPend << "sec." << " TXOP duration = " << (TXOPend - now) <<  "sec."
 					<< endl;
+
+			//myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,M6,TXOPend),
+			//		true);
 
 		}
 
@@ -729,8 +737,21 @@ void MAC_private::end_TXOP() {
 	TXOPflag = false;
 	TXOPend = timestamp(0);
 
-	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+	if (logflag) *mylog << "\n >> " << ptr2sch->now() << "sec., " << *term
 		<< ", of Access Category " << ACat << " ends TXOP." << endl;
+
+	if (TXOPla_win) { // If all ACKs were received during TXOP
+		/*
+		 * If all ACKs were received correctly, by the end of TXOP all fragments wil have
+		 * been transmitted, thus the lastfrag is set to true in
+		 * term->la_success(msdu.get_target(), true) below
+		 */
+		term->la_success(msdu.get_target(), true);
+	} else {
+		term->la_failed(msdu.get_target()); // link adaptation
+	}
+
+	TXOPla_win = true;
 }
 
 
@@ -894,7 +915,7 @@ void MAC_private::tx_attempt() {
 }
 
 // Output operator << for accCat type
-ostream & operator<<(ostream & os, const accCat AC) {
+ostream & operator<<(ostream& os, const accCat& AC) {
    switch(AC){
    case AC_BK:
 	   return os << "AC_BK";
