@@ -35,7 +35,7 @@ Seed = 7
 % No terminal movement supported so far.
 
 NumberAPs = 1 % number of access points
-NumberStas = 1 % number of mobile terminals 
+NumberStas = 3 % number of mobile terminals 
 Radius = 10 % cell radius in meters
 
 
@@ -51,10 +51,10 @@ Radius = 10 % cell radius in meters
 % If the sum of mobile stations belonging to each access category is different from
 % the total number of mobile stations defined above a configuration error happens.
 
-numAC_BK = 0
+numAC_BK = 1
 numAC_BE = 0
 numAC_VI = 1
-numAC_VO = 0
+numAC_VO = 1
 numLegacy = 0
 
 
