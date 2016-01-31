@@ -127,7 +127,7 @@ ArrivalTime = EXP % arrival time distribution (EXP,CONSTANT)
 
 %%%%%%%%%%%%%%%%%
 % MAC Parameters
-RTSThreshold = 10000        % packets with more than RTSThreshold bytes employ RTS/CTS
+RTSThreshold = 10000          % packets with more than RTSThreshold bytes employ RTS/CTS
 RetryLimit = 10000            % packets retransmitted more than RetryLimit times are discarded
 FragmentationThreshold = 1500 % maximum MPDU size, larger packets are fragmented
 QueueSize = 1000              % size of MAC waiting queue

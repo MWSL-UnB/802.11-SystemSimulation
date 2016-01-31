@@ -40,6 +40,12 @@ typedef enum{
 	legacy
 }accCat;
 
+typedef enum {
+	success,
+	ACKfail,
+	CTSfail
+} TXOPla;
+
 ////////////////////////////////////////////////////////////////////////////////
 // class MAC_private                                                          //
 //                                                                            //
@@ -92,7 +98,7 @@ protected:
   timestamp TXOPmax;
   timestamp TXOPend;
   bool TXOPflag;
-  bool TXOPla_win; // Flag that indicates if link adaptation will be successful or not after TXOP
+  TXOPla TXOPla_win; // Flag that indicates if link adaptation will be successful or not after TXOP
 
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts
@@ -123,7 +129,7 @@ protected:
   void send_cts(Terminal *to);
   void send_data();
   
-  void timeTXOP();
+  void start_TXOP();
   // start TXOP time counting
 
   void end_TXOP();
@@ -153,6 +159,9 @@ public:
 
   static void wrapper_to_end_TXOP (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->end_TXOP();}
+
+  static void wrapper_to_start_TXOP (void* ptr2obj) {
+    ((MAC_private*)ptr2obj)->start_TXOP();}
 
   static void wrapper_to_send_ack (void* ptr2obj, void* param) {
     ((MAC_private*)ptr2obj)->send_ack((Terminal*)param);}

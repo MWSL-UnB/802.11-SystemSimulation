@@ -100,7 +100,7 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, accC
 	AIFS = SIFS + timestamp(AIFSN)*aSlotTime;
 	TXOPflag = false;
 	TXOPend = ptr2sch->now();
-	TXOPla_win = true;
+	TXOPla_win = success;
 
 	NAV = timestamp(0);
 	nfrags = 1;
@@ -123,7 +123,7 @@ void MAC_private::ack_timed_out () {
 	<< ": ACK time out for packet " << pck.get_id() << endl;
 
 	if (TXOPflag) { // If during TXOP
-		TXOPla_win = false; // Indicate that LA failed
+		TXOPla_win = ACKfail; // Indicate that LA failed
 	} else {
 		term->la_failed(msdu.get_target()); // link adaptation
 	}
@@ -185,7 +185,7 @@ void MAC_private::begin_countdown() {
 		<< ", schedule function transmit at time "
 		<< time_to_send << endl;
 
-	ptr2sch->schedule(Event(time_to_send,(void*)&wrapper_to_transmit,
+	ptr2sch->schedule(Event(time_to_send,(void*)&wrapper_to_start_TXOP,
 			(void*)this));
 
 	myphy->notify_busy_channel();
@@ -216,7 +216,7 @@ void MAC::phyCCA_busy() {
 			<< backoff_counter << endl;
 
 	time_to_send = not_a_timestamp();
-	ptr2sch->remove((void*)(&wrapper_to_transmit), (void*)this);
+	ptr2sch->remove((void*)(&wrapper_to_start_TXOP), (void*)this);
 
 	END_PROF("MAC::phyCCA_busy")
 }
@@ -243,7 +243,7 @@ void MAC::phyCCA_free() {
 		// resume countdown
 
 		time_to_send = now + AIFS + timestamp(backoff_counter) * aSlotTime;
-		ptr2sch->schedule(Event(time_to_send, (void*)(&wrapper_to_transmit),
+		ptr2sch->schedule(Event(time_to_send, (void*)(&wrapper_to_start_TXOP),
 				(void*)this));
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
@@ -297,8 +297,14 @@ void MAC_private::cts_timed_out () {
 			<< -1 << endl;
 #endif
 
-	// Since a RTS/CTS exchange will happen in the begining of the TXOP, RTS will not fail during it
-	term->la_rts_failed(msdu.get_target()); // link adaptation
+	if(TXOPflag){
+		TXOPla_win = CTSfail;
+		end_TXOP(); // Finish TXOP before it starts
+	} else {
+		// Since a RTS/CTS exchange will happen in the beginning of the TXOP, RTS will not fail during
+		// TXOP
+		term->la_rts_failed(msdu.get_target()); // link adaptation
+	}
 
 	if (retry_count++ >= retry_limit) {
 
@@ -365,7 +371,7 @@ void MAC_private::end_nav() {
 	if (countdown_flag) {
 
 		time_to_send = now + AIFS + timestamp(backoff_counter) * aSlotTime;
-		ptr2sch->schedule(Event(time_to_send, (void*)(&wrapper_to_transmit),
+		ptr2sch->schedule(Event(time_to_send, (void*)(&wrapper_to_start_TXOP),
 				(void*)this));
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
@@ -418,7 +424,17 @@ void MAC_private::new_msdu() {
 	current_frag = 0;
 
 	msdu.set_tx_time(ptr2sch->now());
-	ptr2sch->schedule(Event(ptr2sch->now()+1,(void*)&wrapper_to_tx_attempt,(void*)this));
+
+	// If during TXOP and TXOPend is not next time increment
+	if(TXOPflag && TXOPend > ptr2sch->now() + 1) {
+		// Schedule tx_attempt to now + SIFS
+		ptr2sch->schedule(Event(ptr2sch->now()+SIFS,(void*)&wrapper_to_tx_attempt,
+				(void*)this));
+	} else {
+		// If not, tx_attempt is scheduled for next time increment
+		ptr2sch->schedule(Event(ptr2sch->now()+1,(void*)&wrapper_to_tx_attempt,
+			(void*)this));
+	}
 }    
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -507,7 +523,11 @@ void MAC_private::receive_this(MPDU p) {
 			unsigned pl;
 			timestamp newnav;
 
-			if (current_frag == nfrags) {
+			if(TXOPflag) { // If during TXOP, NAV is simply TXOPend
+
+				newnav = TXOPend;
+
+			}else if (current_frag == nfrags) {
 				pl = msdu.get_nbytes() % frag_thresh;
 				if (!pl) pl = frag_thresh;
 
@@ -522,6 +542,7 @@ void MAC_private::receive_this(MPDU p) {
 					<< current_frag << " with " << pl
 					<< " bytes and NAV = " << newnav << " for "
 					<< now + SIFS << endl;
+
 
 			pck = DataMPDU(msdu, pl, current_frag, nfrags, power_dBm, p.get_mode(),
 					newnav);
@@ -581,13 +602,20 @@ void MAC_private::receive_this(MPDU p) {
 		ptr2sch->remove((void*)(&wrapper_to_cts_timed_out), (void*)this);
 
 		timestamp t_data = now + SIFS;
-		ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_send_data),
-				(void*)this));
+
+		/* If the TXOP CTS is received, tx_attempt(), not send_data():
+		 * tx_attempt() fragments packet, while send_data() simply sends next fragment.
+		 */
+		if(TXOPflag) ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_tx_attempt),(void*)this));
+		else ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_send_data),(void*)this));
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 				<< " received " << p
 				<< ", schedule transmission of data packet "
 				<< pck.get_id() << " at " << t_data << endl;
+
+		// Schedule the end of the TXOP
+		if(TXOPflag) ptr2sch->schedule(Event(TXOPend,(void*)&wrapper_to_end_TXOP,(void*)this));
 
 		break;
 	}
@@ -661,21 +689,30 @@ void MAC_private::send_data() {
 //                                                                            //
 // Start TXOP time counting                                //
 ////////////////////////////////////////////////////////////////////////////////
-void MAC_private::timeTXOP() {
-	BEGIN_PROF("MAC::timeTXOP")
+void MAC_private::start_TXOP() {
+	BEGIN_PROF("MAC::start_TXOP")
 
 		if(!TXOPflag && TXOPmax != 0){ // If not during TXOP and AC has a TXOP
 
 			TXOPflag = true;
+
+			myphy->cancel_notify_busy_channel();
 
 			unsigned count = 0;
 		    unsigned auxNfrags = 0;
 			unsigned lastpl = 0;
 
 			timestamp now = ptr2sch->now();
-			TXOPend = now;
+			timestamp auxTXOPend = now;
+
+			// TXOPend must account for RTS/CTS exchanged in the beginning of TXOP
+			TXOPend = now + rts_duration + cts_duration + SIFS;
+
+			power_dBm = term->get_power(msdu.get_target(), frag_thresh);
 
 			while(TXOPend < now + TXOPmax && count < packet_queue.size()){
+
+				auxTXOPend = TXOPend;
 
 				MSDU auxmsdu = packet_queue[count];
 
@@ -688,45 +725,55 @@ void MAC_private::timeTXOP() {
 				if (!lastpl) lastpl = frag_thresh;
 
 				transmission_mode which_mode = term->get_current_mode(msdu.get_target(),frag_thresh);
-				DataMPDU auxpck (frag_thresh, term, auxmsdu.get_target(), power_dBm, which_mode);
-				DataMPDU auxpckLast (lastpl, term, auxmsdu.get_target(), power_dBm, which_mode);
+				DataMPDU auxpck (frag_thresh, term, auxmsdu.get_target(),power_dBm,
+						which_mode);
+				DataMPDU auxpckLast(lastpl, term, auxmsdu.get_target(), power_dBm,
+						which_mode);
 
-				// Update TXOPend accordingly
-				TXOPend = TXOPend + timestamp(auxNfrags-1)*auxpck.get_duration() +
-						auxpckLast.get_duration() + timestamp(auxNfrags)*ack_duration(which_mode) +
-						timestamp(2*auxNfrags - 1)*SIFS;
+				TXOPend = TXOPend + auxpckLast.get_duration() + timestamp(auxNfrags)*ack_duration(which_mode)
+						+ timestamp(2*auxNfrags)*SIFS;
 
-				if(auxpck.get_nbytes_mac() >= RTS_threshold){ //If an RTS/CTS is needed:
-					// For not the last packet
+				if(auxNfrags != 1){
+					// Update TXOPend accordingly
+					TXOPend = TXOPend + timestamp(auxNfrags-1)*auxpck.get_duration();
+				}
+
+				 //If an RTS/CTS is needed:
+				// For not the last packet
+				if(auxNfrags != 1 && auxpck.get_nbytes_mac() >= RTS_threshold){
 					TXOPend = TXOPend + timestamp(auxNfrags-1)*(rts_duration + cts_duration +
-							2*SIFS + 1);
-
-					// For the last packet
-					if(auxpckLast.get_nbytes_mac() >= RTS_threshold) {
-						TXOPend = TXOPend + rts_duration + cts_duration + 2*SIFS;
-					}
+							SIFS + 1);
+				}
+				// For the last packet
+				if(auxpckLast.get_nbytes_mac() >= RTS_threshold) {
+					TXOPend = TXOPend + rts_duration + cts_duration + SIFS;
 				}
 				count++;
 			}
 
-			// TXOPend must account for RTS/CTS exchanged in the beigining of TXOP
-			//TXOPend = TXOPend + rts_duration + cts_duration + 2*SIFS;
-
-			if(TXOPend > now + TXOPmax) TXOPend = now + TXOPmax;
+			if(TXOPend > now + TXOPmax) TXOPend = auxTXOPend;
 			TXOPend = TXOPend + 1;
-			ptr2sch->schedule(Event(TXOPend,(void*)&wrapper_to_end_TXOP,(void*)this));
 
 			if (logflag) *mylog << "\n >> " << ptr2sch->now() << "sec., " << *term
 					<< ", of Access Category " << ACat << " begins TXOP scheduled to end at "
-					<< TXOPend << "sec." << " TXOP duration = " << (TXOPend - now) <<  "sec."
-					<< endl;
+					<< TXOPend << "sec." << "\nPackets in queue = " << count << ". TXOP duration = "
+					<< TXOPend - now << " sec." << endl;
 
-			//myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,M6,TXOPend),
-			//		true);
+			myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,M6,TXOPend),
+					true);
 
+			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+					<< ", sends TXOP RTS to " << *msdu.get_target() << endl;
+
+			NAV = ptr2sch->now() + rts_duration;
+			timestamp t = NAV + CTS_Timeout;
+			ptr2sch->schedule(Event(t,(void*)&wrapper_to_cts_timed_out,(void*)this));
+
+		} else { // If already during TXOP or station does not have TXOP
+			transmit();
 		}
 
-	END_PROF("MAC::timeTXOP")
+	END_PROF("MAC::start_TXOP")
 }
 ////////////////////////////////////////////////////////////////////////////////
 // MAC_private::end_TXOP                                                      //
@@ -734,24 +781,34 @@ void MAC_private::timeTXOP() {
 // Finishes counting the TXOP time			                                  //
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::end_TXOP() {
+	BEGIN_PROF("MAC::end_TXOP")
+
 	TXOPflag = false;
 	TXOPend = timestamp(0);
 
 	if (logflag) *mylog << "\n >> " << ptr2sch->now() << "sec., " << *term
 		<< ", of Access Category " << ACat << " ends TXOP." << endl;
 
-	if (TXOPla_win) { // If all ACKs were received during TXOP
+	switch (TXOPla_win) {
+	case success:
 		/*
-		 * If all ACKs were received correctly, by the end of TXOP all fragments wil have
+		 * If all ACKs were received correctly, by the end of TXOP all fragments will have
 		 * been transmitted, thus the lastfrag is set to true in
 		 * term->la_success(msdu.get_target(), true) below
 		 */
 		term->la_success(msdu.get_target(), true);
-	} else {
+		break;
+	case ACKfail:
 		term->la_failed(msdu.get_target()); // link adaptation
+		break;
+	default:
+		term->la_rts_failed(msdu.get_target());
+		break;
 	}
 
-	TXOPla_win = true;
+	TXOPla_win = success;
+
+	END_PROF("MAC::end_TXOP")
 }
 
 
@@ -762,8 +819,6 @@ void MAC_private::end_TXOP() {
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::transmit() {
 	BEGIN_PROF("MAC::transmit")
-
-	timeTXOP();
 
 	// determine packet length
 	unsigned pl;
@@ -782,10 +837,14 @@ void MAC_private::transmit() {
 
 	DataMPDU auxpck (pl, term, msdu.get_target(), power_dBm, which_mode);
 
+	//start_TXOP();
+
 	if (auxpck.get_nbytes_mac() < RTS_threshold) { // Basic DCF protocol, without RTS/CTS exchange
 
-		timestamp auxnav = ptr2sch->now() + auxpck.get_duration() + SIFS
-				+ ack_duration(which_mode);
+		timestamp auxnav;
+		if(TXOPflag) auxnav = TXOPend;
+		else auxnav = ptr2sch->now() + auxpck.get_duration() + SIFS + ack_duration(which_mode);
+
 		pck = DataMPDU (msdu, pl, current_frag, nfrags, power_dBm, which_mode,
 				auxnav);
 
@@ -806,7 +865,9 @@ void MAC_private::transmit() {
 		NAV = ptr2sch->now() + rts_duration;
 
 		timestamp newnav;
-		if (current_frag == nfrags) { // If this is the last fragment:
+		if(TXOPflag) {
+			newnav = TXOPend;
+		} else if (current_frag == nfrags) { // If this is the last fragment:
 			newnav = ptr2sch->now() + rts_duration + cts_duration +
 					auxpck.get_duration() + ack_duration(which_mode) + 3*SIFS + 1;
 		} else { // If there are other fragments after this one
@@ -885,31 +946,38 @@ void MAC_private::tx_attempt() {
 		<< endl;
 	}
 
-	// check NAV
-	if (ptr2sch->now() <= NAV) {
+	if(TXOPflag) {
 
-		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " : transmission attempt"
-				<< ", Channel is busy according to NAV (" << NAV
-				<< ")\n    reschedule tx attempt to " << NAV+1 << endl;
+		transmit();
 
-		ptr2sch->schedule(Event(NAV+1,(void*)&wrapper_to_tx_attempt,(void*)this));
-
-		// verify if channel is busy
-	} else if (myphy->carrier_sensing()) {
-
-		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " : transmission attempt, Channel is busy"
-				<< ", ask PHY to notify when it is free" << endl;
-
-		// if channel is busy, ask channel when it is free
-		myphy->notify_free_channel();
 	} else {
 
-		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " : transmission attempt, Channel is free" << endl;
+		// check NAV
+		if (ptr2sch->now() <= NAV) {
 
-		begin_countdown();
+			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+					<< " : transmission attempt"
+					<< ", Channel is busy according to NAV (" << NAV
+					<< ")\n    reschedule tx attempt to " << NAV+1 << endl;
+
+			ptr2sch->schedule(Event(NAV+1,(void*)&wrapper_to_tx_attempt,(void*)this));
+
+			// verify if channel is busy
+		} else if (myphy->carrier_sensing()) {
+
+			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+					<< " : transmission attempt, Channel is busy"
+					<< ", ask PHY to notify when it is free" << endl;
+
+			// if channel is busy, ask channel when it is free
+			myphy->notify_free_channel();
+		} else {
+
+			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+					<< " : transmission attempt, Channel is free" << endl;
+
+			begin_countdown();
+		}
 	}
 	END_PROF("MAC::tx_attempt")
 }
