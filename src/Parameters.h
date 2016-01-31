@@ -208,11 +208,11 @@ class Parameters {
   param_vec_unsigned QueueSize;
 
   // IEEE 802.11n EDCA parameters
-  param_vec_unsigned numAC_BK;
-  param_vec_unsigned numAC_BE;
-  param_vec_unsigned numAC_VI;
-  param_vec_unsigned numAC_VO;
-  param_vec_unsigned numLegacy;
+  param_vec_double ppAC_BK;
+  param_vec_double ppAC_BE;
+  param_vec_double ppAC_VI;
+  param_vec_double ppAC_VO;
+  param_vec_double ppLegacy;
 
 
   bool default_flag; // true if default parameters are stored
@@ -266,11 +266,11 @@ public:
   double get_TxPowerStepDown() {return TxPowerStepDown_dBm.current();}
   double get_TxPowerStepUp() {return TxPowerStepUp_dBm.current();}
   bool get_UseRxMode() {return UseRxMode.current();}
-  unsigned get_numAC_BK() {return numAC_BK.current();}
-  unsigned get_numAC_BE() {return numAC_BE.current();}
-  unsigned get_numAC_VI() {return numAC_VI.current();}
-  unsigned get_numAC_VO() {return numAC_VO.current();}
-  unsigned get_numLegacy() {return numLegacy.current();}
+  double get_ppAC_BK() {return ppAC_BK.current();}
+  double get_ppAC_BE() {return ppAC_BE.current();}
+  double get_ppAC_VI() {return ppAC_VI.current();}
+  double get_ppAC_VO() {return ppAC_VO.current();}
+  double get_ppLegacy() {return ppLegacy.current();}
 
 
   Position get_APPosition(int which_ap);

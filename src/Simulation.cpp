@@ -388,35 +388,35 @@ void Simulation::init_terminals(){
 	for (unsigned i = 0; i < sim_par.get_NumberStas(); i++) {
 		switch(AC){
 		case AC_BK:
-			if(numAC != sim_par.get_numAC_BK()){
+			if(numAC != round(sim_par.get_ppAC_BK()*sim_par.get_NumberStas())){
 				AC = AC_BK;
 				numAC++;
 				break;
 			}
 			numAC = 0;
 		case AC_BE:
-			if(numAC != sim_par.get_numAC_BE()){
+			if(numAC != round(sim_par.get_ppAC_BE()*sim_par.get_NumberStas())){
 				AC = AC_BE;
 				numAC++;
 				break;
 			}
 			numAC = 0;
 		case AC_VI:
-			if(numAC != sim_par.get_numAC_VI()){
+			if(numAC != round(sim_par.get_ppAC_VI()*sim_par.get_NumberStas())){
 				AC = AC_VI;
 				numAC++;
 				break;
 			}
 			numAC = 0;
 		case AC_VO:
-			if(numAC != sim_par.get_numAC_VO()){
+			if(numAC != round(sim_par.get_ppAC_VO()*sim_par.get_NumberStas())){
 				AC = AC_VO;
 				numAC++;
 				break;
 			}
 			numAC = 0;
 		case legacy:
-			if(numAC != sim_par.get_numLegacy()){
+			if(numAC != round(sim_par.get_ppLegacy()*sim_par.get_NumberStas())){
 				AC = legacy;
 				numAC++;
 				break;
