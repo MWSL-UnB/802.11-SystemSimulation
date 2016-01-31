@@ -35,7 +35,7 @@ Seed = 7
 % No terminal movement supported so far.
 
 NumberAPs = 1 % number of access points
-NumberStas = 3 % number of mobile terminals 
+NumberStas = 2 % number of mobile terminals 
 Radius = 10 % cell radius in meters
 
 
@@ -45,17 +45,18 @@ Radius = 10 % cell radius in meters
 
 
 %%%%%%%%%%%%%%%%%%%%%
-% Access category parameters
+% Access Category (AC) parameters
 % 
-% Number of mobile stations belonging to each access category.
-% If the sum of mobile stations belonging to each access category is different from
-% the total number of mobile stations defined above a configuration error happens.
+% Proportion of mobile stations belonging to each access category.
+% If the sum of proportions is such that the stations with specified AC is less than NumberStats,
+% the remaining stations will belong to the highest priority AC present in the specified ACs.
+% If the sum of proportions is bigger than 1, an exception is thrown and the simulation stops.
 
-numAC_BK = 1
-numAC_BE = 0
-numAC_VI = 1
-numAC_VO = 1
-numLegacy = 0
+ppAC_BK = 0
+ppAC_BE = .5
+ppAC_VI = .5
+ppAC_VO = 0
+ppLegacy = 0
 
 
 %%%%%%%%%%%%%%%%%%%%%

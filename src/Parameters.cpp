@@ -305,25 +305,25 @@ bool Parameters::assign (string s1,string s2) {
     which_param = &UseRxMode;
     if (!UseRxMode.read_vec(s2)) return false;
 
-  } else if (!s1.compare("numAC_BK")) {
-	  which_param = &numAC_BK;
-	  if (!numAC_BK.read_vec(s2)) return false;
+  } else if (!s1.compare("ppAC_BK")) {
+	  which_param = &ppAC_BK;
+	  if (!ppAC_BK.read_vec(s2)) return false;
 
-  } else if (!s1.compare("numAC_BE")) {
-  	  which_param = &numAC_BE;
-  	  if (!numAC_BE.read_vec(s2)) return false;
+  } else if (!s1.compare("ppAC_BE")) {
+  	  which_param = &ppAC_BE;
+  	  if (!ppAC_BE.read_vec(s2)) return false;
 
-  } else if (!s1.compare("numAC_VI")) {
-  	  which_param = &numAC_VI;
-  	  if (!numAC_VI.read_vec(s2)) return false;
+  } else if (!s1.compare("ppAC_VI")) {
+  	  which_param = &ppAC_VI;
+  	  if (!ppAC_VI.read_vec(s2)) return false;
 
-  } else if (!s1.compare("numAC_VO")) {
-  	  which_param = &numAC_VO;
-  	  if (!numAC_VO.read_vec(s2)) return false;
+  } else if (!s1.compare("ppAC_VO")) {
+  	  which_param = &ppAC_VO;
+  	  if (!ppAC_VO.read_vec(s2)) return false;
 
-  } else if (!s1.compare("numLegacy")) {
-  	  which_param = &numLegacy;
-  	  if (!numLegacy.read_vec(s2)) return false;
+  } else if (!s1.compare("ppLegacy")) {
+  	  which_param = &ppLegacy;
+  	  if (!ppLegacy.read_vec(s2)) return false;
 
   } else {
     return false;
@@ -393,11 +393,11 @@ void Parameters::default_config () {
   QueueSize.init("queue size",100);
 
   // IEEE802.11n EDCA parameters
-  numAC_BK.init("number of AC_BKs",0);
-  numAC_BE.init("number of AC_BEs",0);
-  numAC_VI.init("number of AC_VIs",0);
-  numAC_VO.init("number of AC_VOs",0);
-  numLegacy.init("number of legacies",NumberStas.current());
+  ppAC_BK.init("proportion of AC_BKs",0);
+  ppAC_BE.init("proportion of AC_BEs",0);
+  ppAC_VI.init("proportion of AC_VIs",0);
+  ppAC_VO.init("proportion of AC_VOs",0);
+  ppLegacy.init("proportion of legacies",NumberStas.current());
 
 }
 
@@ -421,8 +421,8 @@ Position Parameters::get_APPosition(int which_ap) {
 // checks consistency of parameters                                           //
 ////////////////////////////////////////////////////////////////////////////////
 bool Parameters::is_consistent() {
-	if(numAC_BK.current()+numAC_BE.current()+numAC_VI.current()+numAC_VO.current()+
-			numLegacy.current() != NumberStas.current()) {
+	if(ppAC_BK.current()+ppAC_BE.current()+ppAC_VI.current()+ppAC_VO.current()+
+			ppLegacy.current() > 1) {
 		return false;
 	}
 
