@@ -46,7 +46,7 @@ struct mac_struct {
 ////////////////////////////////////////////////////////////////////////////////
 // class MAC                                                                  //
 //                                                                            // 
-// implements the MAC layer of IEEE 802.11a (DCF only).                       //
+// implements the MAC layer of IEEE 802.11a (DCF only) with 802.11e EDCA      //
 //                                                                            //
 // Usage:                                                                     //
 //                                                                            //
@@ -66,7 +66,8 @@ public:
       Scheduler* s,   // pointer to simulation scheduler
       random *r,      // pointer to random number generator
       log_file *l,    // pointer to log
-      mac_struct mac  // MAC layer parameters
+      mac_struct mac, // MAC layer parameters
+	  accCat AC	  // Access category of station
      );
 
   void phyCCA_busy();
@@ -89,6 +90,9 @@ public:
   // attempt to transmit MSDU 'p', put it in queue
   // returns queue size
   
+  friend ostream& operator << (ostream& os, const accCat AC);
+  // Overload of output operator for accCat types
+
 };
 
 #endif

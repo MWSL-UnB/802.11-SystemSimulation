@@ -32,6 +32,20 @@
 class PHY;
 class Terminal;
 
+typedef enum{
+	AC_BK,
+	AC_BE,
+	AC_VI,
+	AC_VO,
+	legacy
+}accCat;
+
+typedef enum {
+	success,
+	ACKfail,
+	CTSfail
+} TXOPla;
+
 ////////////////////////////////////////////////////////////////////////////////
 // class MAC_private                                                          //
 //                                                                            //
@@ -42,7 +56,7 @@ protected:
   Scheduler* ptr2sch;  // pointer to simulation scheduler
   random*    randgen;  // pointer to random number generator
 
-  queue<MSDU> packet_queue;
+  deque<MSDU> packet_queue;
   
   log_file*  mylog;
   bool       logflag;  // true if MAC events should be logged
@@ -74,6 +88,18 @@ protected:
   unsigned  frag_thresh;
   unsigned  max_queue_size;
 
+  // EDCA parameters
+  accCat	ACat;
+  unsigned aCWmin;
+  unsigned aCWmax;
+  unsigned AIFSN;
+  timestamp AIFS;
+
+  timestamp TXOPmax;
+  timestamp TXOPend;
+  bool TXOPflag;
+  TXOPla TXOPla_win; // Flag that indicates if link adaptation will be successful or not after TXOP
+
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts
   double        tx_data_rate; // mean transmitted data rate
@@ -103,6 +129,11 @@ protected:
   void send_cts(Terminal *to);
   void send_data();
   
+  void start_TXOP();
+  // start TXOP time counting
+
+  void end_TXOP();
+
   void transmit();
   // send data packet or begin RTS
   
@@ -125,6 +156,12 @@ public:
 
   static void wrapper_to_end_nav (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->end_nav();}
+
+  static void wrapper_to_end_TXOP (void* ptr2obj) {
+    ((MAC_private*)ptr2obj)->end_TXOP();}
+
+  static void wrapper_to_start_TXOP (void* ptr2obj) {
+    ((MAC_private*)ptr2obj)->start_TXOP();}
 
   static void wrapper_to_send_ack (void* ptr2obj, void* param) {
     ((MAC_private*)ptr2obj)->send_ack((Terminal*)param);}

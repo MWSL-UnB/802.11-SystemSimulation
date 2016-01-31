@@ -54,8 +54,9 @@ public:
            random* r,             // pointer to random number generator
            log_file* l,           // pointer to log file
            mac_struct mac,        // MAC layer parameters
+		   accCat AC,		  // Access category of MAC
            PHY_struct phy,        // physical layer parameters
-           timestamp transient
+           timestamp tr
           );
   ~Terminal();
 
@@ -167,8 +168,8 @@ class MobileStation : public Terminal {
   
 public:
   MobileStation(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-                mac_struct mac, PHY_struct phy, timestamp tr)
-               : Terminal(p, s, c, r, l, mac, phy, tr) {connected = 0;};
+                mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
+               : Terminal(p, s, c, r, l, mac, AC, phy, tr) {connected = 0;};
   ~MobileStation();
   
   /////////////////////////////////////////////////////////////
@@ -206,8 +207,8 @@ class AccessPoint : public Terminal {
 
 public:
   AccessPoint(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-              mac_struct mac, PHY_struct phy, timestamp tr)
-             : Terminal(p, s, c, r, l, mac, phy, tr) {};
+              mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
+             : Terminal(p, s, c, r, l, mac, AC, phy, tr) {};
   ~AccessPoint();             
 
   /////////////////////////////////////////////////////////////
