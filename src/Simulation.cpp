@@ -369,6 +369,7 @@ void Simulation::init_terminals(){
 
 	accCat AP_AC = legacy;
 
+	// Loop for creation of APs
 	for (int i = 0; i < sim_par.get_NumberAPs(); i++) {
 		AccessPoint* ap = new AccessPoint(sim_par.get_APPosition(i), &main_sch, ch,
 				&randgent, &log, mac, AP_AC, phy, tr_time);

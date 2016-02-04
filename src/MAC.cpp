@@ -207,7 +207,7 @@ void MAC::phyCCA_busy() {
 	// stop countdown and cancel transmission
 	timestamp time_diff = time_to_send - ptr2sch->now();
 	if (time_diff < timestamp(backoff_counter) * aSlotTime) {
-		backoff_counter = time_diff / aSlotTime;
+		backoff_counter = time_diff / aSlotTime; // Update backoff counter
 	}
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
@@ -397,7 +397,7 @@ void MAC_private::end_nav() {
 // MAC::phyRxEndInd
 //
 // Check if packet is for this station or not.
-// If not, receive_bc (receive for other station).
+// If not, receive_bc (receive broadcast).
 // If so, receive_this (receive for this station).
 ////////////////////////////////////////////////////////////////////////////////
 void MAC::phyRxEndInd(MPDU p) {

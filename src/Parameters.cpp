@@ -302,31 +302,51 @@ bool Parameters::assign (string s1,string s2) {
     if (!UplinkFactor.read_vec(s2,bind2nd(less<double>(),0))) return false;
 
   } else if (!s1.compare("UseRxMode")){
-    which_param = &UseRxMode;
-    if (!UseRxMode.read_vec(s2)) return false;
+	  which_param = &UseRxMode;
+	  if (!UseRxMode.read_vec(s2)) return false;
 
   } else if (!s1.compare("ppAC_BK")) {
 	  which_param = &ppAC_BK;
 	  if (!ppAC_BK.read_vec(s2)) return false;
 
   } else if (!s1.compare("ppAC_BE")) {
-  	  which_param = &ppAC_BE;
-  	  if (!ppAC_BE.read_vec(s2)) return false;
+	  which_param = &ppAC_BE;
+	  if (!ppAC_BE.read_vec(s2)) return false;
 
   } else if (!s1.compare("ppAC_VI")) {
-  	  which_param = &ppAC_VI;
-  	  if (!ppAC_VI.read_vec(s2)) return false;
+	  which_param = &ppAC_VI;
+	  if (!ppAC_VI.read_vec(s2)) return false;
 
   } else if (!s1.compare("ppAC_VO")) {
-  	  which_param = &ppAC_VO;
-  	  if (!ppAC_VO.read_vec(s2)) return false;
+	  which_param = &ppAC_VO;
+	  if (!ppAC_VO.read_vec(s2)) return false;
 
   } else if (!s1.compare("ppLegacy")) {
-  	  which_param = &ppLegacy;
-  	  if (!ppLegacy.read_vec(s2)) return false;
+	  which_param = &ppLegacy;
+	  if (!ppLegacy.read_vec(s2)) return false;
+
+  } else if (!s1.compare("apAC_BK")) {
+	  which_param = &apAC_BK;
+	  if (!apAC_BK.read_vec(s2)) return false;
+
+  } else if (!s1.compare("apAC_BE")) {
+	  which_param = &apAC_BE;
+	  if (!apAC_BE.read_vec(s2)) return false;
+
+  } else if (!s1.compare("apAC_VI")) {
+	  which_param = &apAC_VI;
+	  if (!apAC_VI.read_vec(s2)) return false;
+
+  } else if (!s1.compare("apAC_VO")) {
+	  which_param = &apAC_VO;
+	  if (!apAC_VO.read_vec(s2)) return false;
+
+  } else if (!s1.compare("apLegacy")) {
+	  which_param = &apLegacy;
+	  if (!apLegacy.read_vec(s2)) return false;
 
   } else {
-    return false;
+	  return false;
   }
 
   if (which_param && which_param->size() > 1)
@@ -392,12 +412,18 @@ void Parameters::default_config () {
   FragmentationThresh.init("fragmentation threshold",2312);
   QueueSize.init("queue size",100);
 
-  // IEEE802.11n EDCA parameters
+  // IEEE802.11e EDCA parameters
   ppAC_BK.init("proportion of AC_BKs",0);
   ppAC_BE.init("proportion of AC_BEs",0);
   ppAC_VI.init("proportion of AC_VIs",0);
   ppAC_VO.init("proportion of AC_VOs",0);
-  ppLegacy.init("proportion of legacies",NumberStas.current());
+  ppLegacy.init("proportion of legacies",1);
+
+  apAC_BK.init("proportion of AC_BKs for APs",0);
+  apAC_BE.init("proportion of AC_BEs for APs",0);
+  apAC_VI.init("proportion of AC_VIs for APs",0);
+  apAC_VO.init("proportion of AC_VOs for APs",0);
+  apLegacy.init("proportion of legacies for APs",1);
 
 }
 

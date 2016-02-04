@@ -53,11 +53,18 @@ Radius = 10 % cell radius in meters
 % If the sum of proportions is bigger than 1, an exception is thrown and the simulation stops.
 
 ppAC_BK = 0
-ppAC_BE = .5
-ppAC_VI = .5
+ppAC_BE = 0
+ppAC_VI = 0
 ppAC_VO = 0
-ppLegacy = 0
+ppLegacy = 1
 
+% For the Access Points, the proportion of connections belonging to each AC must be specified.
+
+apAC_BK = 0
+apAC_BE = .5
+apAC_VI = 0
+apAC_VO = .5
+apLegacy = 0
 
 %%%%%%%%%%%%%%%%%%%%%
 % Channel Parameters
