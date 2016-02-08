@@ -198,9 +198,9 @@ public:
 // an AccessPoint is a Terminal with several possible connections             //
 ////////////////////////////////////////////////////////////////////////////////
 class AccessPoint : public Terminal {
-  map<Terminal*, pair<link_adapt, Traffic*> >connection;
+  map<Terminal*, tuple<link_adapt, Traffic*> >connection;
   // link adaptation units and traffic generators for each connection
-  
+
   void connect(Terminal* t, adapt_struct ad, traffic_struct ts);
   // creates connection to terminal '*t'
   // using link adaptation parameters 'ad' and traffic parameters 'ts'
@@ -218,18 +218,18 @@ public:
   transmission_mode get_current_mode(Terminal* t, unsigned pl);
   double get_power(Terminal* t, unsigned pl);
   
-  void la_failed(Terminal* t) {(connection[t].first).failed();}
+  void la_failed(Terminal* t) {(get<0>(connection[t])).failed();}
   // transmission failed, adapt link
   
-  void la_rts_failed(Terminal* t) {(connection[t].first).rts_failed();}
+  void la_rts_failed(Terminal* t) {(get<0>(connection[t])).rts_failed();}
   // RTS transmission failed, adapt link
   
   void la_success(Terminal* t,  bool lastfrag) {
-                                       (connection[t].first).success(lastfrag);}
+                                       (get<0>(connection[t])).success(lastfrag);}
   // transmission succeeded, adapt link
   
   void la_rx_success(Terminal* t, transmission_mode rx_mode) {
-                                     (connection[t].first).rx_success(rx_mode);}
+                                     (get<0>(connection[t])).rx_success(rx_mode);}
   // reception succeeded, adapt link
 
   string str() const;

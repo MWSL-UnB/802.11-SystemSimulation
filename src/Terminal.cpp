@@ -319,9 +319,9 @@ string MobileStation::str() const {
 ////////////////////////////////////////////////////////////////////////////////
 AccessPoint::~AccessPoint() {
   for (
-  map<Terminal*, pair<link_adapt, Traffic*> >::iterator it = connection.begin();
+  map<Terminal*, tuple<link_adapt, Traffic*> >::iterator it = connection.begin();
   it != connection.end(); ++it) {
-    delete (it->second).second;
+    delete get<1>(it->second);
   }
 }
 
@@ -343,11 +343,11 @@ void AccessPoint::connect(Terminal* t, adapt_struct ad, traffic_struct ts) {
 ////////////////////////////////////////////////////////////////////////////////
 string AccessPoint::get_connections() const {
 
-  map<Terminal*, pair<link_adapt, Traffic*> >::const_iterator it = 
+  map<Terminal*, tuple<link_adapt, Traffic*> >::const_iterator it =
                                                              connection.begin();
   string s = (it++->first)->str();
 
-  map<Terminal*, pair<link_adapt, Traffic*> >::const_iterator it_aux =
+  map<Terminal*, tuple<link_adapt, Traffic*> >::const_iterator it_aux =
                                                                connection.end();
   it_aux--;
                                                                  
@@ -365,24 +365,24 @@ string AccessPoint::get_connections() const {
 // AccessPoint::get_current_mode                                              //
 ////////////////////////////////////////////////////////////////////////////////
 transmission_mode AccessPoint::get_current_mode(Terminal* t,unsigned pl) {
-  map<Terminal*, pair<link_adapt, Traffic*> >::iterator it = connection.find(t);
+  map<Terminal*, tuple<link_adapt, Traffic*> >::iterator it = connection.find(t);
   if (it == connection.end())
     throw(my_exception(GENERAL,
                        "unknown terminal in AccessPoint::get_current_mode"));
                        
-  return ((it->second).first).get_current_mode(pl);
+  return (get<0>(it->second)).get_current_mode(pl);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // AccessPoint::get_power                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 double AccessPoint::get_power(Terminal* t, unsigned pl) {
-  map<Terminal*, pair<link_adapt, Traffic*> >::iterator it = connection.find(t);
+  map<Terminal*, tuple<link_adapt, Traffic*> >::iterator it = connection.find(t);
   if (it == connection.end())
     throw(my_exception(GENERAL,
                        "unknown terminal in AccessPoint::get_current_mode"));
                        
-  return ((it->second).first).get_power(pl);
+  return (get<0>(it->second)).get_power(pl);
 
 }
 
