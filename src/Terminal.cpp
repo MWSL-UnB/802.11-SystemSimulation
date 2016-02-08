@@ -56,7 +56,7 @@ Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
   id = nterm++;
   
   myphy = new PHY(this, p, c, r, s, l, phy);
-  // PLACE WHERE MAC STRUCT IS USED
+  // Place where MAC struct is used
   mymac = new MAC(this, s, r, l, mac, AC);
 
   myphy->connect(mymac);
@@ -240,11 +240,11 @@ void Terminal::macUnitdataReq(MSDU p) {
 //                                                                            //
 // establishes connection between two terminals through wireless channel      //
 ////////////////////////////////////////////////////////////////////////////////
-void connect_two (Terminal* t1, Terminal* t2, Channel* ch, adapt_struct ad,
+void connect_two (Terminal* t1,  accCat AC1, Terminal* t2, accCat AC2, Channel* ch, adapt_struct ad,
                   traffic_struct tr1to2, traffic_struct tr2to1) {
 
-  t1->connect(t2, ad, tr1to2);
-  t2->connect(t1, ad, tr2to1);
+  t1->connect(t2, ad, tr1to2, AC1);
+  t2->connect(t1, ad, tr2to1, AC2);
 
   // add a new link to the channel
   ch->new_link(t1->myphy,t2->myphy);
@@ -276,7 +276,7 @@ MobileStation::~MobileStation () {
 //                                                                            //
 // creates connection to another terminal                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void MobileStation::connect(Terminal* t, adapt_struct ad, traffic_struct ts) {
+void MobileStation::connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC) {
   if (connected) {
     throw(my_exception("second connection attempted to a Mobile Station"));
   } 
@@ -319,7 +319,7 @@ string MobileStation::str() const {
 ////////////////////////////////////////////////////////////////////////////////
 AccessPoint::~AccessPoint() {
   for (
-  map<Terminal*, tuple<link_adapt, Traffic*> >::iterator it = connection.begin();
+  map<Terminal*, tuple<link_adapt, Traffic*, accCat> >::iterator it = connection.begin();
   it != connection.end(); ++it) {
     delete get<1>(it->second);
   }
@@ -330,10 +330,10 @@ AccessPoint::~AccessPoint() {
 //                                                                            //
 // creates connection to another terminal                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void AccessPoint::connect(Terminal* t, adapt_struct ad, traffic_struct ts) {
+void AccessPoint::connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC) {
 
   Traffic* tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
-  connection[t] = make_pair(link_adapt(this,t,ad, mylog), tr);
+  connection[t] = make_tuple(link_adapt(this,t,ad, mylog), tr, AC);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -343,11 +343,11 @@ void AccessPoint::connect(Terminal* t, adapt_struct ad, traffic_struct ts) {
 ////////////////////////////////////////////////////////////////////////////////
 string AccessPoint::get_connections() const {
 
-  map<Terminal*, tuple<link_adapt, Traffic*> >::const_iterator it =
+  map<Terminal*, tuple<link_adapt, Traffic*,accCat> >::const_iterator it =
                                                              connection.begin();
   string s = (it++->first)->str();
 
-  map<Terminal*, tuple<link_adapt, Traffic*> >::const_iterator it_aux =
+  map<Terminal*, tuple<link_adapt, Traffic*,accCat> >::const_iterator it_aux =
                                                                connection.end();
   it_aux--;
                                                                  
@@ -365,7 +365,7 @@ string AccessPoint::get_connections() const {
 // AccessPoint::get_current_mode                                              //
 ////////////////////////////////////////////////////////////////////////////////
 transmission_mode AccessPoint::get_current_mode(Terminal* t,unsigned pl) {
-  map<Terminal*, tuple<link_adapt, Traffic*> >::iterator it = connection.find(t);
+  map<Terminal*, tuple<link_adapt, Traffic*, accCat> >::iterator it = connection.find(t);
   if (it == connection.end())
     throw(my_exception(GENERAL,
                        "unknown terminal in AccessPoint::get_current_mode"));
@@ -377,7 +377,7 @@ transmission_mode AccessPoint::get_current_mode(Terminal* t,unsigned pl) {
 // AccessPoint::get_power                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 double AccessPoint::get_power(Terminal* t, unsigned pl) {
-  map<Terminal*, tuple<link_adapt, Traffic*> >::iterator it = connection.find(t);
+  map<Terminal*, tuple<link_adapt, Traffic*, accCat> >::iterator it = connection.find(t);
   if (it == connection.end())
     throw(my_exception(GENERAL,
                        "unknown terminal in AccessPoint::get_current_mode"));

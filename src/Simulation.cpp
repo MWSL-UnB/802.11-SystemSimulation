@@ -450,7 +450,7 @@ void Simulation::init_terminals(){
 		}
 
 		// Connect mobile terminal to closest AP
-		connect_two(term_vector[min_index],ms, ch, adapt, tr_dl, tr_ul);
+		connect_two(term_vector[min_index],AP_AC,ms,AC, ch, adapt, tr_dl, tr_ul);
 
 		if (log(log_type::setup))
 			log << *ms << " created at position " << pos << " with distance "

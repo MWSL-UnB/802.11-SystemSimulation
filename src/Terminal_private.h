@@ -55,7 +55,7 @@ protected:
   timestamp  transient_time; // collect results only after transient_time
   
   // pointers to lower layers
-  PHY* myphy; 
+  PHY* myphy;
   MAC* mymac;
 
   Position where; // terminal location
@@ -80,7 +80,7 @@ protected:
 
   ////////////////////////////
   // private member functions
-  virtual void connect(Terminal* t, adapt_struct ad, traffic_struct ts) = 0;
+  virtual void connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC) = 0;
   // creates connection to terminal '*t'
   // using link adaptation parameters 'ad' and traffic parameters 'ts'
 };
