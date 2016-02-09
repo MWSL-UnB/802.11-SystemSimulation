@@ -367,12 +367,10 @@ void Simulation::init_terminals(){
 
 	timestamp tr_time = sim_par.get_TransientTime();
 
-	accCat AP_AC = AC_BK;
-
 	// Loop for creation of APs
-	for (int i = 0; i < sim_par.get_NumberAPs(); i++) {
+	for (unsigned i = 0; i < sim_par.get_NumberAPs(); i++) {
 		AccessPoint* ap = new AccessPoint(sim_par.get_APPosition(i), &main_sch, ch,
-				&randgent, &log, mac, AP_AC, phy, tr_time);
+				&randgent, &log, mac, phy, tr_time);
 		term_vector.push_back(ap);
 
 		if (log(log_type::setup))
@@ -383,6 +381,7 @@ void Simulation::init_terminals(){
 
 	double cell_radius = sim_par.get_Radius();
 
+	accCat AP_AC = AC_BK;
 	accCat AC = AC_BK;
 	unsigned numAC = 0;
 	unsigned numAP_AC = 0;

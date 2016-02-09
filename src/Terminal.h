@@ -54,7 +54,6 @@ public:
            random* r,             // pointer to random number generator
            log_file* l,           // pointer to log file
            mac_struct mac,        // MAC layer parameters
-		   accCat AC,		  // Access category of MAC
            PHY_struct phy,        // physical layer parameters
            timestamp tr
           );
@@ -169,7 +168,16 @@ class MobileStation : public Terminal {
 public:
   MobileStation(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
                 mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
-               : Terminal(p, s, c, r, l, mac, AC, phy, tr) {connected = 0;};
+               : Terminal(p, s, c, r, l, mac, phy, tr) {
+
+	  connected = 0;
+      // Place where MAC struct is used
+      mymac = new MAC(this, s, r, l, mac, AC);
+
+      myphy->connect(mymac);
+      mymac->connect(myphy);
+
+  };
   ~MobileStation();
   
   /////////////////////////////////////////////////////////////
@@ -207,8 +215,14 @@ class AccessPoint : public Terminal {
 
 public:
   AccessPoint(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-              mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
-             : Terminal(p, s, c, r, l, mac, AC, phy, tr) {};
+              mac_struct mac, PHY_struct phy, timestamp tr)
+             : Terminal(p, s, c, r, l, mac, phy, tr) {
+	  // Place where MAC struct is used
+	  mymac = new MAC(this, s, r, l, mac, AC_BK);
+
+	  myphy->connect(mymac);
+	  mymac->connect(myphy);
+  };
   ~AccessPoint();             
 
   /////////////////////////////////////////////////////////////

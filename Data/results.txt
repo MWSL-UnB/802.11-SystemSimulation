@@ -5,15 +5,15 @@ Iteration 1
 
 Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   0   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.8
-   1   (  7; -2)  7.6    13.661      251.42    0.55    1537    1537  0.0000   0.2384   724.6     53.22      3.1
-   2   ( -1;  3)  3.2    14.523      264.43    0.51    1634    1634  0.0000   0.2292   758.0     53.62      3.2
+   0   (  0;  0)  0.0     1.004      538.66    7.97     113     113  0.0000   0.9787   987.4     42.30      1.2
+   1   (  7; -2)  7.6    13.440      271.76    0.56    1512    1512  0.0000   0.1940   735.5     53.32      3.0
+   2   (  3; -8)  8.2    13.493      255.04    0.55    1518    1518  0.0000   0.2581   735.0     53.59      3.0
 
- Total throughput = 28.1834 Mbps
- Average transfer time = 0.257929s
- Average transmission time = 0.000528145s
+ Total throughput = 27.9373 Mbps
+ Average transfer time = 0.355156s
+ Average transmission time = 0.00302632s
  Packet loss rate = 0
- Overflow rate = 0.2338
+ Overflow rate = 0.476941
 
 
 %%%% Final results %%%%
@@ -22,28 +22,28 @@ Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss over
 
 
 Throughput (Mbps)
-mean           =     28.183 
+mean           =     27.937 
 
 Transfer time (ms)
-mean           =    257.929 
+mean           =    355.156 
 
 Standard deviation of transfer time (ms)
-mean           =    117.912 
+mean           =    162.777 
 
 Transmission time (ms)
-mean           =      0.528 
+mean           =      3.026 
 
 Standard deviation of transmission time (ms)
-mean           =      0.280 
+mean           =      2.230 
 
 Packet loss rate
 mean           =      0.000 
 
 Queue overflow rate
-mean           =      0.234 
+mean           =      0.477 
 
 Average queue length
-mean           =    741.312 
+mean           =    819.286 
 
 Average transmission power (mW)
-mean           =      2.383 
+mean           =      2.406 
