@@ -53,7 +53,7 @@ protected:
   random*    randgen; // pointer to random number generator
   log_file*  mylog;   // pointer to log file
   timestamp  transient_time; // collect results only after transient_time
-  
+
   // pointers to lower layers
   PHY* myphy;
   MAC* mymac;

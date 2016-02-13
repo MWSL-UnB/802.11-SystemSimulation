@@ -57,7 +57,7 @@ Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
   
   myphy = new PHY(this, p, c, r, s, l, phy);
 
-  // MACs are created and connected in the ModileStation and AccessPoint constructors
+  // MACs are created and connected in the MobileStation and AccessPoint constructors
 
   n_tx_bytes = 0;
   n_tx_packets = 0;
@@ -262,6 +262,21 @@ ostream& operator<< (ostream& os, const Terminal& t) {
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
+// MobileStation constructor                                                     //
+////////////////////////////////////////////////////////////////////////////////
+MobileStation::MobileStation(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
+                mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
+               : Terminal(p, s, c, r, l, mac, phy, tr) {
+
+	  connected = 0;
+      // Place where MAC struct is used
+      mymac = new MAC(this, s, r, l, mac, AC);
+
+      myphy->connect(mymac);
+      mymac->connect(myphy);
+
+  };
+////////////////////////////////////////////////////////////////////////////////
 // MobileStation destructor                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 MobileStation::~MobileStation () {
@@ -311,6 +326,15 @@ string MobileStation::str() const {
 // class AccessPoint                                                          //
 ////////////////////////////////////////////////////////////////////////////////
 
+AccessPoint::AccessPoint(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
+              mac_struct mac, PHY_struct phy, timestamp tr)
+             : Terminal(p, s, c, r, l, mac, phy, tr) {
+	  // Place where MAC struct is used
+	  mymac = new MAC(this, s, r, l, mac, AC_BK);
+
+	  myphy->connect(mymac);
+	  mymac->connect(myphy);
+  };
 ////////////////////////////////////////////////////////////////////////////////
 // AccessPoint destructor                                                     //
 ////////////////////////////////////////////////////////////////////////////////

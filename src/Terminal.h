@@ -167,17 +167,7 @@ class MobileStation : public Terminal {
   
 public:
   MobileStation(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-                mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
-               : Terminal(p, s, c, r, l, mac, phy, tr) {
-
-	  connected = 0;
-      // Place where MAC struct is used
-      mymac = new MAC(this, s, r, l, mac, AC);
-
-      myphy->connect(mymac);
-      mymac->connect(myphy);
-
-  };
+                  mac_struct mac, accCat AC, PHY_struct phy, timestamp tr);
   ~MobileStation();
   
   /////////////////////////////////////////////////////////////
@@ -215,14 +205,7 @@ class AccessPoint : public Terminal {
 
 public:
   AccessPoint(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-              mac_struct mac, PHY_struct phy, timestamp tr)
-             : Terminal(p, s, c, r, l, mac, phy, tr) {
-	  // Place where MAC struct is used
-	  mymac = new MAC(this, s, r, l, mac, AC_BK);
-
-	  myphy->connect(mymac);
-	  mymac->connect(myphy);
-  };
+                mac_struct mac, PHY_struct phy, timestamp tr);
   ~AccessPoint();             
 
   /////////////////////////////////////////////////////////////
