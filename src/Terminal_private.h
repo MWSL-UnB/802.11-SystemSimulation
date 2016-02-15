@@ -58,6 +58,13 @@ protected:
   PHY* myphy;
   MAC* mymac;
 
+  // Mapping from ACs to MAC and PHY
+  map<accCat,MAC*> myMACmap;
+  map<accCat,PHY*> myPHYmap;
+
+  // Vector containing ACs
+  accCat allACs[5] = {AC_BK, AC_BE, AC_VI, AC_VO, legacy};
+
   Position where; // terminal location
   unsigned id;    // unique identification number
   static unsigned nterm; // total number of instanciated terminals

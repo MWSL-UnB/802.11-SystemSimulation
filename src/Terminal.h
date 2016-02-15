@@ -197,7 +197,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 class AccessPoint : public Terminal {
   map<Terminal*, tuple<link_adapt, Traffic*, accCat> >connection;
-  // link adaptation units and traffic generators for each connection
+  // link adaptation units, traffic generators and AC for each connection
 
   void connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC);
   // creates connection to terminal '*t'

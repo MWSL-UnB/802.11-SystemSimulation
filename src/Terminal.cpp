@@ -54,10 +54,17 @@ Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
   transient_time = transient;
   
   id = nterm++;
-  
-  myphy = new PHY(this, p, c, r, s, l, phy);
 
-  // MACs are created and connected in the MobileStation and AccessPoint constructors
+  // Map MACs and PHYs to ACs
+  for(int k = 0; k < 5 ; k++){
+	  accCat auxAC = allACs[k];
+	  myMACmap[auxAC] = new MAC(this, s, r, l, mac, auxAC);
+	  myPHYmap[auxAC] = new PHY(this, p, c, r, s, l, phy);
+	  mymac = myMACmap[auxAC];
+	  myphy = myPHYmap[auxAC];
+	  mymac->connect(myphy);
+	  myphy->connect(mymac);
+  }
 
   n_tx_bytes = 0;
   n_tx_packets = 0;
@@ -70,8 +77,8 @@ Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
 }
 
 Terminal::~Terminal() {
-  delete myphy;
-  delete mymac;
+	delete myphy;
+	delete mymac;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -265,17 +272,15 @@ ostream& operator<< (ostream& os, const Terminal& t) {
 // MobileStation constructor                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 MobileStation::MobileStation(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-                mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
-               : Terminal(p, s, c, r, l, mac, phy, tr) {
+		mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
+		: Terminal(p, s, c, r, l, mac, phy, tr) {
 
-	  connected = 0;
-      // Place where MAC struct is used
-      mymac = new MAC(this, s, r, l, mac, AC);
+	connected = 0;
 
-      myphy->connect(mymac);
-      mymac->connect(myphy);
+	mymac = myMACmap[AC];
+	myphy = myPHYmap[AC];
 
-  };
+};
 ////////////////////////////////////////////////////////////////////////////////
 // MobileStation destructor                                                   //
 ////////////////////////////////////////////////////////////////////////////////
@@ -295,7 +300,7 @@ void MobileStation::connect(Terminal* t, adapt_struct ad, traffic_struct ts, acc
 
   connected = t;
 
-  tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
+   tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
   la = link_adapt(this, t, ad, mylog);
   
 }
@@ -327,14 +332,13 @@ string MobileStation::str() const {
 ////////////////////////////////////////////////////////////////////////////////
 
 AccessPoint::AccessPoint(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-              mac_struct mac, PHY_struct phy, timestamp tr)
-             : Terminal(p, s, c, r, l, mac, phy, tr) {
-	  // Place where MAC struct is used
-	  mymac = new MAC(this, s, r, l, mac, AC_BK);
+		mac_struct mac, PHY_struct phy, timestamp tr)
+		: Terminal(p, s, c, r, l, mac, phy, tr) {
 
-	  myphy->connect(mymac);
-	  mymac->connect(myphy);
-  };
+	mymac = myMACmap[AC_BK];
+	myphy = myPHYmap[AC_BK];
+
+};
 ////////////////////////////////////////////////////////////////////////////////
 // AccessPoint destructor                                                     //
 ////////////////////////////////////////////////////////////////////////////////
