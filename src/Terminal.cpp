@@ -77,6 +77,11 @@ Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
 }
 
 Terminal::~Terminal() {
+	for(int k = 0; k < 5 ; k++){
+		accCat auxAC = allACs[k];
+		map<accCat, PHY*>::const_iterator it = myPHYmap.find(auxAC);
+		delete it->second;
+	}
 	delete myphy;
 	delete mymac;
 }
@@ -87,7 +92,16 @@ Terminal::~Terminal() {
 // returns average transmission power in dBm                                  //
 ////////////////////////////////////////////////////////////////////////////////
 double Terminal::get_average_power() const {
-  return myphy->get_energy() / double(ptr2sch->now());
+
+	double energy = 0;
+
+	for(int k = 0; k < 5 ; k++){
+		accCat auxAC = allACs[k];
+		map<accCat, PHY*>::const_iterator it = myPHYmap.find(auxAC);
+		energy = energy + (it->second)->get_energy();
+	}
+
+	return energy / double(ptr2sch->now());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
