@@ -128,7 +128,15 @@ unsigned long Terminal::get_n_packets() const {
 // returns number of attempted MPDU (fragments) transmissions                 //
 ////////////////////////////////////////////////////////////////////////////////
 unsigned long Terminal::get_n_packets_att() const {
-  return mymac->get_n_packets_att();
+	unsigned long att = 0;
+
+	for(int k = 0; k < 5 ; k++){
+		accCat auxAC = allACs[k];
+		map<accCat, MAC*>::const_iterator it = myMACmap.find(auxAC);
+		att = att + (it->second)->get_n_packets_att();
+	}
+
+	return att;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -203,7 +211,16 @@ double Terminal::get_transmission_delay_std() const{
 // returns average transmission rate of PHY in Mbps                           //
 ////////////////////////////////////////////////////////////////////////////////
 double Terminal::get_tx_data_rate() const {
-  return mymac->get_tx_data_rate();
+
+	double auxTxDR = 0;
+
+	for(int k = 0; k < 5 ; k++){
+		accCat auxAC = allACs[k];
+		map<accCat, MAC*>::const_iterator it = myMACmap.find(auxAC);
+		auxTxDR = auxTxDR + (it->second)->get_tx_data_rate();
+	}
+
+	return auxTxDR;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

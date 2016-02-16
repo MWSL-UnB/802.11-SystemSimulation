@@ -80,7 +80,8 @@ public:
   unsigned long get_n_packets_att() const {return n_att_frags;}
   // returns number of attenpted data fragment transmissions
   
-  double get_tx_data_rate() const  {return (tx_data_rate/n_att_frags);}
+  double get_tx_data_rate() const  {if(n_att_frags > 0) return (tx_data_rate/n_att_frags);
+  	  	  	  	  	  	  	  	  	else return 0.0;}
   // returns average transmission data rate in Mbps
  
   void phyRxEndInd(MPDU p);
