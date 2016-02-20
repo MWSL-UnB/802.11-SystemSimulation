@@ -1,7 +1,7 @@
 
 
 Iteration 1
-    seed = 7 
+    
 
 Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
@@ -18,61 +18,34 @@ Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss over
  Overflow rate = 0.690591
 
 
-Iteration 2
-    seed = 8 
-
-Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
-        m        m      Mbps         ms      ms                                                 Mbps        mW
-   5   (  0;  0)  0.0     0.524      563.15   15.51      59      59  0.0000   0.9949  1000.0     18.99      1.5
-   6   ( -1;  5)  5.0     6.142      427.46    1.26     691     691  0.0000   0.6533   872.1     50.44      1.5
-   7   ( 10; -2)  9.9     4.347      514.01    1.81     489     489  0.0000   0.7719   902.3     46.13      1.3
-   8   (  1; -3)  3.5     9.698      397.00    0.79    1091    1091  0.0000   0.4572   857.2     53.07      2.2
-   9   ( -1;  4)  3.7     8.747      373.09    0.87     984     984  0.0000   0.5237   855.9     52.99      2.0
-
- Total throughput = 29.4577 Mbps
- Average transfer time = 0.454941s
- Average transmission time = 0.0040486s
- Packet loss rate = 0
- Overflow rate = 0.680199
-
-
 %%%% Final results %%%%
 
 
 
 
 Throughput (Mbps)
-mean           =     29.431 
-conf. interval =      0.480 
+mean           =     29.404 
 
 Transfer time (ms)
-mean           =    451.026 
-conf. interval =     70.348 
+mean           =    447.111 
 
 Standard deviation of transfer time (ms)
-mean           =    191.012 
-conf. interval =     13.261 
+mean           =    191.750 
 
 Transmission time (ms)
-mean           =      4.046 
-conf. interval =      0.053 
+mean           =      4.043 
 
 Standard deviation of transmission time (ms)
-mean           =      5.052 
-conf. interval =      0.018 
+mean           =      5.053 
 
 Packet loss rate
 mean           =      0.000 
-conf. interval =      0.000 
 
 Queue overflow rate
-mean           =      0.685 
-conf. interval =      0.093 
+mean           =      0.691 
 
 Average queue length
-mean           =    895.811 
-conf. interval =     30.074 
+mean           =    894.138 
 
 Average transmission power (mW)
 mean           =      1.713 
-conf. interval =      0.000 

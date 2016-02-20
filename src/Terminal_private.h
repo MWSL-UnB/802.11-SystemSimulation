@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <string>
 #include <map>
+#include <tuple>
 #include <vector>
 #include <utility>
 
@@ -79,7 +80,7 @@ protected:
 
   ////////////////////////////
   // private member functions
-  virtual void connect(Terminal* t, adapt_struct ad, traffic_struct ts) = 0;
+  virtual void connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC) = 0;
   // creates connection to terminal '*t'
   // using link adaptation parameters 'ad' and traffic parameters 'ts'
 };

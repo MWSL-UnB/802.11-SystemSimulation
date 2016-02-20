@@ -382,42 +382,42 @@ void Simulation::init_terminals(){
 
 	double cell_radius = sim_par.get_Radius();
 
-	accCat AC = AC_BK;
+	accCat MS_AC = AC_BK;
 	unsigned numAC = 0;
 
 	for (unsigned i = 0; i < sim_par.get_NumberStas(); i++) {
-		switch(AC){
+		switch(MS_AC){
 		case AC_BK:
 			if(numAC != round(sim_par.get_ppAC_BK()*sim_par.get_NumberStas())){
-				AC = AC_BK;
+				MS_AC = AC_BK;
 				numAC++;
 				break;
 			}
 			numAC = 0;
 		case AC_BE:
 			if(numAC != round(sim_par.get_ppAC_BE()*sim_par.get_NumberStas())){
-				AC = AC_BE;
+				MS_AC = AC_BE;
 				numAC++;
 				break;
 			}
 			numAC = 0;
 		case AC_VI:
 			if(numAC != round(sim_par.get_ppAC_VI()*sim_par.get_NumberStas())){
-				AC = AC_VI;
+				MS_AC = AC_VI;
 				numAC++;
 				break;
 			}
 			numAC = 0;
 		case AC_VO:
 			if(numAC != round(sim_par.get_ppAC_VO()*sim_par.get_NumberStas())){
-				AC = AC_VO;
+				MS_AC = AC_VO;
 				numAC++;
 				break;
 			}
 			numAC = 0;
 		case legacy:
 			if(numAC != round(sim_par.get_ppLegacy()*sim_par.get_NumberStas())){
-				AC = legacy;
+				MS_AC = legacy;
 				numAC++;
 				break;
 			}
@@ -435,7 +435,7 @@ void Simulation::init_terminals(){
 		}
 
 		MobileStation* ms = new MobileStation(pos, &main_sch, ch, &randgent,
-				&log, mac, AC, phy, tr_time);
+				&log, mac, MS_AC, phy, tr_time);
 		term_vector.push_back(ms);
 
 		double min_dist = HUGE_VAL;
@@ -449,7 +449,7 @@ void Simulation::init_terminals(){
 		}
 
 		// Connect mobile terminal to closest AP
-		connect_two(term_vector[min_index],ms, ch, adapt, tr_dl, tr_ul);
+		connect_two(term_vector[min_index], AP_AC, ms, MS_AC, ch, adapt, tr_dl, tr_ul);
 
 		if (log(log_type::setup))
 			log << *ms << " created at position " << pos << " with distance "
