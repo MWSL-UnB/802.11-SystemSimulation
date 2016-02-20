@@ -43,7 +43,7 @@ unsigned Terminal_private::nterm = 0;
 // Terminal constructor                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-                   mac_struct mac, PHY_struct phy, timestamp transient) {
+                   mac_struct mac, accCat AC, PHY_struct phy, timestamp transient) {
 
   where = p;
   
@@ -54,17 +54,13 @@ Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
   transient_time = transient;
   
   id = nterm++;
+  
+  myphy = new PHY(this, p, c, r, s, l, phy);
+  // PLACE WHERE MAC STRUCT IS USED
+  mymac = new MAC(this, s, r, l, mac, AC);
 
-  // Map MACs and PHYs to ACs
-  for(int k = 0; k < 5 ; k++){
-	  accCat auxAC = allACs[k];
-	  myMACmap[auxAC] = new MAC(this, s, r, l, mac, auxAC);
-	  myPHYmap[auxAC] = new PHY(this, p, c, r, s, l, phy);
-	  mymac = myMACmap[auxAC];
-	  myphy = myPHYmap[auxAC];
-	  mymac->connect(myphy);
-	  myphy->connect(mymac);
-  }
+  myphy->connect(mymac);
+  mymac->connect(myphy);
 
   n_tx_bytes = 0;
   n_tx_packets = 0;
@@ -77,13 +73,8 @@ Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
 }
 
 Terminal::~Terminal() {
-	for(int k = 0; k < 5 ; k++){
-		accCat auxAC = allACs[k];
-		map<accCat, PHY*>::const_iterator it = myPHYmap.find(auxAC);
-		delete it->second;
-	}
-	delete myphy;
-	delete mymac;
+  delete myphy;
+  delete mymac;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -92,16 +83,7 @@ Terminal::~Terminal() {
 // returns average transmission power in dBm                                  //
 ////////////////////////////////////////////////////////////////////////////////
 double Terminal::get_average_power() const {
-
-	double energy = 0;
-
-	for(int k = 0; k < 5 ; k++){
-		accCat auxAC = allACs[k];
-		map<accCat, PHY*>::const_iterator it = myPHYmap.find(auxAC);
-		energy = energy + (it->second)->get_energy();
-	}
-
-	return energy / double(ptr2sch->now());
+  return myphy->get_energy() / double(ptr2sch->now());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -128,15 +110,7 @@ unsigned long Terminal::get_n_packets() const {
 // returns number of attempted MPDU (fragments) transmissions                 //
 ////////////////////////////////////////////////////////////////////////////////
 unsigned long Terminal::get_n_packets_att() const {
-	unsigned long att = 0;
-
-	for(int k = 0; k < 5 ; k++){
-		accCat auxAC = allACs[k];
-		map<accCat, MAC*>::const_iterator it = myMACmap.find(auxAC);
-		att = att + (it->second)->get_n_packets_att();
-	}
-
-	return att;
+  return mymac->get_n_packets_att();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -211,16 +185,7 @@ double Terminal::get_transmission_delay_std() const{
 // returns average transmission rate of PHY in Mbps                           //
 ////////////////////////////////////////////////////////////////////////////////
 double Terminal::get_tx_data_rate() const {
-
-	double auxTxDR = 0;
-
-	for(int k = 0; k < 5 ; k++){
-		accCat auxAC = allACs[k];
-		map<accCat, MAC*>::const_iterator it = myMACmap.find(auxAC);
-		auxTxDR = auxTxDR + (it->second)->get_tx_data_rate();
-	}
-
-	return auxTxDR;
+  return mymac->get_tx_data_rate();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -251,6 +216,19 @@ void Terminal::macUnitdataStatusInd(MSDU p, timestamp ack_delay) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// void Terminal::macUnitdataReq(MSDU p);                                     //
+//                                                                            //
+// new packet was sent to MAC queue, update queue size                        //
+////////////////////////////////////////////////////////////////////////////////
+void Terminal::macUnitdataReq(MSDU p) {
+  unsigned long l = mymac->macUnitdataReq(p);
+  
+  if (ptr2sch->now() < transient_time) return;
+  
+  ++n_att_packets;
+  queue_length += l;
+}
+////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -262,11 +240,11 @@ void Terminal::macUnitdataStatusInd(MSDU p, timestamp ack_delay) {
 //                                                                            //
 // establishes connection between two terminals through wireless channel      //
 ////////////////////////////////////////////////////////////////////////////////
-void connect_two (Terminal* t1,  accCat AC1, Terminal* t2, accCat AC2, Channel* ch, adapt_struct ad,
+void connect_two (Terminal* t1, Terminal* t2, Channel* ch, adapt_struct ad,
                   traffic_struct tr1to2, traffic_struct tr2to1) {
 
-  t1->connect(t2, ad, tr1to2, AC1);
-  t2->connect(t1, ad, tr2to1, AC2);
+  t1->connect(t2, ad, tr1to2);
+  t2->connect(t1, ad, tr2to1);
 
   // add a new link to the channel
   ch->new_link(t1->myphy,t2->myphy);
@@ -287,20 +265,6 @@ ostream& operator<< (ostream& os, const Terminal& t) {
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
-// MobileStation constructor                                                     //
-////////////////////////////////////////////////////////////////////////////////
-MobileStation::MobileStation(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-		mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
-		: Terminal(p, s, c, r, l, mac, phy, tr) {
-
-	connected = 0;
-	myAC = AC;
-
-	mymac = myMACmap[myAC];
-	myphy = myPHYmap[myAC];
-
-};
-////////////////////////////////////////////////////////////////////////////////
 // MobileStation destructor                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 MobileStation::~MobileStation () {
@@ -312,31 +276,16 @@ MobileStation::~MobileStation () {
 //                                                                            //
 // creates connection to another terminal                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void MobileStation::connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC) {
-	if (connected) {
-		throw(my_exception("second connection attempted to a Mobile Station"));
-	}
+void MobileStation::connect(Terminal* t, adapt_struct ad, traffic_struct ts) {
+  if (connected) {
+    throw(my_exception("second connection attempted to a Mobile Station"));
+  } 
 
-	connected = t;
+  connected = t;
 
-	tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
-	la = link_adapt(this, t, ad, mylog);
-
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// void MobileStation::macUnitdataReq(MSDU p);                                     //
-//                                                                            //
-// new packet was sent to MAC queue, update queue size                        //
-////////////////////////////////////////////////////////////////////////////////
-void MobileStation::macUnitdataReq(MSDU p) {
-
-	unsigned long l = mymac->macUnitdataReq(p);
-
-	if (ptr2sch->now() < transient_time) return;
-
-	++n_att_packets;
-	queue_length += l;
+  tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
+  la = link_adapt(this, t, ad, mylog);
+  
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -365,22 +314,14 @@ string MobileStation::str() const {
 // class AccessPoint                                                          //
 ////////////////////////////////////////////////////////////////////////////////
 
-AccessPoint::AccessPoint(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-		mac_struct mac, PHY_struct phy, timestamp tr)
-		: Terminal(p, s, c, r, l, mac, phy, tr) {
-
-	mymac = myMACmap[AC_BK];
-	myphy = myPHYmap[AC_BK];
-
-};
 ////////////////////////////////////////////////////////////////////////////////
 // AccessPoint destructor                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 AccessPoint::~AccessPoint() {
   for (
-  map<Terminal*, tuple<link_adapt, Traffic*, accCat> >::iterator it = connection.begin();
+  map<Terminal*, pair<link_adapt, Traffic*> >::iterator it = connection.begin();
   it != connection.end(); ++it) {
-    delete get<1>(it->second);
+    delete (it->second).second;
   }
 }
 
@@ -389,34 +330,10 @@ AccessPoint::~AccessPoint() {
 //                                                                            //
 // creates connection to another terminal                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void AccessPoint::connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC) {
+void AccessPoint::connect(Terminal* t, adapt_struct ad, traffic_struct ts) {
 
-	Traffic* tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
-	connection[t] = make_tuple(link_adapt(this,t,ad, mylog), tr, AC);
-
-	mymac = myMACmap[AC];
-	myphy = myPHYmap[AC];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// void AccessPoint::macUnitdataReq(MSDU p);                                     //
-//                                                                            //
-// new packet was sent to MAC queue, update queue size                        //
-////////////////////////////////////////////////////////////////////////////////
-void AccessPoint::macUnitdataReq(MSDU p) {
-
-	Terminal* to = p.get_target();
-	accCat auxAC = get<2>(connection[to]);
-
-	mymac = myMACmap[auxAC];
-	myphy = myPHYmap[auxAC];
-
-	unsigned long l = mymac->macUnitdataReq(p);
-
-	if (ptr2sch->now() < transient_time) return;
-
-	++n_att_packets;
-	queue_length += l;
+  Traffic* tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
+  connection[t] = make_pair(link_adapt(this,t,ad, mylog), tr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -426,11 +343,11 @@ void AccessPoint::macUnitdataReq(MSDU p) {
 ////////////////////////////////////////////////////////////////////////////////
 string AccessPoint::get_connections() const {
 
-  map<Terminal*, tuple<link_adapt, Traffic*,accCat> >::const_iterator it =
+  map<Terminal*, pair<link_adapt, Traffic*> >::const_iterator it = 
                                                              connection.begin();
   string s = (it++->first)->str();
 
-  map<Terminal*, tuple<link_adapt, Traffic*,accCat> >::const_iterator it_aux =
+  map<Terminal*, pair<link_adapt, Traffic*> >::const_iterator it_aux =
                                                                connection.end();
   it_aux--;
                                                                  
@@ -448,24 +365,24 @@ string AccessPoint::get_connections() const {
 // AccessPoint::get_current_mode                                              //
 ////////////////////////////////////////////////////////////////////////////////
 transmission_mode AccessPoint::get_current_mode(Terminal* t,unsigned pl) {
-  map<Terminal*, tuple<link_adapt, Traffic*, accCat> >::iterator it = connection.find(t);
+  map<Terminal*, pair<link_adapt, Traffic*> >::iterator it = connection.find(t);
   if (it == connection.end())
     throw(my_exception(GENERAL,
                        "unknown terminal in AccessPoint::get_current_mode"));
                        
-  return (get<0>(it->second)).get_current_mode(pl);
+  return ((it->second).first).get_current_mode(pl);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // AccessPoint::get_power                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 double AccessPoint::get_power(Terminal* t, unsigned pl) {
-  map<Terminal*, tuple<link_adapt, Traffic*, accCat> >::iterator it = connection.find(t);
+  map<Terminal*, pair<link_adapt, Traffic*> >::iterator it = connection.find(t);
   if (it == connection.end())
     throw(my_exception(GENERAL,
                        "unknown terminal in AccessPoint::get_current_mode"));
                        
-  return (get<0>(it->second)).get_power(pl);
+  return ((it->second).first).get_power(pl);
 
 }
 

@@ -26,7 +26,6 @@
 #include <stdio.h>
 #include <string>
 #include <map>
-#include <tuple>
 #include <vector>
 #include <utility>
 
@@ -53,17 +52,10 @@ protected:
   random*    randgen; // pointer to random number generator
   log_file*  mylog;   // pointer to log file
   timestamp  transient_time; // collect results only after transient_time
-
+  
   // pointers to lower layers
-  PHY* myphy;
+  PHY* myphy; 
   MAC* mymac;
-
-  // Mapping from ACs to MAC and PHY
-  map<accCat,MAC*> myMACmap;
-  map<accCat,PHY*> myPHYmap;
-
-  // Vector containing ACs
-  accCat const allACs[5] = {AC_BK, AC_BE, AC_VI, AC_VO, legacy};
 
   Position where; // terminal location
   unsigned id;    // unique identification number
@@ -87,7 +79,7 @@ protected:
 
   ////////////////////////////
   // private member functions
-  virtual void connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC) = 0;
+  virtual void connect(Terminal* t, adapt_struct ad, traffic_struct ts) = 0;
   // creates connection to terminal '*t'
   // using link adaptation parameters 'ad' and traffic parameters 'ts'
 };

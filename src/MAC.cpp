@@ -207,7 +207,7 @@ void MAC::phyCCA_busy() {
 	// stop countdown and cancel transmission
 	timestamp time_diff = time_to_send - ptr2sch->now();
 	if (time_diff < timestamp(backoff_counter) * aSlotTime) {
-		backoff_counter = time_diff / aSlotTime; // Update backoff counter
+		backoff_counter = time_diff / aSlotTime;
 	}
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term

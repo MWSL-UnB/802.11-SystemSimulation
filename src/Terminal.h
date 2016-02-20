@@ -54,13 +54,14 @@ public:
            random* r,             // pointer to random number generator
            log_file* l,           // pointer to log file
            mac_struct mac,        // MAC layer parameters
+		   accCat AC,		  // Access category of MAC
            PHY_struct phy,        // physical layer parameters
            timestamp tr
           );
   ~Terminal();
 
-  friend void connect_two (Terminal* t1, accCat AC1, Terminal* t2, accCat AC2,
-		  	  	  	  	   Channel* ch, adapt_struct ad,
+  friend void connect_two (Terminal* t1, Terminal* t2, Channel* ch,
+                           adapt_struct ad,
                            traffic_struct tr1to2, traffic_struct tr2to1);
   // establishes connection between two terminals through wireless channel '*ch'
   // performs link adaptation using parameters 'ad'
@@ -138,7 +139,7 @@ public:
   //////////////////////////////
 
   
-  virtual void macUnitdataReq(MSDU p) = 0;
+  void macUnitdataReq(MSDU p);
   
   virtual string str() const = 0;
   // returns string with terminal type and identification
@@ -160,15 +161,15 @@ class MobileStation : public Terminal {
   Terminal* connected; // active connection
   link_adapt la;   // link adaptation
   Traffic* tr;      // traffic generator
-  accCat myAC;     // access category of this Mobile Station
   
-  void connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC);
+  void connect(Terminal* t, adapt_struct ad, traffic_struct ts);
   // creates connection to terminal '*t'
   // using link adaptation parameters 'ad' and traffic parameters 'ts'
   
 public:
   MobileStation(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-                  mac_struct mac, accCat AC, PHY_struct phy, timestamp tr);
+                mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
+               : Terminal(p, s, c, r, l, mac, AC, phy, tr) {connected = 0;};
   ~MobileStation();
   
   /////////////////////////////////////////////////////////////
@@ -186,8 +187,6 @@ public:
                                                  return la.rx_success(rx_mode);}
   void la_success(Terminal* t, bool lastfrag) {la.success(lastfrag);}
 
-  void macUnitdataReq(MSDU p);
-
   string str() const;
   /////////////////////////////////////////////////////////////
   
@@ -199,16 +198,17 @@ public:
 // an AccessPoint is a Terminal with several possible connections             //
 ////////////////////////////////////////////////////////////////////////////////
 class AccessPoint : public Terminal {
-  map<Terminal*, tuple<link_adapt, Traffic*, accCat> >connection;
-  // link adaptation units, traffic generators and AC for each connection
-
-  void connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC);
+  map<Terminal*, pair<link_adapt, Traffic*> >connection;
+  // link adaptation units and traffic generators for each connection
+  
+  void connect(Terminal* t, adapt_struct ad, traffic_struct ts);
   // creates connection to terminal '*t'
   // using link adaptation parameters 'ad' and traffic parameters 'ts'
 
 public:
   AccessPoint(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-                mac_struct mac, PHY_struct phy, timestamp tr);
+              mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
+             : Terminal(p, s, c, r, l, mac, AC, phy, tr) {};
   ~AccessPoint();             
 
   /////////////////////////////////////////////////////////////
@@ -218,21 +218,19 @@ public:
   transmission_mode get_current_mode(Terminal* t, unsigned pl);
   double get_power(Terminal* t, unsigned pl);
   
-  void la_failed(Terminal* t) {(get<0>(connection[t])).failed();}
+  void la_failed(Terminal* t) {(connection[t].first).failed();}
   // transmission failed, adapt link
   
-  void la_rts_failed(Terminal* t) {(get<0>(connection[t])).rts_failed();}
+  void la_rts_failed(Terminal* t) {(connection[t].first).rts_failed();}
   // RTS transmission failed, adapt link
   
   void la_success(Terminal* t,  bool lastfrag) {
-                                       (get<0>(connection[t])).success(lastfrag);}
+                                       (connection[t].first).success(lastfrag);}
   // transmission succeeded, adapt link
   
   void la_rx_success(Terminal* t, transmission_mode rx_mode) {
-                                     (get<0>(connection[t])).rx_success(rx_mode);}
+                                     (connection[t].first).rx_success(rx_mode);}
   // reception succeeded, adapt link
-
-  void macUnitdataReq(MSDU p);
 
   string str() const;
   /////////////////////////////////////////////////////////////  

@@ -140,9 +140,8 @@ typedef param_vec_<Position> param_vec_Position;
 //    by calling the 'get_ functions for the desired parameter.               //
 //    'reset_iterations' will return iterator to the initial values.          //
 //  - new simulation parameters may be included by:                           //
-//    1 - declaring a param_vec_ object in the Parameters class (Parameters.h)//
-//    2 - declaring and defining the corresponding 'get_' function (also in   //
-//		  Parameters.h).													  //
+//    1 - declaring a param_vec_ object in the Parameters class.              //
+//    2 - declaring and defining the corresponding 'get_' function.           //
 //    3 - modifying Parameters.cpp to include parameter in functions          //
 //        'assign' and 'default_config'                                       //
 //                                                                            //
@@ -208,18 +207,12 @@ class Parameters {
   param_vec_unsigned FragmentationThresh;
   param_vec_unsigned QueueSize;
 
-  // IEEE 802.11e EDCA parameters
+  // IEEE 802.11n EDCA parameters
   param_vec_double ppAC_BK;
   param_vec_double ppAC_BE;
   param_vec_double ppAC_VI;
   param_vec_double ppAC_VO;
   param_vec_double ppLegacy;
-
-  param_vec_double apAC_BK;
-  param_vec_double apAC_BE;
-  param_vec_double apAC_VI;
-  param_vec_double apAC_VO;
-  param_vec_double apLegacy;
 
 
   bool default_flag; // true if default parameters are stored
@@ -278,11 +271,6 @@ public:
   double get_ppAC_VI() {return ppAC_VI.current();}
   double get_ppAC_VO() {return ppAC_VO.current();}
   double get_ppLegacy() {return ppLegacy.current();}
-  double get_apAC_BK() {return apAC_BK.current();}
-  double get_apAC_BE() {return apAC_BE.current();}
-  double get_apAC_VI() {return apAC_VI.current();}
-  double get_apAC_VO() {return apAC_VO.current();}
-  double get_apLegacy() {return apLegacy.current();}
 
 
   Position get_APPosition(int which_ap);

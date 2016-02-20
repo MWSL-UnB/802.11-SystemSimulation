@@ -353,7 +353,7 @@ void Simulation::init_terminals(){
 			sim_par.get_TargetPER(),sim_par.get_LAMaxSucceedCounter(),
 			sim_par.get_LAFailLimit(), sim_par.get_UseRxMode());
 
-	// PLACE WHERE MAC STRUCT IS CREATED
+	// Place where MAC struct is created
 	mac_struct mac(sim_par.get_RetryLimit(), sim_par.get_RTSThreshold(),
 			sim_par.get_FragmentationThresh(), sim_par.get_QueueSize());
 
@@ -367,10 +367,11 @@ void Simulation::init_terminals(){
 
 	timestamp tr_time = sim_par.get_TransientTime();
 
-	// Loop for creation of APs
-	for (unsigned i = 0; i < sim_par.get_NumberAPs(); i++) {
+	accCat AP_AC = legacy;
+
+	for (int i = 0; i < sim_par.get_NumberAPs(); i++) {
 		AccessPoint* ap = new AccessPoint(sim_par.get_APPosition(i), &main_sch, ch,
-				&randgent, &log, mac, phy, tr_time);
+				&randgent, &log, mac, AP_AC, phy, tr_time);
 		term_vector.push_back(ap);
 
 		if (log(log_type::setup))
@@ -381,10 +382,8 @@ void Simulation::init_terminals(){
 
 	double cell_radius = sim_par.get_Radius();
 
-	accCat AP_AC = AC_BK;
 	accCat AC = AC_BK;
 	unsigned numAC = 0;
-	unsigned numAP_AC = 0;
 
 	for (unsigned i = 0; i < sim_par.get_NumberStas(); i++) {
 		switch(AC){
@@ -449,51 +448,12 @@ void Simulation::init_terminals(){
 			}
 		}
 
-		switch(AP_AC){
-		case AC_BK:
-			if(numAP_AC != round(sim_par.get_apAC_BK()*sim_par.get_NumberStas())){
-				AP_AC = AC_BK;
-				numAP_AC++;
-				break;
-			}
-			numAP_AC = 0;
-		case AC_BE:
-			if(numAP_AC != round(sim_par.get_apAC_BE()*sim_par.get_NumberStas())){
-				AP_AC = AC_BE;
-				numAP_AC++;
-				break;
-			}
-			numAP_AC = 0;
-		case AC_VI:
-			if(numAP_AC != round(sim_par.get_apAC_VI()*sim_par.get_NumberStas())){
-				AP_AC = AC_VI;
-				numAP_AC++;
-				break;
-			}
-			numAP_AC = 0;
-		case AC_VO:
-			if(numAP_AC != round(sim_par.get_apAC_VO()*sim_par.get_NumberStas())){
-				AP_AC = AC_VO;
-				numAP_AC++;
-				break;
-			}
-			numAP_AC = 0;
-		case legacy:
-			if(numAP_AC != round(sim_par.get_apLegacy()*sim_par.get_NumberStas())){
-				AP_AC = legacy;
-				numAP_AC++;
-				break;
-			}
-			numAP_AC = 0;
-		}
-
 		// Connect mobile terminal to closest AP
-		connect_two(term_vector[min_index],AP_AC,ms,AC, ch, adapt, tr_dl, tr_ul);
+		connect_two(term_vector[min_index],ms, ch, adapt, tr_dl, tr_ul);
 
 		if (log(log_type::setup))
 			log << *ms << " created at position " << pos << " with distance "
-			<< min_dist << " m to " << *term_vector[min_index] << ".\nStation AC: "
-			<< AC << ". Access Point Connection AC: " << AP_AC << "." << endl;
+			<< min_dist << " m to " << *term_vector[min_index] << endl;
 	}
 
 
