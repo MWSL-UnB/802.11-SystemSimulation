@@ -63,7 +63,7 @@ protected:
   map<accCat,PHY*> myPHYmap;
 
   // Vector containing ACs
-  accCat allACs[5] = {AC_BK, AC_BE, AC_VI, AC_VO, legacy};
+  accCat const allACs[5] = {AC_BK, AC_BE, AC_VI, AC_VO, legacy};
 
   Position where; // terminal location
   unsigned id;    // unique identification number

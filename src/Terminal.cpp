@@ -251,19 +251,6 @@ void Terminal::macUnitdataStatusInd(MSDU p, timestamp ack_delay) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// void Terminal::macUnitdataReq(MSDU p);                                     //
-//                                                                            //
-// new packet was sent to MAC queue, update queue size                        //
-////////////////////////////////////////////////////////////////////////////////
-void Terminal::macUnitdataReq(MSDU p) {
-  unsigned long l = mymac->macUnitdataReq(p);
-  
-  if (ptr2sch->now() < transient_time) return;
-  
-  ++n_att_packets;
-  queue_length += l;
-}
-////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -307,9 +294,10 @@ MobileStation::MobileStation(Position p, Scheduler* s, Channel* c, random* r, lo
 		: Terminal(p, s, c, r, l, mac, phy, tr) {
 
 	connected = 0;
+	myAC = AC;
 
-	mymac = myMACmap[AC];
-	myphy = myPHYmap[AC];
+	mymac = myMACmap[myAC];
+	myphy = myPHYmap[myAC];
 
 };
 ////////////////////////////////////////////////////////////////////////////////
@@ -325,15 +313,30 @@ MobileStation::~MobileStation () {
 // creates connection to another terminal                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void MobileStation::connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC) {
-  if (connected) {
-    throw(my_exception("second connection attempted to a Mobile Station"));
-  } 
+	if (connected) {
+		throw(my_exception("second connection attempted to a Mobile Station"));
+	}
 
-  connected = t;
+	connected = t;
 
-   tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
-  la = link_adapt(this, t, ad, mylog);
-  
+	tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
+	la = link_adapt(this, t, ad, mylog);
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// void MobileStation::macUnitdataReq(MSDU p);                                     //
+//                                                                            //
+// new packet was sent to MAC queue, update queue size                        //
+////////////////////////////////////////////////////////////////////////////////
+void MobileStation::macUnitdataReq(MSDU p) {
+
+	unsigned long l = mymac->macUnitdataReq(p);
+
+	if (ptr2sch->now() < transient_time) return;
+
+	++n_att_packets;
+	queue_length += l;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -388,8 +391,32 @@ AccessPoint::~AccessPoint() {
 ////////////////////////////////////////////////////////////////////////////////
 void AccessPoint::connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC) {
 
-  Traffic* tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
-  connection[t] = make_tuple(link_adapt(this,t,ad, mylog), tr, AC);
+	Traffic* tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
+	connection[t] = make_tuple(link_adapt(this,t,ad, mylog), tr, AC);
+
+	mymac = myMACmap[AC];
+	myphy = myPHYmap[AC];
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// void AccessPoint::macUnitdataReq(MSDU p);                                     //
+//                                                                            //
+// new packet was sent to MAC queue, update queue size                        //
+////////////////////////////////////////////////////////////////////////////////
+void AccessPoint::macUnitdataReq(MSDU p) {
+
+	Terminal* to = p.get_target();
+	accCat auxAC = get<2>(connection[to]);
+
+	mymac = myMACmap[auxAC];
+	myphy = myPHYmap[auxAC];
+
+	unsigned long l = mymac->macUnitdataReq(p);
+
+	if (ptr2sch->now() < transient_time) return;
+
+	++n_att_packets;
+	queue_length += l;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

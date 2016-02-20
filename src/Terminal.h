@@ -138,7 +138,7 @@ public:
   //////////////////////////////
 
   
-  void macUnitdataReq(MSDU p);
+  virtual void macUnitdataReq(MSDU p) = 0;
   
   virtual string str() const = 0;
   // returns string with terminal type and identification
@@ -160,6 +160,7 @@ class MobileStation : public Terminal {
   Terminal* connected; // active connection
   link_adapt la;   // link adaptation
   Traffic* tr;      // traffic generator
+  accCat myAC;     // access category of this Mobile Station
   
   void connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC);
   // creates connection to terminal '*t'
@@ -184,6 +185,8 @@ public:
   void la_rx_success(Terminal* t, transmission_mode rx_mode) {
                                                  return la.rx_success(rx_mode);}
   void la_success(Terminal* t, bool lastfrag) {la.success(lastfrag);}
+
+  void macUnitdataReq(MSDU p);
 
   string str() const;
   /////////////////////////////////////////////////////////////
@@ -228,6 +231,8 @@ public:
   void la_rx_success(Terminal* t, transmission_mode rx_mode) {
                                      (get<0>(connection[t])).rx_success(rx_mode);}
   // reception succeeded, adapt link
+
+  void macUnitdataReq(MSDU p);
 
   string str() const;
   /////////////////////////////////////////////////////////////  
