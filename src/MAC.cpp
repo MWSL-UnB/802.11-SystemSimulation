@@ -62,9 +62,27 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, accC
 	frag_thresh = mac.frag_thresh;
 	max_queue_size = mac.queue_size;
 
-	ACat = AC;
+	set_AC(AC);
 
-	switch(ACat){
+	NAV = timestamp(0);
+	nfrags = 1;
+	current_frag = 0;
+
+	n_att_frags = 0;
+	tx_data_rate = 0;
+
+	countdown_flag = false;
+
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// MAC_private::set_AC		                                                  //
+////////////////////////////////////////////////////////////////////////////////
+void MAC_private::set_AC(accCat AC) {
+
+	myAC = AC;
+
+	switch(myAC){
 	case AC_BK:
 		aCWmin = 31;
 		aCWmax = 1023;
@@ -101,15 +119,6 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, accC
 	TXOPflag = false;
 	TXOPend = ptr2sch->now();
 	TXOPla_win = success;
-
-	NAV = timestamp(0);
-	nfrags = 1;
-	current_frag = 0;
-
-	n_att_frags = 0;
-	tx_data_rate = 0;
-
-	countdown_flag = false;
 
 }
 
@@ -755,7 +764,7 @@ void MAC_private::start_TXOP() {
 			TXOPend = TXOPend + 1;
 
 			if (logflag) *mylog << "\n >> " << ptr2sch->now() << "sec., " << *term
-					<< ", of Access Category " << ACat << " begins TXOP scheduled to end at "
+					<< ", of Access Category " << myAC << " begins TXOP scheduled to end at "
 					<< TXOPend << "sec." << "\nPackets in queue = " << count << ". TXOP duration = "
 					<< TXOPend - now << " sec." << endl;
 
@@ -787,7 +796,7 @@ void MAC_private::end_TXOP() {
 	TXOPend = timestamp(0);
 
 	if (logflag) *mylog << "\n >> " << ptr2sch->now() << "sec., " << *term
-		<< ", of Access Category " << ACat << " ends TXOP." << endl;
+		<< ", of Access Category " << myAC << " ends TXOP." << endl;
 
 	switch (TXOPla_win) {
 	case success:

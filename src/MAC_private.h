@@ -89,7 +89,7 @@ protected:
   unsigned  max_queue_size;
 
   // EDCA parameters
-  accCat	ACat;
+  accCat	myAC;
   unsigned aCWmin;
   unsigned aCWmax;
   unsigned AIFSN;
@@ -103,6 +103,8 @@ protected:
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts
   double        tx_data_rate; // mean transmitted data rate
+
+  void set_AC(accCat AC);
 
   void ack_timed_out();
   
