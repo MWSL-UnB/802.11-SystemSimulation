@@ -5,17 +5,16 @@ Iteration 1
 
 Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   0   (  0;  0)  0.0     0.507      564.02   15.77      57      57  0.0000   0.9950  1000.0     18.46      1.5
-   1   (  7; -2)  7.6     5.164      480.98    1.48     581     581  0.0000   0.7215   892.9     48.68      1.4
-   2   (  3; -8)  8.2     6.453      457.05    1.19     726     726  0.0000   0.6654   885.9     50.63      1.6
-   3   (  2;  8)  7.9     8.622      365.66    0.89     970     970  0.0000   0.5303   845.7     52.65      2.0
-   4   (  5; -8)  9.7     8.658      367.86    0.88     974     974  0.0000   0.5408   846.1     51.26      2.1
+   0   (  0;  0)  0.0     0.622      535.87   12.53      70      70  0.0000   0.9917   999.4     28.37      1.5
+   1   ( -6; -6)  8.2     8.461      356.86    0.91     952     952  0.0000   0.5512   838.1     49.65      2.2
+   2   (  2; -3)  2.9     9.315      395.00    0.82    1048    1048  0.0000   0.5040   867.8     51.78      2.2
+   3   (  4;  5)  6.2    11.901      324.51    0.63    1339    1339  0.0000   0.3404   817.1     53.21      2.7
 
- Total throughput = 29.4043 Mbps
- Average transfer time = 0.447111s
- Average transmission time = 0.00404273s
+ Total throughput = 30.2996 Mbps
+ Average transfer time = 0.40306s
+ Average transmission time = 0.00372093s
  Packet loss rate = 0
- Overflow rate = 0.690591
+ Overflow rate = 0.596817
 
 
 %%%% Final results %%%%
@@ -24,28 +23,28 @@ Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss over
 
 
 Throughput (Mbps)
-mean           =     29.404 
+mean           =     30.300 
 
 Transfer time (ms)
-mean           =    447.111 
+mean           =    403.060 
 
 Standard deviation of transfer time (ms)
-mean           =    191.750 
+mean           =    177.614 
 
 Transmission time (ms)
-mean           =      4.043 
+mean           =      3.721 
 
 Standard deviation of transmission time (ms)
-mean           =      5.053 
+mean           =      4.006 
 
 Packet loss rate
 mean           =      0.000 
 
 Queue overflow rate
-mean           =      0.691 
+mean           =      0.597 
 
 Average queue length
-mean           =    894.138 
+mean           =    880.609 
 
 Average transmission power (mW)
-mean           =      1.713 
+mean           =      2.135 

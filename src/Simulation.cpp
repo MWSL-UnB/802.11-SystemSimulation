@@ -382,47 +382,26 @@ void Simulation::init_terminals(){
 
 	double cell_radius = sim_par.get_Radius();
 
-	accCat MS_AC = AC_BK;
-	unsigned numAC = 0;
+	// Array containing the amount of connections belonging to each AC
+	int ppArray[5] = {round(2*sim_par.get_ppAC_BK()*sim_par.get_NumberStas()),
+			round(2*sim_par.get_ppAC_BE()*sim_par.get_NumberStas()),
+			round(2*sim_par.get_ppAC_VI()*sim_par.get_NumberStas()),
+			round(2*sim_par.get_ppAC_VO()*sim_par.get_NumberStas()),
+			round(2*sim_par.get_ppLegacy()*sim_par.get_NumberStas())};
+	accCat allACs[5] = {AC_BK, AC_BE, AC_VI, AC_VO, legacy};
+	vector<int> noZe_ppArray;
 
 	for (unsigned i = 0; i < sim_par.get_NumberStas(); i++) {
-		switch(MS_AC){
-		case AC_BK:
-			if(numAC != round(sim_par.get_ppAC_BK()*sim_par.get_NumberStas())){
-				MS_AC = AC_BK;
-				numAC++;
-				break;
-			}
-			numAC = 0;
-		case AC_BE:
-			if(numAC != round(sim_par.get_ppAC_BE()*sim_par.get_NumberStas())){
-				MS_AC = AC_BE;
-				numAC++;
-				break;
-			}
-			numAC = 0;
-		case AC_VI:
-			if(numAC != round(sim_par.get_ppAC_VI()*sim_par.get_NumberStas())){
-				MS_AC = AC_VI;
-				numAC++;
-				break;
-			}
-			numAC = 0;
-		case AC_VO:
-			if(numAC != round(sim_par.get_ppAC_VO()*sim_par.get_NumberStas())){
-				MS_AC = AC_VO;
-				numAC++;
-				break;
-			}
-			numAC = 0;
-		case legacy:
-			if(numAC != round(sim_par.get_ppLegacy()*sim_par.get_NumberStas())){
-				MS_AC = legacy;
-				numAC++;
-				break;
-			}
-			numAC = 0;
+
+		// Vector containing elements of ppArray that are non-zero
+		noZe_ppArray.clear();
+		for(int k = 0; k < 5; k++) {
+			if(ppArray[k] != 0) noZe_ppArray.push_back(k);
 		}
+		// Choose one access category randomly
+		int idx = randgent.from_vec(noZe_ppArray);
+		accCat MS_AC = allACs[idx];
+		ppArray[idx]--;
 
 		// if just one mobile station, then distance = cell radius
 		Position pos(cell_radius,0);
@@ -448,12 +427,24 @@ void Simulation::init_terminals(){
 			}
 		}
 
+		// Vector containing elements of ppArray that are non-zero
+		noZe_ppArray.clear();
+		for(int k = 0; k < 5; k++) {
+			if(ppArray[k] != 0) noZe_ppArray.push_back(k);
+		}
+		// Choose one access category randomly
+		idx = randgent.from_vec(noZe_ppArray);
+		accCat AP_AC = allACs[idx];
+		ppArray[idx]--;
+
 		// Connect mobile terminal to closest AP
 		connect_two(term_vector[min_index], AP_AC, ms, MS_AC, ch, adapt, tr_dl, tr_ul);
 
 		if (log(log_type::setup))
 			log << *ms << " created at position " << pos << " with distance "
-			<< min_dist << " m to " << *term_vector[min_index] << endl;
+			<< min_dist << " m to " << *term_vector[min_index]
+		    << "\nMobile station AC: "<< MS_AC << ". Access Point AC: "
+			<< AP_AC << "." <<endl;
 	}
 
 
