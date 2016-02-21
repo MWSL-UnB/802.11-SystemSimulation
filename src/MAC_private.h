@@ -28,6 +28,7 @@
 #include "random.h"
 #include "log.h"
 #include <queue>
+#include <map>
 
 class PHY;
 class Terminal;
@@ -57,7 +58,7 @@ protected:
   Scheduler* ptr2sch;  // pointer to simulation scheduler
   random*    randgen;  // pointer to random number generator
 
-  deque<MSDU> packet_queue;
+  map<accCat,deque<MSDU>> packet_queue;
   
   log_file*  mylog;
   bool       logflag;  // true if MAC events should be logged
@@ -105,7 +106,7 @@ protected:
   unsigned long n_att_frags;  // number of data fragments transmission attempts
   double        tx_data_rate; // mean transmitted data rate
 
-  void set_AC(accCat AC);
+  void set_myAC(accCat AC);
 
   void ack_timed_out();
   
@@ -145,6 +146,9 @@ protected:
     
 public:
   
+  size_t get_queue_size();
+  // returns size of complete packet queue
+
   /////////////////////////////////////////////////////
   // wrapper functions for member-function call-back //
   /////////////////////////////////////////////////////

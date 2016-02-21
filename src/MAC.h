@@ -78,7 +78,7 @@ public:
   // associates PHY object '*p' to this object.
   
   unsigned long get_n_packets_att() const {return n_att_frags;}
-  // returns number of attenpted data fragment transmissions
+  // returns number of attempted data fragment transmissions
   
   double get_tx_data_rate() const  {return (tx_data_rate/n_att_frags);}
   // returns average transmission data rate in Mbps

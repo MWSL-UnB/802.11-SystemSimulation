@@ -62,7 +62,13 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, accC
 	frag_thresh = mac.frag_thresh;
 	max_queue_size = mac.queue_size;
 
-	set_AC(AC);
+	for(int k = 0; k < 5; k++)	{
+		accCat auxAC = allACs[k];
+		deque<MSDU> auxQue;
+		packet_queue[auxAC] = auxQue;
+	}
+
+	set_myAC(AC);
 
 	NAV = timestamp(0);
 	nfrags = 1;
@@ -78,7 +84,7 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, accC
 ////////////////////////////////////////////////////////////////////////////////
 // MAC_private::set_AC		                                                  //
 ////////////////////////////////////////////////////////////////////////////////
-void MAC_private::set_AC(accCat AC) {
+void MAC_private::set_myAC(accCat AC) {
 
 	myAC = AC;
 
@@ -157,8 +163,9 @@ void MAC_private::ack_timed_out () {
 
 		term->macUnitdataMaxRetry(msdu);
 
-		packet_queue.pop_front();
-		if (packet_queue.size()) new_msdu();
+		packet_queue[myAC].pop_front();
+		// If there is a packet on the queue, transmit next msdu
+		if (get_queue_size()) new_msdu();
 
 	} else {
 
@@ -325,8 +332,8 @@ void MAC_private::cts_timed_out () {
 
 		term->macUnitdataMaxRetry(msdu);
 
-		packet_queue.pop_front();
-		if (packet_queue.size()) new_msdu();
+		packet_queue[myAC].pop_front();
+		if (get_queue_size()) new_msdu();
 
 	} else {
 
@@ -425,7 +432,7 @@ void MAC::phyRxEndInd(MPDU p) {
 // transmits next MSDU from packet queue                                      //
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::new_msdu() {
-	msdu = packet_queue.front();
+	msdu = packet_queue[myAC].front();
 
 	contention_window = aCWmin;
 	retry_count = 0;
@@ -516,8 +523,8 @@ void MAC_private::receive_this(MPDU p) {
 			// Indicate LA success if not during TXOP
 			if(!TXOPflag) term->la_success(msdu.get_target(), true);
 
-			packet_queue.pop_front();
-			if (packet_queue.size()) new_msdu();
+			packet_queue[myAC].pop_front();
+			if (get_queue_size()) new_msdu();
 
 			break;
 
@@ -719,11 +726,11 @@ void MAC_private::start_TXOP() {
 
 			power_dBm = term->get_power(msdu.get_target(), frag_thresh);
 
-			while(TXOPend < now + TXOPmax && count < packet_queue.size()){
+			while(TXOPend < now + TXOPmax && count < packet_queue[myAC].size()){
 
 				auxTXOPend = TXOPend;
 
-				MSDU auxmsdu = packet_queue[count];
+				MSDU auxmsdu = (packet_queue[myAC])[count];
 
 				// Determine number of fragments
 				auxNfrags = auxmsdu.get_nbytes() / frag_thresh;
@@ -922,15 +929,15 @@ void MAC_private::transmit() {
 ////////////////////////////////////////////////////////////////////////////////
 unsigned MAC::macUnitdataReq(MSDU p) {
 
-	if (packet_queue.size() >= max_queue_size) {
+	if (get_queue_size() >= max_queue_size) {
 		term->macUnitdataQueueOverflow(p);
 	} else {
-		packet_queue.push_back(p);
+		packet_queue[myAC].push_back(p);
 
-		if (packet_queue.size() == 1) new_msdu();
+		if (get_queue_size() == 1) new_msdu();
 	}
 
-	return packet_queue.size();
+	return get_queue_size();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -989,6 +996,20 @@ void MAC_private::tx_attempt() {
 		}
 	}
 	END_PROF("MAC::tx_attempt")
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// MAC_private::get_queue_size												  //
+//                                                                            //
+// returns size of packet queue              							      //
+////////////////////////////////////////////////////////////////////////////////
+size_t MAC_private::get_queue_size()	{
+	size_t queSize = 0;
+	for(int k = 0; k < 5; k++){
+		accCat auxAC = allACs[k];
+		queSize = queSize + packet_queue[auxAC].size();
+	}
+	return queSize;
 }
 
 // Output operator << for accCat type
