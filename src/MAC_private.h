@@ -39,6 +39,7 @@ typedef enum{
 	AC_VO,
 	legacy
 }accCat;
+accCat const allACs[5] = {AC_BK, AC_BE, AC_VI, AC_VO, legacy};
 
 typedef enum {
 	success,

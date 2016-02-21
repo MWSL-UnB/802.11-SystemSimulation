@@ -388,7 +388,6 @@ void Simulation::init_terminals(){
 			round(2*sim_par.get_ppAC_VI()*sim_par.get_NumberStas()),
 			round(2*sim_par.get_ppAC_VO()*sim_par.get_NumberStas()),
 			round(2*sim_par.get_ppLegacy()*sim_par.get_NumberStas())};
-	accCat allACs[5] = {AC_BK, AC_BE, AC_VI, AC_VO, legacy};
 	vector<int> noZe_ppArray;
 
 	for (unsigned i = 0; i < sim_par.get_NumberStas(); i++) {
