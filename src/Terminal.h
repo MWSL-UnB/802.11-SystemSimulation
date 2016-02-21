@@ -160,10 +160,9 @@ ostream& operator<< (ostream& os, const Terminal& t);
 // a MobileStation is a terminal with  a single connection                    //
 ////////////////////////////////////////////////////////////////////////////////
 class MobileStation : public Terminal {
-  Terminal* connected; // active connection
-  link_adapt la;   // link adaptation
-  Traffic* tr;      // traffic generator
-  accCat myAC;		// AC to which this station belongs
+  tuple<Terminal*,accCat> connected; // active connection and its AC
+  link_adapt la;   					// link adaptation
+  Traffic* tr;     				     // traffic generator
   
   void connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC);
   // creates connection to terminal '*t'
@@ -172,8 +171,8 @@ class MobileStation : public Terminal {
 public:
   MobileStation(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
 		  mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
-			: Terminal(p, s, c, r, l, mac, AC, phy, tr) {connected = 0;
-														 myAC = AC;};
+			: Terminal(p, s, c, r, l, mac, AC, phy, tr) {get<0>(connected) = 0;
+  	  	  	  	  	  	  	  	  	  	  	  	  	  	 get<1>(connected) = AC;};
   ~MobileStation();
   
   accCat get_connection_AC(Terminal* t);

@@ -276,11 +276,11 @@ MobileStation::~MobileStation () {
 // creates connection to another terminal                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void MobileStation::connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC) {
-  if (connected) {
+  if (get<0>(connected)) {
     throw(my_exception("second connection attempted to a Mobile Station"));
   } 
 
-  connected = t;
+  get<0>(connected) = t;
 
   tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
   la = link_adapt(this, t, ad, mylog);
@@ -293,7 +293,7 @@ void MobileStation::connect(Terminal* t, adapt_struct ad, traffic_struct ts, acc
 // returns string with terminals connected to this one                        //
 ////////////////////////////////////////////////////////////////////////////////
 string MobileStation::get_connections() const {
-  return connected->str();
+  return (get<0>(connected))->str();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -303,11 +303,11 @@ string MobileStation::get_connections() const {
 // connection does not exist then an exception is thrown.					  //
 ////////////////////////////////////////////////////////////////////////////////
 accCat MobileStation::get_connection_AC(Terminal* t) {
-	if (t != connected)
+	if (t != get<0>(connected))
 		throw(my_exception(GENERAL,
 				"unknown terminal in MobileStation::get_connection_AC"));
 
-	return myAC;
+	return get<1>(connected);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

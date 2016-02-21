@@ -32,7 +32,7 @@ const timestamp aSlotTime = timestamp(9.0e-6);
 const timestamp DIFS = timestamp(34.0e-6);
 const timestamp SIFS = timestamp(16.0e-6);
 
-// Duration of signalling packets
+// Duration of signaling packets
 const timestamp cts_duration = (MPDU(CTS, 0, 0, 0, M6)).get_duration();
 const timestamp rts_duration = (MPDU(RTS, 0, 0, 0, M6)).get_duration();
 
