@@ -5,16 +5,15 @@ Iteration 1
 
 Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   0   (  0;  0)  0.0     0.622      535.87   12.53      70      70  0.0000   0.9917   999.4     28.37      1.5
-   1   ( -6; -6)  8.2     8.461      356.86    0.91     952     952  0.0000   0.5512   838.1     49.65      2.2
-   2   (  2; -3)  2.9     9.315      395.00    0.82    1048    1048  0.0000   0.5040   867.8     51.78      2.2
-   3   (  4;  5)  6.2    11.901      324.51    0.63    1339    1339  0.0000   0.3404   817.1     53.21      2.7
+   0   (  0;  0)  0.0    25.039      244.79    0.28    2817    2817  0.0000   0.4416   930.7     53.10      5.7
+   1   ( -6; -6)  8.2     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.4
+   2   ( -3; -0)  2.5     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.4
 
- Total throughput = 30.2996 Mbps
- Average transfer time = 0.40306s
- Average transmission time = 0.00372093s
+ Total throughput = 25.0386 Mbps
+ Average transfer time = 0.244787s
+ Average transmission time = 0.000279413s
  Packet loss rate = 0
- Overflow rate = 0.596817
+ Overflow rate = 0.441625
 
 
 %%%% Final results %%%%
@@ -23,28 +22,28 @@ Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss over
 
 
 Throughput (Mbps)
-mean           =     30.300 
+mean           =     25.039 
 
 Transfer time (ms)
-mean           =    403.060 
+mean           =    244.787 
 
 Standard deviation of transfer time (ms)
-mean           =    177.614 
+mean           =     86.984 
 
 Transmission time (ms)
-mean           =      3.721 
+mean           =      0.279 
 
 Standard deviation of transmission time (ms)
-mean           =      4.006 
+mean           =      0.068 
 
 Packet loss rate
 mean           =      0.000 
 
 Queue overflow rate
-mean           =      0.597 
+mean           =      0.442 
 
 Average queue length
-mean           =    880.609 
+mean           =    930.661 
 
 Average transmission power (mW)
-mean           =      2.135 
+mean           =      2.152 

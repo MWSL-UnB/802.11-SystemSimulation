@@ -7,7 +7,7 @@ MaxSimTime = 1 %0.1025  % maximum simulation time in seconds
 TempOutputInterval = 1 % interval between temporary outputs
 TransientTime = .1 % ignore first TransientTime seconds 
 Confidence = .95 % for calculation of confidence interval (if more than one seed), default = .95
-Log = SETUP  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or SCHEDULER)
+Log = SETUP,MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or SCHEDULER)
              % unlike the other parameters the simulation will not iterate over this parameter
              % , the log output will be a combination of the desired elements for all iterations
 
@@ -35,7 +35,7 @@ Seed = 11
 % No terminal movement supported so far.
 
 NumberAPs = 1 % number of access points
-NumberStas = 3 % number of mobile terminals 
+NumberStas = 2 % number of mobile terminals 
 Radius = 10 % cell radius in meters
 
 
@@ -124,7 +124,7 @@ PacketLength = 1000 %,500(.3);1000(.2);1500(.3);2100(.2)
   % probabilities, e.g., 250(.4);1000(.3);2000(.3)
 DataRate = 25%,2,5%.01,.05,.1,.2,.3,.4,.5,.6,.7,.8 % offered load in Mbps per link
 DownlinkFactor = 1 % offered downstream load is DataRate * DownlinkFactor
-UplinkFactor = 1 % offered upstream load is DataRate * UplinkFactor
+UplinkFactor = 0 % offered upstream load is DataRate * UplinkFactor
 ArrivalTime = EXP % arrival time distribution (EXP,CONSTANT)
 
 %%%%%%%%%%%%%%%%%

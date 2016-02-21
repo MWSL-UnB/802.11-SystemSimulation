@@ -73,8 +73,8 @@ protected:
   transmission_mode rx_mode; // transmission rate of latest received packet
 
   // MAC variables
-  unsigned  backoff_counter;
-  unsigned  contention_window;
+  unsigned  backoff_counter;   // backoff counter in time slots
+  unsigned  contention_window; // window from which the backoff counter is chosen
   timestamp time_to_send;      // time scheduled for next transmission
   bool      countdown_flag;    // true if backoff countdown is activated
   unsigned  retry_count;       // number of transmissions retry for current MSDU
