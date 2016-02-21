@@ -362,6 +362,22 @@ string AccessPoint::get_connections() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// AccessPoint::get_connection_AC                                             //
+//                                                                            //
+// returns access category of the connection with a terminal. If the  		  //
+// connection does not exist then an exception is thrown.					  //
+////////////////////////////////////////////////////////////////////////////////
+accCat AccessPoint::get_connection_AC(Terminal* t) {
+	map<Terminal*, tuple<link_adapt, Traffic*, accCat> >::const_iterator it =
+			connection.find(t);
+	if (it == connection.end())
+		throw(my_exception(GENERAL,
+				"unknown terminal in AccessPoint::get_connection_AC"));
+
+	return get<2>(it->second);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // AccessPoint::get_current_mode                                              //
 ////////////////////////////////////////////////////////////////////////////////
 transmission_mode AccessPoint::get_current_mode(Terminal* t,unsigned pl) {

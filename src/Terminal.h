@@ -160,6 +160,7 @@ class MobileStation : public Terminal {
   Terminal* connected; // active connection
   link_adapt la;   // link adaptation
   Traffic* tr;      // traffic generator
+  accCat myAC;		// AC to which this station belongs
   
   void connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC);
   // creates connection to terminal '*t'
@@ -167,14 +168,17 @@ class MobileStation : public Terminal {
   
 public:
   MobileStation(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-                mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
-               : Terminal(p, s, c, r, l, mac, AC, phy, tr) {connected = 0;};
+		  mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
+			: Terminal(p, s, c, r, l, mac, AC, phy, tr) {connected = 0;
+														 myAC = AC;};
   ~MobileStation();
   
+  accCat get_myAC() {return myAC;}
+
   /////////////////////////////////////////////////////////////
   // definition of virtual functions from base class Terminal
   string get_connections() const;
-  
+
   double get_power(Terminal* t, unsigned pl) {return la.get_power(pl);}
   
   transmission_mode get_current_mode (Terminal* t, unsigned pl) {
@@ -208,12 +212,14 @@ public:
   AccessPoint(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
               mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
              : Terminal(p, s, c, r, l, mac, AC, phy, tr) {};
-  ~AccessPoint();             
+  ~AccessPoint();
+
+  accCat get_connection_AC(Terminal* t);
 
   /////////////////////////////////////////////////////////////
   // definition of virtual functions from base class Terminal
   string get_connections() const;
-  
+
   transmission_mode get_current_mode(Terminal* t, unsigned pl);
   double get_power(Terminal* t, unsigned pl);
   
