@@ -68,6 +68,9 @@ public:
   virtual string get_connections() const = 0;
   // returns string with terminals connected to this one
 
+  virtual accCat get_connection_AC(Terminal* t) = 0;
+  // returns access category of a connection
+
   unsigned get_id() const {return id;}
   // returns unique terminal identification number
 
@@ -173,7 +176,7 @@ public:
 														 myAC = AC;};
   ~MobileStation();
   
-  accCat get_myAC() {return myAC;}
+  accCat get_connection_AC(Terminal* t);
 
   /////////////////////////////////////////////////////////////
   // definition of virtual functions from base class Terminal

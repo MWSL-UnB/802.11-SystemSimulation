@@ -298,6 +298,20 @@ string MobileStation::get_connections() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// MobileStation::get_connection_AC                                             //
+//                                                                            //
+// returns access category of the connection with a terminal. If the  		  //
+// connection does not exist then an exception is thrown.					  //
+////////////////////////////////////////////////////////////////////////////////
+accCat MobileStation::get_connection_AC(Terminal* t) {
+	if (t != connected)
+		throw(my_exception(GENERAL,
+				"unknown terminal in MobileStation::get_connection_AC"));
+
+	return myAC;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // MobileStation::str                                                         //
 //                                                                            //
 // returns string with terminal type and identification                       //
