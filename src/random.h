@@ -1,6 +1,8 @@
 #ifndef _random_h
 #define _random_h 1
 
+#include <vector>
+
 ///////////////////////////////////////////////////////////////////////
 // class random
 //
@@ -57,6 +59,10 @@ public:
   // returns random integer n with uniform discrete distribution,
   // a <= n <= b
   int discrete_uniform(int a, int b);
+
+  // returns a random integer n chosen from vector v
+  // n belongs to v
+  int from_vec(std::vector<int> v);
 
   // returns random float x with uniform distribution,
   // a <= x < b
