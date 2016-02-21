@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <sstream>
 #include <iomanip>
+#include <tuple>
 
 #include "Terminal.h"
 #include "Packet.h"
@@ -276,11 +277,11 @@ MobileStation::~MobileStation () {
 // creates connection to another terminal                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void MobileStation::connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC) {
-  if (get<0>(connected)) {
+  if (connected.first != this) {
     throw(my_exception("second connection attempted to a Mobile Station"));
   } 
 
-  get<0>(connected) = t;
+  connected.first = t;
 
   tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
   la = link_adapt(this, t, ad, mylog);
@@ -293,7 +294,7 @@ void MobileStation::connect(Terminal* t, adapt_struct ad, traffic_struct ts, acc
 // returns string with terminals connected to this one                        //
 ////////////////////////////////////////////////////////////////////////////////
 string MobileStation::get_connections() const {
-  return (get<0>(connected))->str();
+  return (connected.first)->str();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -303,11 +304,11 @@ string MobileStation::get_connections() const {
 // connection does not exist then an exception is thrown.					  //
 ////////////////////////////////////////////////////////////////////////////////
 accCat MobileStation::get_connection_AC(Terminal* t) {
-	if (t != get<0>(connected))
+	if (t != connected.first)
 		throw(my_exception(GENERAL,
 				"unknown terminal in MobileStation::get_connection_AC"));
 
-	return get<1>(connected);
+	return connected.second;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

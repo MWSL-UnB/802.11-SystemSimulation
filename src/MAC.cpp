@@ -432,6 +432,9 @@ void MAC::phyRxEndInd(MPDU p) {
 // transmits next MSDU from packet queue                                      //
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::new_msdu() {
+
+	// Recalculate myAC here. Only if not during TXOP
+
 	msdu = packet_queue[myAC].front();
 
 	contention_window = aCWmin;
