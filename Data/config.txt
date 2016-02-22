@@ -17,7 +17,7 @@ Log = SETUP,MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC an
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 
-Seed = 11
+Seed = 8
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters
@@ -124,7 +124,7 @@ PacketLength = 1000 %,500(.3);1000(.2);1500(.3);2100(.2)
   % probabilities, e.g., 250(.4);1000(.3);2000(.3)
 DataRate = 25%,2,5%.01,.05,.1,.2,.3,.4,.5,.6,.7,.8 % offered load in Mbps per link
 DownlinkFactor = 1 % offered downstream load is DataRate * DownlinkFactor
-UplinkFactor = 0 % offered upstream load is DataRate * UplinkFactor
+UplinkFactor = 1 % offered upstream load is DataRate * UplinkFactor
 ArrivalTime = EXP % arrival time distribution (EXP,CONSTANT)
 
 %%%%%%%%%%%%%%%%%

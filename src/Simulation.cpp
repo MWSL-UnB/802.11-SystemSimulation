@@ -353,7 +353,6 @@ void Simulation::init_terminals(){
 			sim_par.get_TargetPER(),sim_par.get_LAMaxSucceedCounter(),
 			sim_par.get_LAFailLimit(), sim_par.get_UseRxMode());
 
-	// Place where MAC struct is created
 	mac_struct mac(sim_par.get_RetryLimit(), sim_par.get_RTSThreshold(),
 			sim_par.get_FragmentationThresh(), sim_par.get_QueueSize());
 
@@ -384,11 +383,14 @@ void Simulation::init_terminals(){
 
 	// Array containing the amount of connections belonging to each AC
 	int ppArray[5] = {round(2*sim_par.get_ppAC_BK()*sim_par.get_NumberStas()),
-			round(2*sim_par.get_ppAC_BE()*sim_par.get_NumberStas()),
-			round(2*sim_par.get_ppAC_VI()*sim_par.get_NumberStas()),
-			round(2*sim_par.get_ppAC_VO()*sim_par.get_NumberStas()),
-			round(2*sim_par.get_ppLegacy()*sim_par.get_NumberStas())};
+					  round(2*sim_par.get_ppAC_BE()*sim_par.get_NumberStas()),
+					  round(2*sim_par.get_ppAC_VI()*sim_par.get_NumberStas()),
+					  round(2*sim_par.get_ppAC_VO()*sim_par.get_NumberStas()),
+					  round(2*sim_par.get_ppLegacy()*sim_par.get_NumberStas())};
 	vector<int> noZe_ppArray;
+	accCat MS_AC = AC_BK;
+	AP_AC = AC_BK;
+	int idx = 0;
 
 	for (unsigned i = 0; i < sim_par.get_NumberStas(); i++) {
 
@@ -398,9 +400,11 @@ void Simulation::init_terminals(){
 			if(ppArray[k] != 0) noZe_ppArray.push_back(k);
 		}
 		// Choose one access category randomly
-		int idx = randgent.from_vec(noZe_ppArray);
-		accCat MS_AC = allACs[idx];
-		ppArray[idx]--;
+		if(noZe_ppArray.size() != 0) {
+			idx = randgent.from_vec(noZe_ppArray);
+			MS_AC = allACs[idx];
+			ppArray[idx]--;
+		}
 
 		// if just one mobile station, then distance = cell radius
 		Position pos(cell_radius,0);
@@ -432,9 +436,11 @@ void Simulation::init_terminals(){
 			if(ppArray[k] != 0) noZe_ppArray.push_back(k);
 		}
 		// Choose one access category randomly
-		idx = randgent.from_vec(noZe_ppArray);
-		accCat AP_AC = allACs[idx];
-		ppArray[idx]--;
+		if(noZe_ppArray.size() != 0) {
+			idx = randgent.from_vec(noZe_ppArray);
+			AP_AC = allACs[idx];
+			ppArray[idx]--;
+		}
 
 		// Connect mobile terminal to closest AP
 		connect_two(term_vector[min_index], AP_AC, ms, MS_AC, ch, adapt, tr_dl, tr_ul);

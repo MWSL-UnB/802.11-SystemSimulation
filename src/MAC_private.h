@@ -59,7 +59,11 @@ protected:
   random*    randgen;  // pointer to random number generator
 
   map<accCat,deque<MSDU>> packet_queue;
-  
+  map<accCat,unsigned> CW_ACs;	 // Contention window of all ACs
+  map<accCat,unsigned> BOC_ACs;  // Backoff Counter (BOC) of front packets of ACs queues
+  map<accCat,bool> BOC_flag; 	 // Flag that defines if the BOC has to be recalculated to
+  	  	  	  	  	  	  	 	 // an AC
+
   log_file*  mylog;
   bool       logflag;  // true if MAC events should be logged
   
@@ -74,8 +78,8 @@ protected:
   transmission_mode rx_mode; // transmission rate of latest received packet
 
   // MAC variables
-  unsigned  backoff_counter;   // backoff counter in time slots
-  unsigned  contention_window; // window from which the backoff counter is chosen
+  //unsigned  backoff_counter;   // backoff counter in time slots
+  //unsigned  contention_window; // window from which the backoff counter is chosen
   timestamp time_to_send;      // time scheduled for next transmission
   bool      countdown_flag;    // true if backoff countdown is activated
   unsigned  retry_count;       // number of transmissions retry for current MSDU
@@ -137,6 +141,10 @@ protected:
   // start TXOP time counting
 
   void end_TXOP();
+  // end TXOP time counting
+
+  void internal_contention();
+  // resolves internal competition between ACs
 
   void transmit();
   // send data packet or begin RTS

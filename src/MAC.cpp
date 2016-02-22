@@ -66,6 +66,9 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, accC
 		accCat auxAC = allACs[k];
 		deque<MSDU> auxQue;
 		packet_queue[auxAC] = auxQue;
+		BOC_ACs[auxAC] = 0;
+		CW_ACs[auxAC] = 0;
+		BOC_flag[auxAC] = true;
 	}
 
 	set_myAC(AC);
@@ -169,12 +172,12 @@ void MAC_private::ack_timed_out () {
 
 	} else {
 
-		if (contention_window <= aCWmax/2) {
-			contention_window = contention_window * 2;
+		if (CW_ACs[myAC] <= aCWmax/2) {
+			CW_ACs[myAC] = CW_ACs[myAC] * 2;
 		}
 
 		if (logflag) *mylog << "  " << *term << ": retry count = " << retry_count
-				<< ", CW = " << contention_window << ", try again"
+				<< ", CW = " << CW_ACs[myAC] << ", try again"
 				<< endl;
 
 		tx_attempt();
@@ -192,12 +195,13 @@ void MAC_private::begin_countdown() {
 
 	// if channel is free now, schedule transmission for time
 	// AIFS + contention window
-	backoff_counter = randgen->discrete_uniform(0,contention_window-1);
-	time_to_send = ptr2sch->now() + AIFS + timestamp(backoff_counter) * aSlotTime;
+	// CHANGE HERE!
+	//backoff_counter = randgen->discrete_uniform(0,CW_ACs[myAC]-1);
+	time_to_send = ptr2sch->now() + AIFS + timestamp(BOC_ACs[myAC]) * aSlotTime;
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-		<< ": begin countdown, CW = " << contention_window
-		<< ", backoff counter = " << backoff_counter
+		<< ": begin countdown, CW = " << CW_ACs[myAC]
+		<< ", backoff counter = " << BOC_ACs[myAC]
 		<< ", schedule function transmit at time "
 		<< time_to_send << endl;
 
@@ -222,14 +226,14 @@ void MAC::phyCCA_busy() {
 	//////////////////////////////////////////
 	// stop countdown and cancel transmission
 	timestamp time_diff = time_to_send - ptr2sch->now();
-	if (time_diff < timestamp(backoff_counter) * aSlotTime) {
-		backoff_counter = time_diff / aSlotTime;
+	if (time_diff < timestamp(BOC_ACs[myAC]) * aSlotTime) {
+		BOC_ACs[myAC] = time_diff / aSlotTime;
 	}
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 			<< " received channel-busy message"
 			<< ", stop countdown, backoff counter frozen at "
-			<< backoff_counter << endl;
+			<< BOC_ACs[myAC] << endl;
 
 	time_to_send = not_a_timestamp();
 	ptr2sch->remove((void*)(&wrapper_to_start_TXOP), (void*)this);
@@ -258,7 +262,7 @@ void MAC::phyCCA_free() {
 	if (countdown_flag) {
 		// resume countdown
 
-		time_to_send = now + AIFS + timestamp(backoff_counter) * aSlotTime;
+		time_to_send = now + AIFS + timestamp(BOC_ACs[myAC]) * aSlotTime;
 		ptr2sch->schedule(Event(time_to_send, (void*)(&wrapper_to_start_TXOP),
 				(void*)this));
 
@@ -337,14 +341,14 @@ void MAC_private::cts_timed_out () {
 
 	} else {
 
-		if (contention_window <= aCWmax/2) {
-			contention_window = contention_window * 2;
+		if (CW_ACs[myAC] <= aCWmax/2) {
+			CW_ACs[myAC] = CW_ACs[myAC] * 2;
 		}
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 				<< " did not receive CTS for packet " << pck.get_id()
 				<< ", retry count = " << retry_count << ", CW = "
-				<< contention_window << ", try again" << endl;
+				<< CW_ACs[myAC] << ", try again" << endl;
 
 		tx_attempt();
 	}
@@ -386,7 +390,7 @@ void MAC_private::end_nav() {
 	// resume countdown
 	if (countdown_flag) {
 
-		time_to_send = now + AIFS + timestamp(backoff_counter) * aSlotTime;
+		time_to_send = now + AIFS + timestamp(BOC_ACs[myAC]) * aSlotTime;
 		ptr2sch->schedule(Event(time_to_send, (void*)(&wrapper_to_start_TXOP),
 				(void*)this));
 
@@ -433,11 +437,16 @@ void MAC::phyRxEndInd(MPDU p) {
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::new_msdu() {
 
-	// Recalculate myAC here. Only if not during TXOP
+	// Change BOC flag before switching AC
+	BOC_flag[myAC] = true;
+
+	// Recalculate myAC, if not during TXOP or TXOP is going to end or has ended
+	if(!TXOPflag || TXOPend <= ptr2sch->now() + 1){
+		internal_contention();
+	}
 
 	msdu = packet_queue[myAC].front();
 
-	contention_window = aCWmin;
 	retry_count = 0;
 
 	current_frag = 0;
@@ -830,6 +839,113 @@ void MAC_private::end_TXOP() {
 	END_PROF("MAC::end_TXOP")
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// MAC_private::internal_contention                       	                  //
+//                                                                            //
+// resolves internal competition between ACs			                      //
+////////////////////////////////////////////////////////////////////////////////
+void MAC_private::internal_contention()	{
+
+	timestamp TTT_ACs[5];
+	timestamp minTTT = timestamp_max();
+	int minTTT_idx = 0;
+
+	// This log line is distributed in multiple code lines
+	if(logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+			<< ": BOCs and TTTs for all ACs: ";
+
+	// Loop through all ACs, to define which AC will gain access to the WM
+	for(int k = 0; k < 5; k++)	{
+		accCat auxAC = allACs[k];
+
+		if(packet_queue[auxAC].size()) { // If there are packets in that AC's queue
+
+			// Change to temporary AC to calculate TTT
+			set_myAC(auxAC);
+			if(BOC_flag[auxAC]) { // If it is a new packet and the BOC has not yet been calculated
+				// Then calculate it
+				CW_ACs[auxAC] = aCWmin;
+				BOC_ACs[auxAC] = randgen->discrete_uniform(0,CW_ACs[auxAC]-1);
+				BOC_flag[auxAC] = false;
+			}
+
+			// Calculate Time To Transmit
+			TTT_ACs[k] = ptr2sch->now() + AIFS + timestamp(BOC_ACs[auxAC]) * aSlotTime;
+
+			if(logflag) *mylog << "\n" << auxAC << "	" << BOC_ACs[auxAC]
+					<< "	" << TTT_ACs[k] << " sec.";
+
+			// If calculated TTT is less than the smallest TTT
+			if(TTT_ACs[k] <= minTTT) {
+				minTTT_idx = k;
+				minTTT = TTT_ACs[k];
+			}
+		}
+	}
+
+	if(logflag) *mylog << endl;
+
+	// Loop to determine if two ACs gained simultaneous access
+	for(int k = 0; k < 5; k++) {
+		accCat auxAC = allACs[k];
+
+		// If calculated TTT is equal to the smallest one
+		if(packet_queue[auxAC].size() && TTT_ACs[k] == minTTT && k != minTTT_idx) {
+
+			if(logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+							<< ": simultaneous access between AC " << allACs[minTTT_idx]
+							<< " and AC "<< auxAC << "." <<endl;
+
+			// Change to temporary AC to calculate BOC
+			set_myAC(auxAC);
+
+			// Double contention window for that AC
+			if (CW_ACs[auxAC] <= aCWmax/2) CW_ACs[auxAC] = CW_ACs[auxAC] * 2;
+
+			BOC_flag[auxAC] = false;
+
+			// Recalculate BOC
+			BOC_ACs[auxAC] = randgen->discrete_uniform(0,CW_ACs[auxAC]-1);
+
+			// Calculate Time To Transmit
+			TTT_ACs[k] = ptr2sch->now() + AIFS + timestamp(BOC_ACs[auxAC]) * aSlotTime;
+
+			if(logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+					<< "new AC " << auxAC << "BOC and TTT: "
+					<< BOC_ACs[auxAC] << "	" << TTT_ACs[k] << " sec." << endl;
+
+			// If calculated TTT is less than the smallest TTT
+			if(TTT_ACs[k] <= minTTT) {
+				minTTT_idx = k;
+				minTTT = TTT_ACs[k];
+			}
+		}
+	}
+
+	if(logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+			<< ": packet of AC " << allACs[minTTT_idx]
+			<< " will be transmitted." << endl;
+
+	// This log line is distributed in multiple code lines
+	if(logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+				<< ": BOCs will be frozen at: ";
+
+	// Loop to redefine BOCs
+	for(int k = 0; k < 5; k++) {
+		accCat auxAC = allACs[k];
+		if(packet_queue[auxAC].size() && k != minTTT_idx) {
+			timestamp time_diff = TTT_ACs[k] - TTT_ACs[minTTT_idx];
+			if (time_diff < timestamp(BOC_ACs[auxAC]) * aSlotTime) {
+				BOC_ACs[auxAC] = time_diff / aSlotTime;
+				if(logflag) *mylog << BOC_ACs[auxAC] << "  ";
+			}
+		}
+	}
+
+	if(logflag) *mylog << endl;
+
+	set_myAC(allACs[minTTT_idx]);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // MAC_private::transmit                                                      //
@@ -855,8 +971,6 @@ void MAC_private::transmit() {
 	myphy->cancel_notify_busy_channel();
 
 	DataMPDU auxpck (pl, term, msdu.get_target(), power_dBm, which_mode);
-
-	//start_TXOP();
 
 	if (auxpck.get_nbytes_mac() < RTS_threshold) { // Basic DCF protocol, without RTS/CTS exchange
 
@@ -935,7 +1049,8 @@ unsigned MAC::macUnitdataReq(MSDU p) {
 	if (get_queue_size() >= max_queue_size) {
 		term->macUnitdataQueueOverflow(p);
 	} else {
-		packet_queue[myAC].push_back(p);
+		accCat auxAC = term->get_connection_AC(p.get_target());
+		packet_queue[auxAC].push_back(p);
 
 		if (get_queue_size() == 1) new_msdu();
 	}
@@ -995,6 +1110,7 @@ void MAC_private::tx_attempt() {
 			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 					<< " : transmission attempt, Channel is free" << endl;
 
+
 			begin_countdown();
 		}
 	}
@@ -1016,7 +1132,7 @@ size_t MAC_private::get_queue_size()	{
 }
 
 // Output operator << for accCat type
-ostream & operator<<(ostream& os, const accCat& AC) {
+ostream& operator<<(ostream& os, accCat& AC) {
    switch(AC){
    case AC_BK:
 	   return os << "AC_BK";
