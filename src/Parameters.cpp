@@ -421,11 +421,11 @@ Position Parameters::get_APPosition(int which_ap) {
 // checks consistency of parameters                                           //
 ////////////////////////////////////////////////////////////////////////////////
 bool Parameters::is_consistent() {
-	if(ppAC_BK.current()+ppAC_BE.current()+ppAC_VI.current()+ppAC_VO.current()+
+/*	if(ppAC_BK.current()+ppAC_BE.current()+ppAC_VI.current()+ppAC_VO.current()+
 			ppLegacy.current() > 1) {
 		return false;
 	}
-
+*/
   return true;
 }
 

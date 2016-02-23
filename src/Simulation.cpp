@@ -366,8 +366,6 @@ void Simulation::init_terminals(){
 
 	timestamp tr_time = sim_par.get_TransientTime();
 
-	accCat AP_AC = legacy;
-
 	for (int i = 0; i < sim_par.get_NumberAPs(); i++) {
 		AccessPoint* ap = new AccessPoint(sim_par.get_APPosition(i), &main_sch, ch,
 				&randgent, &log, mac, phy, tr_time);
@@ -382,14 +380,30 @@ void Simulation::init_terminals(){
 	double cell_radius = sim_par.get_Radius();
 
 	// Array containing the amount of connections belonging to each AC
-	int ppArray[5] = {round(2*sim_par.get_ppAC_BK()*sim_par.get_NumberStas()),
-					  round(2*sim_par.get_ppAC_BE()*sim_par.get_NumberStas()),
-					  round(2*sim_par.get_ppAC_VI()*sim_par.get_NumberStas()),
-					  round(2*sim_par.get_ppAC_VO()*sim_par.get_NumberStas()),
-					  round(2*sim_par.get_ppLegacy()*sim_par.get_NumberStas())};
+	unsigned ppArray[5] = {round(2*sim_par.get_ppAC_BK()*sim_par.get_NumberStas()),
+					  	   round(2*sim_par.get_ppAC_BE()*sim_par.get_NumberStas()),
+						   round(2*sim_par.get_ppAC_VI()*sim_par.get_NumberStas()),
+						   round(2*sim_par.get_ppAC_VO()*sim_par.get_NumberStas()),
+						   round(2*sim_par.get_ppLegacy()*sim_par.get_NumberStas())};
+	unsigned sum = 0;
+	for(int k = 0; k < 5; k++) {
+		sum = sum + ppArray[k];
+	}
+	int diff = sum - 2*sim_par.get_NumberStas();
+	if(diff > 0) {
+		for(int k = 0; k < 5; k++) {
+			while(ppArray[k] > 0 && diff > 0){
+				ppArray[k]--;
+				diff--;
+			}
+		}
+	}
+	if(diff < 0)	{
+		ppArray[0] = (-1)*diff;
+	}
 	vector<int> noZe_ppArray;
 	accCat MS_AC = AC_BK;
-	AP_AC = AC_BK;
+	accCat AP_AC = AC_BK;
 	int idx = 0;
 
 	for (unsigned i = 0; i < sim_par.get_NumberStas(); i++) {
