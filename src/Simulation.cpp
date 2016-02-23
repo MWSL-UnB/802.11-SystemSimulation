@@ -370,7 +370,7 @@ void Simulation::init_terminals(){
 
 	for (int i = 0; i < sim_par.get_NumberAPs(); i++) {
 		AccessPoint* ap = new AccessPoint(sim_par.get_APPosition(i), &main_sch, ch,
-				&randgent, &log, mac, AP_AC, phy, tr_time);
+				&randgent, &log, mac, phy, tr_time);
 		term_vector.push_back(ap);
 
 		if (log(log_type::setup))
@@ -417,7 +417,7 @@ void Simulation::init_terminals(){
 		}
 
 		MobileStation* ms = new MobileStation(pos, &main_sch, ch, &randgent,
-				&log, mac, MS_AC, phy, tr_time);
+				&log, mac, phy, tr_time);
 		term_vector.push_back(ms);
 
 		double min_dist = HUGE_VAL;

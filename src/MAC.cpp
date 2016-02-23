@@ -49,7 +49,7 @@ const timestamp CTS_Timeout = SIFS + cts_duration + 5;
 ////////////////////////////////////////////////////////////////////////////////
 // MAC constructor                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, accCat AC){
+MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac){
 	term = t;
 	ptr2sch = s;
 	randgen = r;
@@ -70,8 +70,6 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, accC
 		CW_ACs[auxAC] = 0;
 		BOC_flag[auxAC] = true;
 	}
-
-	set_myAC(AC);
 
 	NAV = timestamp(0);
 	nfrags = 1;

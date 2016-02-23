@@ -44,7 +44,7 @@ unsigned Terminal_private::nterm = 0;
 // Terminal constructor                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-                   mac_struct mac, accCat AC, PHY_struct phy, timestamp transient) {
+                   mac_struct mac, PHY_struct phy, timestamp transient) {
 
   where = p;
   
@@ -57,7 +57,7 @@ Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
   id = nterm++;
   
   myphy = new PHY(this, p, c, r, s, l, phy);
-  mymac = new MAC(this, s, r, l, mac, AC);
+  mymac = new MAC(this, s, r, l, mac);
 
   myphy->connect(mymac);
   mymac->connect(myphy);
@@ -281,7 +281,7 @@ void MobileStation::connect(Terminal* t, adapt_struct ad, traffic_struct ts, acc
     throw(my_exception("second connection attempted to a Mobile Station"));
   } 
 
-  connected.first = t;
+  connected = make_pair(t,AC);
 
   tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
   la = link_adapt(this, t, ad, mylog);

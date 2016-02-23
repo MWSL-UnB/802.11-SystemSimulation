@@ -66,8 +66,7 @@ public:
       Scheduler* s,   // pointer to simulation scheduler
       random *r,      // pointer to random number generator
       log_file *l,    // pointer to log
-      mac_struct mac, // MAC layer parameters
-	  accCat AC	  // Access category of station
+      mac_struct mac // MAC layer parameters
      );
 
   void phyCCA_busy();
