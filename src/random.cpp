@@ -206,3 +206,12 @@ int random::discrete_uniform(int a, int b) {
   return (a+rand()%(b-a+1));
 }
 
+/////////////////////////////////////////////////////////////////
+// returns a random integer n chosen from vector v
+// n belongs to v
+/////////////////////////////////////////////////////////////////
+int random::from_vec(std::vector<int> v)	{
+	int max = static_cast<int>(v.size()) - 1;
+	int idx = discrete_uniform(0,max);
+	return v[idx];
+}

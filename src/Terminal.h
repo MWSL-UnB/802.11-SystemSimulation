@@ -54,20 +54,21 @@ public:
            random* r,             // pointer to random number generator
            log_file* l,           // pointer to log file
            mac_struct mac,        // MAC layer parameters
-		   accCat AC,		  // Access category of MAC
            PHY_struct phy,        // physical layer parameters
            timestamp tr
           );
   ~Terminal();
 
-  friend void connect_two (Terminal* t1, Terminal* t2, Channel* ch,
-                           adapt_struct ad,
-                           traffic_struct tr1to2, traffic_struct tr2to1);
+  friend void connect_two (Terminal* t1, accCat AC1, Terminal* t2, accCat AC2,
+		  Channel* ch, adapt_struct ad, traffic_struct tr1to2, traffic_struct tr2to1);
   // establishes connection between two terminals through wireless channel '*ch'
   // performs link adaptation using parameters 'ad'
 
   virtual string get_connections() const = 0;
   // returns string with terminals connected to this one
+
+  virtual accCat get_connection_AC(Terminal* t) = 0;
+  // returns access category of a connection
 
   unsigned get_id() const {return id;}
   // returns unique terminal identification number
@@ -158,24 +159,26 @@ ostream& operator<< (ostream& os, const Terminal& t);
 // a MobileStation is a terminal with  a single connection                    //
 ////////////////////////////////////////////////////////////////////////////////
 class MobileStation : public Terminal {
-  Terminal* connected; // active connection
-  link_adapt la;   // link adaptation
-  Traffic* tr;      // traffic generator
+  pair<Terminal*,accCat> connected; // active connection and its AC
+  link_adapt la;   					// link adaptation
+  Traffic* tr;     				     // traffic generator
   
-  void connect(Terminal* t, adapt_struct ad, traffic_struct ts);
+  void connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC);
   // creates connection to terminal '*t'
   // using link adaptation parameters 'ad' and traffic parameters 'ts'
   
 public:
   MobileStation(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-                mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
-               : Terminal(p, s, c, r, l, mac, AC, phy, tr) {connected = 0;};
+		  mac_struct mac, PHY_struct phy, timestamp tr)
+			: Terminal(p, s, c, r, l, mac, phy, tr) {connected = make_pair(this,AC_BK);};
   ~MobileStation();
   
+  accCat get_connection_AC(Terminal* t);
+
   /////////////////////////////////////////////////////////////
   // definition of virtual functions from base class Terminal
   string get_connections() const;
-  
+
   double get_power(Terminal* t, unsigned pl) {return la.get_power(pl);}
   
   transmission_mode get_current_mode (Terminal* t, unsigned pl) {
@@ -198,38 +201,40 @@ public:
 // an AccessPoint is a Terminal with several possible connections             //
 ////////////////////////////////////////////////////////////////////////////////
 class AccessPoint : public Terminal {
-  map<Terminal*, pair<link_adapt, Traffic*> >connection;
+  map<Terminal*, tuple<link_adapt, Traffic*, accCat> >connection;
   // link adaptation units and traffic generators for each connection
   
-  void connect(Terminal* t, adapt_struct ad, traffic_struct ts);
+  void connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC);
   // creates connection to terminal '*t'
   // using link adaptation parameters 'ad' and traffic parameters 'ts'
 
 public:
   AccessPoint(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-              mac_struct mac, accCat AC, PHY_struct phy, timestamp tr)
-             : Terminal(p, s, c, r, l, mac, AC, phy, tr) {};
-  ~AccessPoint();             
+              mac_struct mac, PHY_struct phy, timestamp tr)
+             : Terminal(p, s, c, r, l, mac, phy, tr) {};
+  ~AccessPoint();
+
+  accCat get_connection_AC(Terminal* t);
 
   /////////////////////////////////////////////////////////////
   // definition of virtual functions from base class Terminal
   string get_connections() const;
-  
+
   transmission_mode get_current_mode(Terminal* t, unsigned pl);
   double get_power(Terminal* t, unsigned pl);
   
-  void la_failed(Terminal* t) {(connection[t].first).failed();}
+  void la_failed(Terminal* t) {(get<0>(connection[t])).failed();}
   // transmission failed, adapt link
   
-  void la_rts_failed(Terminal* t) {(connection[t].first).rts_failed();}
+  void la_rts_failed(Terminal* t) {(get<0>(connection[t])).rts_failed();}
   // RTS transmission failed, adapt link
   
   void la_success(Terminal* t,  bool lastfrag) {
-                                       (connection[t].first).success(lastfrag);}
+                                       (get<0>(connection[t])).success(lastfrag);}
   // transmission succeeded, adapt link
   
   void la_rx_success(Terminal* t, transmission_mode rx_mode) {
-                                     (connection[t].first).rx_success(rx_mode);}
+                                     (get<0>(connection[t])).rx_success(rx_mode);}
   // reception succeeded, adapt link
 
   string str() const;

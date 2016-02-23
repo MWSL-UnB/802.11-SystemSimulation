@@ -28,6 +28,7 @@
 #include "random.h"
 #include "log.h"
 #include <queue>
+#include <map>
 
 class PHY;
 class Terminal;
@@ -39,6 +40,7 @@ typedef enum{
 	AC_VO,
 	legacy
 }accCat;
+accCat const allACs[5] = {AC_BK, AC_BE, AC_VI, AC_VO, legacy};
 
 typedef enum {
 	success,
@@ -56,8 +58,12 @@ protected:
   Scheduler* ptr2sch;  // pointer to simulation scheduler
   random*    randgen;  // pointer to random number generator
 
-  deque<MSDU> packet_queue;
-  
+  map<accCat,deque<MSDU>> packet_queue;
+  map<accCat,unsigned> CW_ACs;	 // Contention window of all ACs
+  map<accCat,unsigned> BOC_ACs;  // Backoff Counter (BOC) of front packets of ACs queues
+  map<accCat,bool> BOC_flag; 	 // Flag that defines if the BOC has to be recalculated to
+  	  	  	  	  	  	  	 	 // an AC
+
   log_file*  mylog;
   bool       logflag;  // true if MAC events should be logged
   
@@ -72,8 +78,8 @@ protected:
   transmission_mode rx_mode; // transmission rate of latest received packet
 
   // MAC variables
-  unsigned  backoff_counter;
-  unsigned  contention_window;
+  //unsigned  backoff_counter;   // backoff counter in time slots
+  //unsigned  contention_window; // window from which the backoff counter is chosen
   timestamp time_to_send;      // time scheduled for next transmission
   bool      countdown_flag;    // true if backoff countdown is activated
   unsigned  retry_count;       // number of transmissions retry for current MSDU
@@ -89,7 +95,7 @@ protected:
   unsigned  max_queue_size;
 
   // EDCA parameters
-  accCat	ACat;
+  accCat	myAC;
   unsigned aCWmin;
   unsigned aCWmax;
   unsigned AIFSN;
@@ -103,6 +109,8 @@ protected:
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts
   double        tx_data_rate; // mean transmitted data rate
+
+  void set_myAC(accCat AC);
 
   void ack_timed_out();
   
@@ -133,6 +141,10 @@ protected:
   // start TXOP time counting
 
   void end_TXOP();
+  // end TXOP time counting
+
+  void internal_contention();
+  // resolves internal competition between ACs
 
   void transmit();
   // send data packet or begin RTS
@@ -142,6 +154,9 @@ protected:
     
 public:
   
+  size_t get_queue_size();
+  // returns size of complete packet queue
+
   /////////////////////////////////////////////////////
   // wrapper functions for member-function call-back //
   /////////////////////////////////////////////////////

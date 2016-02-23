@@ -353,7 +353,6 @@ void Simulation::init_terminals(){
 			sim_par.get_TargetPER(),sim_par.get_LAMaxSucceedCounter(),
 			sim_par.get_LAFailLimit(), sim_par.get_UseRxMode());
 
-	// PLACE WHERE MAC STRUCT IS CREATED
 	mac_struct mac(sim_par.get_RetryLimit(), sim_par.get_RTSThreshold(),
 			sim_par.get_FragmentationThresh(), sim_par.get_QueueSize());
 
@@ -371,7 +370,7 @@ void Simulation::init_terminals(){
 
 	for (int i = 0; i < sim_par.get_NumberAPs(); i++) {
 		AccessPoint* ap = new AccessPoint(sim_par.get_APPosition(i), &main_sch, ch,
-				&randgent, &log, mac, AP_AC, phy, tr_time);
+				&randgent, &log, mac, phy, tr_time);
 		term_vector.push_back(ap);
 
 		if (log(log_type::setup))
@@ -382,46 +381,29 @@ void Simulation::init_terminals(){
 
 	double cell_radius = sim_par.get_Radius();
 
-	accCat AC = AC_BK;
-	unsigned numAC = 0;
+	// Array containing the amount of connections belonging to each AC
+	int ppArray[5] = {round(2*sim_par.get_ppAC_BK()*sim_par.get_NumberStas()),
+					  round(2*sim_par.get_ppAC_BE()*sim_par.get_NumberStas()),
+					  round(2*sim_par.get_ppAC_VI()*sim_par.get_NumberStas()),
+					  round(2*sim_par.get_ppAC_VO()*sim_par.get_NumberStas()),
+					  round(2*sim_par.get_ppLegacy()*sim_par.get_NumberStas())};
+	vector<int> noZe_ppArray;
+	accCat MS_AC = AC_BK;
+	AP_AC = AC_BK;
+	int idx = 0;
 
 	for (unsigned i = 0; i < sim_par.get_NumberStas(); i++) {
-		switch(AC){
-		case AC_BK:
-			if(numAC != round(sim_par.get_ppAC_BK()*sim_par.get_NumberStas())){
-				AC = AC_BK;
-				numAC++;
-				break;
-			}
-			numAC = 0;
-		case AC_BE:
-			if(numAC != round(sim_par.get_ppAC_BE()*sim_par.get_NumberStas())){
-				AC = AC_BE;
-				numAC++;
-				break;
-			}
-			numAC = 0;
-		case AC_VI:
-			if(numAC != round(sim_par.get_ppAC_VI()*sim_par.get_NumberStas())){
-				AC = AC_VI;
-				numAC++;
-				break;
-			}
-			numAC = 0;
-		case AC_VO:
-			if(numAC != round(sim_par.get_ppAC_VO()*sim_par.get_NumberStas())){
-				AC = AC_VO;
-				numAC++;
-				break;
-			}
-			numAC = 0;
-		case legacy:
-			if(numAC != round(sim_par.get_ppLegacy()*sim_par.get_NumberStas())){
-				AC = legacy;
-				numAC++;
-				break;
-			}
-			numAC = 0;
+
+		// Vector containing elements of ppArray that are non-zero
+		noZe_ppArray.clear();
+		for(int k = 0; k < 5; k++) {
+			if(ppArray[k] != 0) noZe_ppArray.push_back(k);
+		}
+		// Choose one access category randomly
+		if(noZe_ppArray.size() != 0) {
+			idx = randgent.from_vec(noZe_ppArray);
+			MS_AC = allACs[idx];
+			ppArray[idx]--;
 		}
 
 		// if just one mobile station, then distance = cell radius
@@ -435,7 +417,7 @@ void Simulation::init_terminals(){
 		}
 
 		MobileStation* ms = new MobileStation(pos, &main_sch, ch, &randgent,
-				&log, mac, AC, phy, tr_time);
+				&log, mac, phy, tr_time);
 		term_vector.push_back(ms);
 
 		double min_dist = HUGE_VAL;
@@ -448,12 +430,26 @@ void Simulation::init_terminals(){
 			}
 		}
 
+		// Vector containing elements of ppArray that are non-zero
+		noZe_ppArray.clear();
+		for(int k = 0; k < 5; k++) {
+			if(ppArray[k] != 0) noZe_ppArray.push_back(k);
+		}
+		// Choose one access category randomly
+		if(noZe_ppArray.size() != 0) {
+			idx = randgent.from_vec(noZe_ppArray);
+			AP_AC = allACs[idx];
+			ppArray[idx]--;
+		}
+
 		// Connect mobile terminal to closest AP
-		connect_two(term_vector[min_index],ms, ch, adapt, tr_dl, tr_ul);
+		connect_two(term_vector[min_index], AP_AC, ms, MS_AC, ch, adapt, tr_dl, tr_ul);
 
 		if (log(log_type::setup))
 			log << *ms << " created at position " << pos << " with distance "
-			<< min_dist << " m to " << *term_vector[min_index] << endl;
+			<< min_dist << " m to " << *term_vector[min_index]
+		    << "\nMobile station AC: "<< MS_AC << ". Access Point AC: "
+			<< AP_AC << "." <<endl;
 	}
 
 
