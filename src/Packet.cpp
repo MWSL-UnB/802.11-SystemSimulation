@@ -39,6 +39,9 @@ const unsigned data_packet_overhead = 28;
 const unsigned ack_packet_overhead  = 14;
 const unsigned rts_packet_overhead  = 20;
 const unsigned cts_packet_overhead  = 14;
+const unsigned addba_rqst_overhead  = 14;
+const unsigned addba_rsps_overhead  = 14;
+const unsigned delba_pckt_overhead  = 14;
 
 /////////////////////////////
 // physical layer overhead 
@@ -176,22 +179,28 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
 
   source = from;
   target = to;
-               
+
   switch (t) {
-    case ACK :
-      nbytes_overhead = service_field_overhead + ack_packet_overhead;
-      break;
-    case RTS :
-      nbytes_overhead = service_field_overhead + rts_packet_overhead;
-      break;
-    case CTS :
-      nbytes_overhead = service_field_overhead + cts_packet_overhead;
-      break;
-    case DUMMY :
-      return;
-    default :
-      throw(my_exception(GENERAL,
-            "Packet type not supported in MPDU constructor"));
+  case ACK :
+	  nbytes_overhead = service_field_overhead + ack_packet_overhead;
+	  break;
+  case RTS :
+	  nbytes_overhead = service_field_overhead + rts_packet_overhead;
+	  break;
+  case CTS :
+	  nbytes_overhead = service_field_overhead + cts_packet_overhead;
+	  break;
+  case ADDBArqst :
+	  nbytes_overhead = service_field_overhead + addba_rqst_overhead;
+	  break;
+  case ADDBArsps :
+	  nbytes_overhead = service_field_overhead + addba_rsps_overhead;
+	  break;
+  case DUMMY :
+	  return;
+  default :
+	  throw(my_exception(GENERAL,
+			  "Packet type not supported in MPDU constructor"));
   }
 
   nbits = nbytes_overhead*8;
@@ -257,6 +266,12 @@ ostream& operator << (ostream& os, const MPDU& p) {
     case RTS:
       return os << "RTS packet " << p.id << " from " << *(p.source) << " to "
                 << *(p.target);
+    case ADDBArqst:
+          return os << "ADDBA request packet " << p.id << " from " << *(p.source) << " to "
+                    << *(p.target);
+    case ADDBArsps:
+          return os << "ADDBA response packet " << p.id << " from " << *(p.source) << " to "
+                    << *(p.target);
   }
 }
 
