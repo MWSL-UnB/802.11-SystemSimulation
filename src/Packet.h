@@ -23,6 +23,8 @@
 #ifndef _packet_h
 #define _packet_h 1
 
+#include <vector>
+
 #include "timestamp.h"
 #include "long_integer.h"
 
@@ -63,7 +65,7 @@ istream& operator>> (istream& is, transmission_mode& tm);
 ////////////////////////////////////////////////////////////////////////////////
 // enum packet_type                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-typedef enum {DUMMY, DATA, ACK, RTS, CTS, ADDBArqst, ADDBArsps, DELBA} packet_type;
+typedef enum {DUMMY, DATA, ACK, RTS, CTS, ADDBArqst, ADDBArsps, DELBA, BAR, BA} packet_type;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -140,7 +142,7 @@ public:
   timestamp         get_duration ()  const {return packet_duration;}
   timestamp         get_nav()        const {return net_all_vec;}
   unsigned          get_nbits()      const {return nbits;}
-  double            get_power ()     const {return tx_power;}
+  double            get_power()     const {return tx_power;}
   packet_type       get_type()       const {return t;}       
   
   friend ostream& operator << (ostream& os, const MPDU& p);
@@ -173,13 +175,13 @@ public:
   DataMPDU (MSDU pck,
             int n = -1,
             unsigned frag = 1,
-            unsigned nfrags = 1,                     
-            double p = 0,
-            transmission_mode r = M6,
-            timestamp nav = timestamp(0)
-           );
+			unsigned nfrags = 1,
+			double p = 0,
+			transmission_mode r = M6,
+			timestamp nav = timestamp(0)
+  );
   // creates a DataMPDU inheriting parameters of a given MSDU 'pck'
-                            
+
   unsigned get_nbytes()        const {return nbytes_data;}
   unsigned get_nbytes_mac()    const {return nbytes_data+nbytes_overhead;}
   unsigned get_tid()           const {return tid;}
@@ -192,4 +194,20 @@ public:
 inline timestamp ack_duration(transmission_mode tm) {
   return (MPDU(ACK, 0, 0, 0, tm)).get_duration();
 }
+
+class BA_MPDU: public MPDU {
+public:
+	vector<long_integer> pcktsToACK;
+
+	BA_MPDU(packet_type tp = BA,   				   // packet type
+			Terminal* from = 0,                    // source terminal
+			Terminal* to = 0,         			   // target terminal
+			double p = 0,              			   // transmit power in dBm
+			transmission_mode r = M0,  			   // transmission mode
+			timestamp nav = timestamp(0),          // NAV
+			vector<long_integer> ptACK = {0}		   // packets to be ACKed
+       	   	);
+
+	vector<long_integer> get_pcktsToACK() const {return pcktsToACK;}
+};
 #endif

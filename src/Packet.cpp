@@ -39,9 +39,13 @@ const unsigned data_packet_overhead = 28;
 const unsigned ack_packet_overhead  = 14;
 const unsigned rts_packet_overhead  = 20;
 const unsigned cts_packet_overhead  = 14;
+
+// Define these correctly
 const unsigned addba_rqst_overhead  = 14;
 const unsigned addba_rsps_overhead  = 14;
 const unsigned delba_pckt_overhead  = 14;
+const unsigned bar_packet_overhead  = 20;
+const unsigned ba_packet_overhead   = 20;
 
 /////////////////////////////
 // physical layer overhead 
@@ -177,33 +181,39 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
            transmission_mode r, timestamp nav)
            : t(tp), mode(r), tx_power(p), net_all_vec(nav) {
 
-  source = from;
-  target = to;
+	source = from;
+	target = to;
 
-  switch (t) {
-  case ACK :
-	  nbytes_overhead = service_field_overhead + ack_packet_overhead;
-	  break;
-  case RTS :
-	  nbytes_overhead = service_field_overhead + rts_packet_overhead;
-	  break;
-  case CTS :
-	  nbytes_overhead = service_field_overhead + cts_packet_overhead;
-	  break;
-  case ADDBArqst :
-	  nbytes_overhead = service_field_overhead + addba_rqst_overhead;
-	  break;
-  case ADDBArsps :
-	  nbytes_overhead = service_field_overhead + addba_rsps_overhead;
-	  break;
-  case DELBA :
-  	  nbytes_overhead = service_field_overhead + delba_pckt_overhead;
-  	  break;
-  case DUMMY :
-	  return;
-  default :
-	  throw(my_exception(GENERAL,
-			  "Packet type not supported in MPDU constructor"));
+	switch (t) {
+	case ACK :
+		nbytes_overhead = service_field_overhead + ack_packet_overhead;
+		break;
+	case RTS :
+		nbytes_overhead = service_field_overhead + rts_packet_overhead;
+		break;
+	case CTS :
+		nbytes_overhead = service_field_overhead + cts_packet_overhead;
+		break;
+	case ADDBArqst :
+		nbytes_overhead = service_field_overhead + addba_rqst_overhead;
+		break;
+	case ADDBArsps :
+		nbytes_overhead = service_field_overhead + addba_rsps_overhead;
+		break;
+	case DELBA :
+		nbytes_overhead = service_field_overhead + delba_pckt_overhead;
+		break;
+	case BAR :
+		nbytes_overhead = service_field_overhead + bar_packet_overhead;
+		break;
+	case BA :
+		nbytes_overhead = service_field_overhead + ba_packet_overhead;
+		break;
+	case DUMMY :
+		return;
+	default :
+		throw(my_exception(GENERAL,
+				"Packet type not supported in MPDU constructor"));
   }
 
   nbits = nbytes_overhead*8;
@@ -250,6 +260,23 @@ DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
   nbits = (nbytes_data + nbytes_overhead)*8;
   packet_duration = calc_duration (nbits, mode);
 
+}
+
+BA_MPDU::BA_MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
+		transmission_mode r, timestamp nav, vector<long_integer> ptACK)
+		:MPDU(tp,from,to,p,r,nav) {
+
+	pcktsToACK = ptACK;
+
+	switch(tp){
+	case BAR:
+		break;
+	case BA:
+		break;
+	default:
+		throw(my_exception(GENERAL,
+				"Block ACK MPDU of type different than BAR or BA in BA_MPDU::BA_MPDU()"));
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
