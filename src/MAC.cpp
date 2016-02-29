@@ -656,6 +656,28 @@ void MAC_private::receive_this(MPDU p) {
 
 		break;
 	}
+	////////////////////////////////////////////////////////////////////
+	// ADDBA request received, if channel is not busy, transmit response
+	case ADDBArqst : {
+
+		if (now <= NAV) break;
+
+		timestamp t_addba_rsps = now + SIFS;
+
+		// update NAV
+		NAV_ADDBA = NAV = p.get_nav();
+
+		ptr2sch->schedule(Event(t_addba_rsps, (void*)(&wrapper_to_send_addba_rsps),
+				(void*)this, p.get_source()));
+
+		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+				<< " received " << p << ", channel is free"
+				<< ", ADDBA response transmission scheduled at "
+				<< t_addba_rsps << endl;
+
+		break;
+	}
+
 	}
 
 	END_PROF("MAC::receive_this")
