@@ -136,6 +136,7 @@ protected:
 
   void send_ack(Terminal *to);
   void send_cts(Terminal *to);
+  void send_addba_rsps(Terminal *to);
   void send_data();
   
   void start_TXOP();
@@ -184,6 +185,9 @@ public:
 
   static void wrapper_to_send_cts (void* ptr2obj, void* param) {
     ((MAC_private*)ptr2obj)->send_cts((Terminal*)param);}
+
+  static void wrapper_to_send_addba_rsps (void* ptr2obj, void* param) {
+    ((MAC_private*)ptr2obj)->send_addba_rsps((Terminal*)param);}
 
   static void wrapper_to_send_data (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->send_data();}
