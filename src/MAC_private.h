@@ -94,6 +94,9 @@ protected:
   unsigned  frag_thresh;
   unsigned  max_queue_size;
 
+  // Block ACK parameters
+  bool BAFlag;
+
   // EDCA parameters
   accCat	myAC;
   unsigned aCWmin;

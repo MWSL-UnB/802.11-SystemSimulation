@@ -85,7 +85,6 @@ private:
   
   vector<res_struct> results;   // simulation results
 
-
   
   void final_results();  // stop simulation and output results
   void init_terminals(); // initialize terminals for a new iteration

@@ -49,7 +49,7 @@ const timestamp CTS_Timeout = SIFS + cts_duration + 5;
 ////////////////////////////////////////////////////////////////////////////////
 // MAC constructor                                                            //
 ////////////////////////////////////////////////////////////////////////////////
-MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac){
+MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, bool baf){
 	term = t;
 	ptr2sch = s;
 	randgen = r;
@@ -61,6 +61,8 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac){
 	RTS_threshold = mac.RTS_thresh;
 	frag_thresh = mac.frag_thresh;
 	max_queue_size = mac.queue_size;
+
+	BAFlag = baf;
 
 	for(int k = 0; k < 5; k++)	{
 		accCat auxAC = allACs[k];
