@@ -330,8 +330,8 @@ void MAC_private::cts_timed_out () {
 		TXOPla_win = CTSfail;
 		end_TXOP(); // Finish TXOP before it starts
 	} else {
-		// Since a RTS/CTS exchange will happen in the beginning of the TXOP, RTS will not fail during
-		// TXOP
+		// Remember that RTS might fail during TXOP, so this LA still needs to be performed
+		// afterwards
 		term->la_rts_failed(msdu.get_target()); // link adaptation
 	}
 
@@ -364,6 +364,52 @@ void MAC_private::cts_timed_out () {
 
 
 	END_PROF("MAC::cts_timed_out")
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// MAC_private::cts_timed_out
+//
+// Change contention window if CTS is not received.
+////////////////////////////////////////////////////////////////////////////////
+void MAC_private::addba_rsps_timed_out() {
+	BEGIN_PROF("MAC::addba_rsps_timed_out")
+
+	if(TXOPflag){
+		TXOPla_win = CTSfail;
+		end_TXOP(); // Finish TXOP before it starts
+	} else {
+		term->la_rts_failed(msdu.get_target()); // link adaptation
+	}
+
+	if (retry_count++ >= retry_limit) {
+
+		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+				<< " did not receive ADDBA response for packet "
+				<< pck.get_id() << ", retry count = retry limit ("
+				<< retry_limit << "), give up sending this packet"
+				<< endl;
+
+		term->macUnitdataMaxRetry(msdu);
+
+		packet_queue[myAC].pop_front();
+		if (get_queue_size()) new_msdu();
+
+	} else {
+
+		if (CW_ACs[myAC] <= aCWmax/2) {
+			CW_ACs[myAC] = CW_ACs[myAC] * 2;
+		}
+
+		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+				<< " did not receive ADDBA response for packet " << pck.get_id()
+				<< ", retry count = " << retry_count << ", CW = "
+				<< CW_ACs[myAC] << ", try again" << endl;
+
+		tx_attempt();
+	}
+
+
+	END_PROF("MAC::addba_rsps_timed_out")
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -727,12 +773,12 @@ void MAC_private::send_addba_rsps(Terminal *to) {
 	BEGIN_PROF("MAC::send_addba_rsps")
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-	<< ": send ADDBA response to " << *to << ", NAV = " << NAV_RTS
+	<< ": send ADDBA response to " << *to << ", NAV = " << NAV_ADDBA
 	<< endl;
 
 	// always send CTS at 6Mbps
 	myphy->phyTxStartReq(MPDU(ADDBArsps, term, to, term->get_power(to, frag_thresh),
-			M6, NAV_RTS), true);
+			M6, NAV_ADDBA), true);
 
 	END_PROF("MAC::send_addba_rsps")
 }
