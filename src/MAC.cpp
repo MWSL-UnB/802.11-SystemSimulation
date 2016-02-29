@@ -35,12 +35,21 @@ const timestamp SIFS = timestamp(16.0e-6);
 // Duration of signaling packets
 const timestamp cts_duration = (MPDU(CTS, 0, 0, 0, M6)).get_duration();
 const timestamp rts_duration = (MPDU(RTS, 0, 0, 0, M6)).get_duration();
+const timestamp addba_rqst_duration = (MPDU(ADDBArqst, 0, 0, 0, M6)).get_duration();
+const timestamp addba_rsps_duration = (MPDU(ADDBArsps, 0, 0, 0, M6)).get_duration();
 
 // timeout intervals
 inline timestamp ACK_Timeout(transmission_mode m) {
 	return SIFS + ack_duration(m) + 5;
 }
+inline timestamp BAR_Timeout(transmission_mode m) {
+	return SIFS + bar_duration(m) + 5;
+}
+inline timestamp BA_Timeout(transmission_mode m) {
+	return SIFS + ba_duration(m) + 5;
+}
 const timestamp CTS_Timeout = SIFS + cts_duration + 5;
+const timestamp ADDBArsps_Timeout = SIFS + addba_rsps_duration + 5;
 
 ////////////////////////////////////////////////////////////////////////////////
 // class MAC                                                                  //

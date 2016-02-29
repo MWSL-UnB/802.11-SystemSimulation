@@ -194,6 +194,12 @@ public:
 inline timestamp ack_duration(transmission_mode tm) {
   return (MPDU(ACK, 0, 0, 0, tm)).get_duration();
 }
+inline timestamp ba_duration(transmission_mode tm) {
+  return (MPDU(BA, 0, 0, 0, tm)).get_duration();
+}
+inline timestamp bar_duration(transmission_mode tm) {
+  return (MPDU(BAR, 0, 0, 0, tm)).get_duration();
+}
 
 class BA_MPDU: public MPDU {
 public:
