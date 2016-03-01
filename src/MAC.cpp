@@ -240,7 +240,7 @@ void MAC::phyCCA_busy() {
 	}
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-			<< " received channel-busy message"
+			<< ": received channel-busy message"
 			<< ", stop countdown, backoff counter frozen at "
 			<< BOC_ACs[myAC] << endl;
 
@@ -408,7 +408,6 @@ void MAC_private::addba_rsps_timed_out() {
 		tx_attempt();
 	}
 
-
 	END_PROF("MAC::addba_rsps_timed_out")
 }
 
@@ -532,7 +531,7 @@ void MAC_private::receive_bc(MPDU p) {
 			NAV = p.get_nav();
 
 			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-					<< " received packet " <<  p.get_id()
+					<< ": received packet " <<  p.get_id()
 					<< " targeted at other terminal, with NAV = "
 					<< p.get_nav() << endl;
 		}
@@ -565,7 +564,7 @@ void MAC_private::receive_this(MPDU p) {
 		ptr2sch->remove((void*)(&wrapper_to_ack_timed_out), (void*)this);
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " received ACK for packet "
+				<< ": received ACK for packet "
 				<< pck.get_id() << ", fragment " << current_frag
 				<< " of " << nfrags << endl;
 
@@ -647,8 +646,8 @@ void MAC_private::receive_this(MPDU p) {
 				(void*)this, p.get_source()));
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " received " << p
-				<< "    schedule ACK transmission for " << t_ack
+				<< ": received " << p
+				<< ". Schedule ACK transmission for " << t_ack
 				<< endl;
 
 		// rate adaptation
@@ -666,14 +665,15 @@ void MAC_private::receive_this(MPDU p) {
 		timestamp t_cts = now + SIFS;
 
 		// update NAV
-		NAV_RTS = NAV = p.get_nav();
+		NAV_RTS = p.get_nav();
+		NAV = NAV_RTS;
 
 		ptr2sch->schedule(Event(t_cts, (void*)(&wrapper_to_send_cts),
 				(void*)this, p.get_source()));
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " received " << p << ", channel is free"
-				<< ", schedule CTS transmission scheduled at "
+				<< ": received " << p << ". Channel is free"
+				<< ", CTS transmission scheduled at "
 				<< t_cts << endl;
 
 		break;
@@ -689,24 +689,27 @@ void MAC_private::receive_this(MPDU p) {
 		/* If the TXOP CTS is received, tx_attempt(), not send_data():
 		 * tx_attempt() fragments packet, while send_data() simply sends next fragment.
 		 */
-		if(TXOPflag) ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_tx_attempt),(void*)this));
+		if(TXOPflag && !BAFlag) ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_tx_attempt),
+				(void*)this));
+		else if(TXOPflag) ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_send_addba_rqst),
+				(void*)this,p.get_source()));
 		else ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_send_data),(void*)this));
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " received " << p
+				<< ": received " << p
 				<< ", schedule transmission of data packet "
 				<< pck.get_id() << " at " << t_data << endl;
 
 		// Schedule the end of the TXOP
-		if(TXOPflag) ptr2sch->schedule(Event(TXOPend,(void*)&wrapper_to_end_TXOP,(void*)this));
+		if(!BAFlag && TXOPflag){
+			ptr2sch->schedule(Event(TXOPend,(void*)&wrapper_to_end_TXOP,(void*)this));
+		}
 
 		break;
 	}
 	////////////////////////////////////////////////////////////////////
 	// ADDBA request received, if channel is not busy, transmit response
 	case ADDBArqst : {
-
-		if (now <= NAV) break;
 
 		timestamp t_addba_rsps = now + SIFS;
 
@@ -717,9 +720,30 @@ void MAC_private::receive_this(MPDU p) {
 				(void*)this, p.get_source()));
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " received " << p << ", channel is free"
+				<< ": received " << p << ". Channel is free"
 				<< ", ADDBA response transmission scheduled at "
 				<< t_addba_rsps << endl;
+
+		break;
+	} case ADDBArsps : {
+		ptr2sch->remove((void*)(&wrapper_to_addba_rsps_timed_out), (void*)this);
+
+		if (now <= NAV) break;
+
+		timestamp t_data = now + SIFS;
+
+		// update NAV
+		NAV_ADDBA = NAV = p.get_nav();
+
+		ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_tx_attempt),
+				(void*)this, p.get_source()));
+
+		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+				<< ": received " << p << ". Channel is free"
+				<< ", data transmission scheduled at "
+				<< t_data << endl;
+
+		if(TXOPflag) ptr2sch->schedule(Event(TXOPend,(void*)&wrapper_to_end_TXOP,(void*)this));
 
 		break;
 	}
@@ -767,7 +791,7 @@ void MAC_private::send_cts(Terminal *to) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// MAC_private::send_cts                                                      //
+// MAC_private::send_rqst                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::send_addba_rsps(Terminal *to) {
 	BEGIN_PROF("MAC::send_addba_rsps")
@@ -784,6 +808,27 @@ void MAC_private::send_addba_rsps(Terminal *to) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// MAC_private::send_rqst                                                      //
+////////////////////////////////////////////////////////////////////////////////
+void MAC_private::send_addba_rqst(Terminal *to) {
+	BEGIN_PROF("MAC::send_addba_rqst")
+
+	NAV = ptr2sch->now() + addba_rqst_duration;
+	timestamp t = NAV + ADDBArsps_Timeout;
+
+	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+	<< ": send ADDBA request to " << *to << ", NAV = " << TXOPend
+	<< endl;
+
+	myphy->phyTxStartReq(MPDU(ADDBArqst, term, to, term->get_power(to, frag_thresh),
+			M6, TXOPend), true);
+
+	ptr2sch->schedule(Event(t,(void*)&wrapper_to_addba_rsps_timed_out,(void*)this));
+
+	END_PROF("MAC::send_addba_rqst")
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // MAC_private::send_data                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::send_data() {
@@ -796,7 +841,7 @@ void MAC_private::send_data() {
 	tx_data_rate += tx_mode_to_double(pck.get_mode());
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-			<< " : send " << pck << ", ACK timeout scheduled for "
+			<< ": send " << pck << ". ACK timeout scheduled for "
 			<< t << endl;
 
 	myphy->phyTxStartReq(pck,true);
@@ -833,8 +878,8 @@ void MAC_private::start_TXOP() {
 			TXOPend = now + rts_duration + cts_duration + SIFS;
 
 			if(BAFlag){
-				TXOPend = TXOPend + addba_rqst_duration + addba_rsps_duration + bar_duration(which_mode) +
-						ba_duration(which_mode) + timestamp(3)*SIFS;
+				TXOPend = TXOPend + addba_rqst_duration + addba_rsps_duration + timestamp(2)*SIFS;
+				// + bar_duration(which_mode) + ba_duration(which_mode) + timestamp(3)*SIFS;
 			}
 
 			power_dBm = term->get_power(msdu.get_target(), frag_thresh);
@@ -860,11 +905,11 @@ void MAC_private::start_TXOP() {
 
 				TXOPend = TXOPend + auxpckLast.get_duration();
 
-				if(BAFlag) {
+				//if(BAFlag) {
+					//TXOPend = TXOPend + timestamp(auxNfrags)*SIFS;
+				//} else {
 					TXOPend = TXOPend + timestamp(auxNfrags)*ack_duration(which_mode) + timestamp(2*auxNfrags)*SIFS;
-				} else {
-					TXOPend = TXOPend + timestamp(auxNfrags)*SIFS;
-				}
+				//}
 
 				if(auxNfrags != 1){
 					// Update TXOPend accordingly
@@ -896,7 +941,7 @@ void MAC_private::start_TXOP() {
 					true);
 
 			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-					<< ", sends TXOP RTS to " << *msdu.get_target() << endl;
+					<< ": send TXOP RTS to " << *msdu.get_target() << endl;
 
 			NAV = ptr2sch->now() + rts_duration;
 			timestamp t = NAV + CTS_Timeout;
@@ -958,7 +1003,7 @@ BEGIN_PROF("MAC::internal_contention")
 
 	// This log line is distributed in multiple code lines
 	if(logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-			<< ": BOCs and TTTs for all ACs: ";
+			<< ": BOCs and TTTs for all ACs: \nAC      BOC  TTT";
 
 	// Loop through all ACs, to define which AC will gain access to the WM
 	for(int k = 0; k < 5; k++)	{
@@ -978,8 +1023,8 @@ BEGIN_PROF("MAC::internal_contention")
 			// Calculate Time To Transmit
 			TTT_ACs[k] = ptr2sch->now() + AIFS + timestamp(BOC_ACs[auxAC]) * aSlotTime;
 
-			if(logflag) *mylog << "\n" << auxAC << "	" << BOC_ACs[auxAC]
-					<< "	" << TTT_ACs[k] << " sec.";
+			if(logflag) *mylog << "\n" << auxAC << "   " << BOC_ACs[auxAC]
+					<< "   " << TTT_ACs[k];
 
 			// If calculated TTT is less than the smallest TTT
 			if(TTT_ACs[k] <= minTTT) {
@@ -999,8 +1044,8 @@ BEGIN_PROF("MAC::internal_contention")
 		if(packet_queue[auxAC].size() && TTT_ACs[k] == minTTT && k != minTTT_idx) {
 
 			if(logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-							<< ": simultaneous access between AC " << allACs[minTTT_idx]
-							<< " and AC "<< auxAC << "." <<endl;
+							<< ": simultaneous access between " << allACs[minTTT_idx]
+							<< " and "<< (accCat)auxAC << "." <<endl;
 
 			// Change to temporary AC to calculate BOC
 			set_myAC(auxAC);
@@ -1017,7 +1062,7 @@ BEGIN_PROF("MAC::internal_contention")
 			TTT_ACs[k] = ptr2sch->now() + AIFS + timestamp(BOC_ACs[auxAC]) * aSlotTime;
 
 			if(logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-					<< "new AC " << auxAC << "BOC and TTT: "
+					<< "new AC " << (accCat)auxAC << "BOC and TTT: "
 					<< BOC_ACs[auxAC] << "	" << TTT_ACs[k] << " sec." << endl;
 
 			// If calculated TTT is less than the smallest TTT
@@ -1029,12 +1074,8 @@ BEGIN_PROF("MAC::internal_contention")
 	}
 
 	if(logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-			<< ": packet of AC " << allACs[minTTT_idx]
+			<< ": packet of Acess Category " << (accCat)(allACs[minTTT_idx])
 			<< " will be transmitted." << endl;
-
-	// This log line is distributed in multiple code lines
-	if(logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< ": BOCs will be frozen at: ";
 
 	// Loop to redefine BOCs
 	for(int k = 0; k < 5; k++) {
@@ -1043,12 +1084,9 @@ BEGIN_PROF("MAC::internal_contention")
 			timestamp time_diff = TTT_ACs[k] - TTT_ACs[minTTT_idx];
 			if (time_diff < timestamp(BOC_ACs[auxAC]) * aSlotTime) {
 				BOC_ACs[auxAC] = time_diff / aSlotTime;
-				if(logflag) *mylog << BOC_ACs[auxAC] << "  ";
 			}
 		}
 	}
-
-	if(logflag) *mylog << endl;
 
 	set_myAC(allACs[minTTT_idx]);
 
@@ -1092,10 +1130,10 @@ void MAC_private::transmit() {
 		countdown_flag = false;
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " begins transmission, start with fragment "
+				<< ": begin transmission, start with fragment "
 				<< current_frag << " of " << nfrags
 				<< " with " << pl << " bytes and rate " << which_mode
-				<< "    basic DCF protocol, transmit data packet "
+				<< ". Basic DCF protocol, transmit data packet "
 				<< pck.get_id() << " now" << endl;
 
 		send_data();
@@ -1123,11 +1161,11 @@ void MAC_private::transmit() {
 		timestamp t = NAV + CTS_Timeout;
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " begins transmission, start with fragment "
+				<< ": begin transmission, start with fragment "
 				<< current_frag << " of " << nfrags
 				<< " with " << pl << " bytes and rate " << which_mode
-				<< "    RTS/CTS protocol, transmit RTS for data packet "
-				<< pck.get_id() << "\n    packet takes " << rts_duration
+				<< ". RTS/CTS protocol, transmit RTS for data packet "
+				<< pck.get_id() << "\n    Packet takes " << rts_duration
 				<< ", CTS timeout scheduled for " << t
 				<< ", NAV set to " << NAV << endl;
 
@@ -1182,7 +1220,7 @@ void MAC_private::tx_attempt() {
 	current_frag = 1;
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-		<< " : transmission attempt of new packet with "
+		<< ": transmission attempt of new packet with "
 		<< msdu.get_nbytes() << " bytes and " << nfrags
 		<< " fragments of at most " << frag_thresh << " bytes"
 		<< endl;
@@ -1198,7 +1236,7 @@ void MAC_private::tx_attempt() {
 		if (ptr2sch->now() <= NAV) {
 
 			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-					<< " : transmission attempt"
+					<< ": transmission attempt"
 					<< ", Channel is busy according to NAV (" << NAV
 					<< ")\n    reschedule tx attempt to " << NAV+1 << endl;
 
@@ -1208,7 +1246,7 @@ void MAC_private::tx_attempt() {
 		} else if (myphy->carrier_sensing()) {
 
 			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-					<< " : transmission attempt, Channel is busy"
+					<< ": transmission attempt, Channel is busy"
 					<< ", ask PHY to notify when it is free" << endl;
 
 			// if channel is busy, ask channel when it is free
@@ -1216,7 +1254,7 @@ void MAC_private::tx_attempt() {
 		} else {
 
 			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-					<< " : transmission attempt, Channel is free" << endl;
+					<< ": transmission attempt, Channel is free" << endl;
 
 
 			begin_countdown();
@@ -1240,7 +1278,7 @@ size_t MAC_private::get_queue_size()	{
 }
 
 // Output operator << for accCat type
-ostream& operator<<(ostream& os, const accCat& AC) {
+ostream& operator<<(std::ostream& os, const accCat& AC) {
    switch(AC){
    case AC_BK:
 	   return os << "AC_BK";

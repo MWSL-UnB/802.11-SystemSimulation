@@ -40,6 +40,10 @@ typedef enum{
 	AC_VO,
 	legacy
 }accCat;
+
+ostream& operator<< (ostream& os, const accCat& AC);
+// Overload of output operator for accCat types
+
 accCat const allACs[5] = {AC_BK, AC_BE, AC_VI, AC_VO, legacy};
 
 typedef enum {
@@ -95,6 +99,7 @@ protected:
 
   // Block ACK parameters
   bool BAFlag;
+  vector<long_integer> pcktsToACK;
 
   // EDCA parameters
   accCat	myAC;
@@ -140,6 +145,7 @@ protected:
   void send_ack(Terminal *to);
   void send_cts(Terminal *to);
   void send_addba_rsps(Terminal *to);
+  void send_addba_rqst(Terminal *to);
   void send_data();
   
   void start_TXOP();
@@ -194,6 +200,9 @@ public:
 
   static void wrapper_to_send_addba_rsps (void* ptr2obj, void* param) {
     ((MAC_private*)ptr2obj)->send_addba_rsps((Terminal*)param);}
+
+  static void wrapper_to_send_addba_rqst (void* ptr2obj, void* param) {
+    ((MAC_private*)ptr2obj)->send_addba_rqst((Terminal*)param);}
 
   static void wrapper_to_send_data (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->send_data();}
