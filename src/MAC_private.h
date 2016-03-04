@@ -76,6 +76,7 @@ protected:
   MPDU pck;                  // currently transmitted packet (MPDU)
   MSDU msdu;                 // currently transmitted packet (MSDU)
   transmission_mode rx_mode; // transmission rate of latest received packet
+  transmission_mode tx_mode; // transmission rate of latest transmitted packet
 
   // MAC variables
   map<accCat,unsigned> CW_ACs;	 // Contention window of all ACs
@@ -99,7 +100,10 @@ protected:
 
   // Block ACK parameters
   bool BAFlag;
+  bool BArqstFlag;
+  bool BArspsFlag;
   vector<long_integer> pcktsToACK;
+  vector<MSDU> BApckts;
 
   // EDCA parameters
   accCat	myAC;

@@ -17,7 +17,7 @@ Log = SETUP,MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC an
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 
-Seed = 7
+Seed = 8
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters
@@ -35,7 +35,7 @@ Seed = 7
 % No terminal movement supported so far.
 
 NumberAPs = 1 % number of access points
-NumberStas = 2 % number of mobile terminals 
+NumberStas = 1 % number of mobile terminals 
 Radius = 10 % cell radius in meters
 
 
@@ -53,8 +53,8 @@ Radius = 10 % cell radius in meters
 % will be reduced so that the new sum equals 1. 
 
 ppAC_BK = 0
-ppAC_BE = .5
-ppAC_VI = .5
+ppAC_BE = 0
+ppAC_VI = 1
 ppAC_VO = 0
 ppLegacy = 0
 

@@ -65,7 +65,7 @@ istream& operator>> (istream& is, transmission_mode& tm);
 ////////////////////////////////////////////////////////////////////////////////
 // enum packet_type                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-typedef enum {DUMMY, DATA, ACK, RTS, CTS, ADDBArqst, ADDBArsps, DELBA, BAR, BA} packet_type;
+typedef enum {DUMMY, DATA, ACK, RTS, CTS, ADDBArqst, ADDBArsps, BAR, BA} packet_type;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -193,6 +193,12 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 inline timestamp ack_duration(transmission_mode tm) {
   return (MPDU(ACK, 0, 0, 0, tm)).get_duration();
+}
+inline timestamp addba_rqst_duration(transmission_mode tm) {
+  return (MPDU(ADDBArqst, 0, 0, 0, tm)).get_duration();
+}
+inline timestamp addba_rsps_duration(transmission_mode tm) {
+  return (MPDU(ADDBArsps, 0, 0, 0, tm)).get_duration();
 }
 inline timestamp ba_duration(transmission_mode tm) {
   return (MPDU(BA, 0, 0, 0, tm)).get_duration();
