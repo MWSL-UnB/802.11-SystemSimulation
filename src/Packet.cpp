@@ -262,7 +262,7 @@ BA_MPDU::BA_MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
 		transmission_mode r, timestamp nav, vector<long_integer> ptACK)
 		:MPDU(tp,from,to,p,r,nav) {
 
-	pcktsToACK = ptACK;
+	pcks2ACK = ptACK;
 
 	switch(tp){
 	case BAR:
