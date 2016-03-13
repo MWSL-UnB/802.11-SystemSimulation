@@ -180,6 +180,8 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
            transmission_mode r, timestamp nav)
            : t(tp), mode(r), tx_power(p), net_all_vec(nav) {
 
+	pcks2ACK.clear();
+
 	source = from;
 	target = to;
 
@@ -215,6 +217,17 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
   nbits = nbytes_overhead*8;
   packet_duration = calc_duration (nbits, mode);
 }
+
+void MPDU::set_pcks2ACK(const vector<long_integer>& p2a) {
+
+	  switch(t) {
+	  case BAR: break;
+	  case BA : break;
+	  default: throw(my_exception(GENERAL,
+				"Attempt to set_pcks2ACK on non BA packet."));
+	  }
+	  pcks2ACK = p2a;
+  }
 
 ////////////////////////////////////////////////////////////////////////////////
 // DataMPDU Constructors                                                      //
@@ -256,23 +269,6 @@ DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
   nbits = (nbytes_data + nbytes_overhead)*8;
   packet_duration = calc_duration (nbits, mode);
 
-}
-
-BA_MPDU::BA_MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
-		transmission_mode r, timestamp nav, vector<long_integer> ptACK)
-		:MPDU(tp,from,to,p,r,nav) {
-
-	pcks2ACK = ptACK;
-
-	switch(tp){
-	case BAR:
-		break;
-	case BA:
-		break;
-	default:
-		throw(my_exception(GENERAL,
-				"Block ACK MPDU of type different than BAR or BA in BA_MPDU::BA_MPDU()"));
-	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

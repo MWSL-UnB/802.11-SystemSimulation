@@ -68,7 +68,7 @@ timestamp operator+ (int a, timestamp b) {
 
 timestamp timestamp::operator- (timestamp b) const {
   if (t >= b.t) return timestamp (t - b.t);
-  else throw (my_exception(TS_OVERFLOW));
+  else throw (my_exception(GENERAL,"Timestamp underflow"));
 }
 timestamp timestamp::operator* (timestamp b) const {
   if (t && b.t >= long_integer_max / t) throw (my_exception(TS_OVERFLOW));
