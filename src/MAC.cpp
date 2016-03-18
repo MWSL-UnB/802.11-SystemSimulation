@@ -933,6 +933,7 @@ void MAC_private::send_addba_rsps(Terminal *to) {
 
 	BApckts.clear();
 	pcktsToACK.clear();
+	pcktsDur.clear();
 	BArspsFlag = true;
 
 	timestamp t = ptr2sch->now() + addba_rsps_duration(rx_mode) + ACK_Timeout(rx_mode);
@@ -981,6 +982,7 @@ void MAC_private::send_addba_rqst(Terminal *to) {
 
 	BApckts.clear();
 	pcktsToACK.clear();
+	pcktsDur.clear();
 	BArqstFlag = true;
 
 	END_PROF("MAC::send_addba_rqst")
@@ -1033,6 +1035,7 @@ void MAC_private::send_data() {
 	BEGIN_PROF("MAC::send_data")
 
 	pcktsToACK.push_back(pck.get_id());
+	pcktsDur.push_back(pck.get_duration());
 	BApckts.push_back(msdu);
 
 	NAV = ptr2sch->now() + pck.get_duration();
@@ -1139,7 +1142,7 @@ void MAC_private::start_TXOP() {
 					TXOPend = TXOPend + timestamp(auxNfrags-1)*auxpck.get_duration();
 				}
 
-				 //If an RTS/CTS is needed:
+				//If an RTS/CTS is needed:
 				// For not the last packet
 				if(auxNfrags != 1 && auxpck.get_nbytes_mac() >= RTS_threshold){
 					TXOPend = TXOPend + timestamp(auxNfrags-1)*(rts_duration + cts_duration +
@@ -1226,6 +1229,8 @@ void MAC_private::end_TXOP() {
 void MAC_private::requeue_pcks(MPDU ba) {
 	BEGIN_PROF("MAC::requeue_pcks")
 
+		timestamp auxDur = ba.get_duration() + SIFS;
+
 		for(int k = pcktsToACK.size() - 1; k >= 0; k--) {
 			if(find((ba.get_pcks2Ack()).begin(), (ba.get_pcks2Ack()).end(), pcktsToACK[k])
 					== (ba.get_pcks2Ack()).end()) {
@@ -1234,8 +1239,9 @@ void MAC_private::requeue_pcks(MPDU ba) {
 						<< endl;
 				packet_queue[myAC].push_front(BApckts[k]);
 			} else {
-				term->macUnitdataStatusInd(BApckts[k], ba.get_duration() + SIFS);
+				term->macUnitdataStatusInd(BApckts[k], auxDur);
 			}
+			auxDur = auxDur + pcktsDur[k] + SIFS;
 		}
 
 	new_msdu();
