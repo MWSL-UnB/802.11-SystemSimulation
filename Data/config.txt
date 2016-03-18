@@ -61,6 +61,9 @@ ppLegacy = 0
 % setBA: if 1, all stations with non-zero TXOP time will use 802.11e's Block ACK
 setBA = 1
 
+% setMPDU_Aggregation: if 1, all stations will perform 802.11n's MPDU agregation
+setMPDU_Aggregation = 1
+
 %%%%%%%%%%%%%%%%%%%%%
 % Channel Parameters
 %
