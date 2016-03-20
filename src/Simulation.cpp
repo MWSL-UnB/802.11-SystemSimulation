@@ -354,7 +354,8 @@ void Simulation::init_terminals(){
 			sim_par.get_LAFailLimit(), sim_par.get_UseRxMode());
 
 	mac_struct mac(sim_par.get_RetryLimit(), sim_par.get_RTSThreshold(),
-			sim_par.get_FragmentationThresh(), sim_par.get_QueueSize());
+			sim_par.get_FragmentationThresh(), sim_par.get_QueueSize(),
+			sim_par.get_setBA(), sim_par.get_setAggreg());
 
 	PHY_struct phy(sim_par.get_NoiseVariance(), sim_par.get_CCASensitivity());
 
@@ -368,7 +369,7 @@ void Simulation::init_terminals(){
 
 	for (int i = 0; i < sim_par.get_NumberAPs(); i++) {
 		AccessPoint* ap = new AccessPoint(sim_par.get_APPosition(i), &main_sch, ch,
-				&randgent, &log, mac, phy, tr_time,sim_par.get_setBA());
+				&randgent, &log, mac, phy, tr_time);
 		term_vector.push_back(ap);
 
 		if (log(log_type::setup))
@@ -431,7 +432,7 @@ void Simulation::init_terminals(){
 		}
 
 		MobileStation* ms = new MobileStation(pos, &main_sch, ch, &randgent,
-				&log, mac, phy, tr_time,sim_par.get_setBA());
+				&log, mac, phy, tr_time);
 		term_vector.push_back(ms);
 
 		double min_dist = HUGE_VAL;

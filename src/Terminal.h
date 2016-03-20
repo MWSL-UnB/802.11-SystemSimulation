@@ -55,8 +55,7 @@ public:
            log_file* l,           // pointer to log file
            mac_struct mac,        // MAC layer parameters
            PHY_struct phy,        // physical layer parameters
-           timestamp tr,
-		   bool baf
+           timestamp tr
           );
   ~Terminal();
 
@@ -170,8 +169,8 @@ class MobileStation : public Terminal {
   
 public:
   MobileStation(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-		  mac_struct mac, PHY_struct phy, timestamp tr, bool baf)
-			: Terminal(p, s, c, r, l, mac, phy, tr, baf) {connected = make_pair(this,AC_BK);};
+		  mac_struct mac, PHY_struct phy, timestamp tr)
+			: Terminal(p, s, c, r, l, mac, phy, tr) {connected = make_pair(this,AC_BK);};
   ~MobileStation();
   
   accCat get_connection_AC(Terminal* t);
@@ -211,8 +210,8 @@ class AccessPoint : public Terminal {
 
 public:
   AccessPoint(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-              mac_struct mac, PHY_struct phy, timestamp tr, bool baf)
-             : Terminal(p, s, c, r, l, mac, phy, tr, baf) {};
+              mac_struct mac, PHY_struct phy, timestamp tr)
+             : Terminal(p, s, c, r, l, mac, phy, tr) {};
   ~AccessPoint();
 
   accCat get_connection_AC(Terminal* t);
