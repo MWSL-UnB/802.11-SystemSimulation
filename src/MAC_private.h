@@ -115,6 +115,9 @@ protected:
   unsigned AIFSN;
   timestamp AIFS;
 
+  // MPDU aggregation parameters
+  bool aggFlag;
+
   timestamp TXOPmax;
   timestamp TXOPend;
   bool TXOPflag;
