@@ -108,6 +108,9 @@ protected:
   vector<MSDU> BApckts;
   vector<timestamp> pcktsDur;
 
+  // MPDU aggregation parameters
+  bool aggFlag;
+
   // EDCA parameters
   accCat	myAC;
   unsigned aCWmin;
