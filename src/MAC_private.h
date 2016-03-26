@@ -123,8 +123,6 @@ protected:
 
   void cts_timed_out();
 
-  void addba_rsps_timed_out();
-
   void end_nav();
   // channel released according to NAV
 
@@ -173,9 +171,6 @@ public:
 
   static void wrapper_to_cts_timed_out (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->cts_timed_out();}
-
-  static void wrapper_to_addba_rsps_timed_out (void* ptr2obj) {
-    ((MAC_private*)ptr2obj)->addba_rsps_timed_out();}
 
   static void wrapper_to_end_nav (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->end_nav();}
