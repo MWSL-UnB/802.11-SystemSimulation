@@ -106,7 +106,6 @@ protected:
   timestamp time_to_send_BAR;
   vector<long_integer> pcktsToACK;
   vector<MSDU> BApckts;
-  vector<timestamp> pcktsDur;
 
   // EDCA parameters
   accCat	myAC;
