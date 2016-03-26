@@ -101,7 +101,7 @@ ostream& operator << (ostream& os, const timestamp& ts) {
     return os << "not_a_timestamp";
    } else {
 //    return os << ts.t << '(' << double(aux_ts) << "sec.)";
-     return os <<  double(ts);
+     return os << double(ts);
    }
 }
 

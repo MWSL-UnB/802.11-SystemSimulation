@@ -7,7 +7,7 @@ MaxSimTime = 1 %0.1025  % maximum simulation time in seconds
 TempOutputInterval = 1 % interval between temporary outputs
 TransientTime = .1 % ignore first TransientTime seconds 
 Confidence = .95 % for calculation of confidence interval (if more than one seed), default = .95
-Log = SETUP,MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or SCHEDULER)
+Log = SETUP  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or SCHEDULER)
              % unlike the other parameters the simulation will not iterate over this parameter
              % , the log output will be a combination of the desired elements for all iterations
 
@@ -17,7 +17,7 @@ Log = SETUP,MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC an
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 
-Seed = 7
+Seed = 8
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters
@@ -53,13 +53,13 @@ Radius = 10 % cell radius in meters
 % will be reduced so that the new sum equals 1. 
 
 ppAC_BK = 0
-ppAC_BE = .5
-ppAC_VI = .5
+ppAC_BE = 1
+ppAC_VI = 0, .25, .5, .75, 1
 ppAC_VO = 0
 ppLegacy = 0
 
 % setBA: if 1, all stations with non-zero TXOP time will use 802.11e's Block ACK
-setBA = 1
+setBA = 0
 
 %%%%%%%%%%%%%%%%%%%%%
 % Channel Parameters
@@ -123,7 +123,7 @@ PacketLength = 1000 %,500(.3);1000(.2);1500(.3);2100(.2)
   % Number of data bytes in a packet
   % variable-length packets can be considered by giving several lengths with the corresponding
   % probabilities, e.g., 250(.4);1000(.3);2000(.3)
-DataRate = 2%,2,5%.01,.05,.1,.2,.3,.4,.5,.6,.7,.8 % offered load in Mbps per link
+DataRate = 25%,2,5%.01,.05,.1,.2,.3,.4,.5,.6,.7,.8 % offered load in Mbps per link
 DownlinkFactor = 1 % offered downstream load is DataRate * DownlinkFactor
 UplinkFactor = 1 % offered upstream load is DataRate * UplinkFactor
 ArrivalTime = EXP % arrival time distribution (EXP,CONSTANT)

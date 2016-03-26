@@ -1,49 +1,114 @@
 
 
 Iteration 1
-    
+    proportion of AC_VIs = 0 , 
 
 Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   0   (  0;  0)  0.0     4.167        0.68    0.54     469     469  0.0000   0.0000     1.4     48.77      1.8
-   1   ( -2; -9)  9.6     2.070        0.65    0.55     233     233  0.0000   0.0000     1.2     49.05      0.9
-   2   ( -1;  3)  3.2     1.795        0.66    0.57     202     202  0.0000   0.0000     1.1     51.00      0.8
+   0   (  0;  0)  0.0     8.604      459.75    0.89     968     968  0.0000   0.8128   980.7     52.70      2.5
+   1   (  7; -1)  7.1     8.835      366.74    0.87     994     994  0.0000   0.5018   832.7     53.31      2.1
+   2   ( -4;  1)  4.1     8.720      386.37    0.88     981     981  0.0000   0.5355   862.1     53.05      2.1
 
- Total throughput = 8.03241 Mbps
- Average transfer time = 0.000660829s
- Average transmission time = 0.000552364s
+ Total throughput = 26.1597 Mbps
+ Average transfer time = 0.404287s
+ Average transmission time = 0.000877978s
  Packet loss rate = 0
- Overflow rate = 0
+ Overflow rate = 0.616689
+
+
+Iteration 2
+    proportion of AC_VIs = 0.25 , 
+
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+   3   (  0;  0)  0.0     1.893      560.40    4.21     213     213  0.0000   0.9596   988.9     47.86      1.6
+   4   (  7; -1)  7.1    25.685        5.70    0.27    2890    2890  0.0000   0.0000    18.5     53.50      6.0
+   5   ( -4;  1)  4.1     1.893      540.39    4.20     213     213  0.0000   0.8988   906.6     50.96      0.5
+
+ Total throughput = 29.4714 Mbps
+ Average transfer time = 0.368831s
+ Average transmission time = 0.00289249s
+ Packet loss rate = 0
+ Overflow rate = 0.619455
+
+
+Iteration 3
+    proportion of AC_VIs = 0.5 , 
+
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+   6   (  0;  0)  0.0     9.138      152.77    0.83    1028    1028  0.0000   0.8026   980.1     51.34      3.0
+   7   (  7; -1)  7.1    22.231      193.87    0.32    2501    2501  0.0000   0.0000   590.6     53.41      4.9
+   8   ( -4;  1)  4.1     0.613      619.24   13.01      69      69  0.0000   0.9673   914.2     44.88      0.5
+
+ Total throughput = 31.9818 Mbps
+ Average transfer time = 0.321961s
+ Average transmission time = 0.00471876s
+ Packet loss rate = 0
+ Overflow rate = 0.589988
+
+
+Iteration 4
+    proportion of AC_VIs = 0.75 , 
+
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+   9   (  0;  0)  0.0     8.720      199.92    0.87     981     981  0.0000   0.8122   982.8     51.20      2.9
+  10   (  7; -1)  7.1    11.600      360.46    0.65    1305    1305  0.0000   0.3584   838.0     52.84      2.6
+  11   ( -4;  1)  4.1    12.009      351.55    0.63    1351    1351  0.0000   0.3473   831.5     52.57      3.0
+
+ Total throughput = 32.3282 Mbps
+ Average transfer time = 0.303975s
+ Average transmission time = 0.000715555s
+ Packet loss rate = 0
+ Overflow rate = 0.505976
+
+
+Iteration 5
+    proportion of AC_VIs = 1 , 
+
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  12   (  0;  0)  0.0    11.182      433.29    0.67    1258    1258  0.0000   0.7611   983.2     51.41      3.4
+  13   (  7; -1)  7.1    11.199      336.17    0.68    1260    1260  0.0000   0.3931   816.2     52.83      2.7
+  14   ( -4;  1)  4.1     9.919      369.35    0.77    1116    1116  0.0000   0.4812   849.9     52.67      2.5
+
+ Total throughput = 32.3003 Mbps
+ Average transfer time = 0.379604s
+ Average transmission time = 0.000705544s
+ Packet loss rate = 0
+ Overflow rate = 0.545115
 
 
 %%%% Final results %%%%
 
 
+proportion of AC_VIs=         0       0.25        0.5       0.75          1 
 
 
 Throughput (Mbps)
-mean           =      8.032 
+mean           =     26.160     29.471     31.982     32.328     32.300 
 
 Transfer time (ms)
-mean           =      0.661 
+mean           =    404.287    368.831    321.961    303.975    379.604 
 
 Standard deviation of transfer time (ms)
-mean           =      0.524 
+mean           =    184.107    147.423    147.559    128.249    163.146 
 
 Transmission time (ms)
-mean           =      0.552 
+mean           =      0.878      2.892      4.719      0.716      0.706 
 
 Standard deviation of transmission time (ms)
-mean           =      0.374 
+mean           =      0.464      2.478      4.418      2.882      2.227 
 
 Packet loss rate
-mean           =      0.000 
+mean           =      0.000      0.000      0.000      0.000      0.000 
 
 Queue overflow rate
-mean           =      0.000 
+mean           =      0.617      0.619      0.590      0.506      0.545 
 
 Average queue length
-mean           =      1.238 
+mean           =    891.847    638.012    828.309    884.104    883.127 
 
 Average transmission power (mW)
-mean           =      1.130 
+mean           =      2.228      2.709      2.822      2.854      2.856 
