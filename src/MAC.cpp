@@ -72,8 +72,6 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac){
 	BArqstFlag = false;
 	BArspsFlag = false;
 
-	aggFlag = mac.MPDUaggFlag;
-
 	for(int k = 0; k < 5; k++)	{
 		accCat auxAC = allACs[k];
 		deque<MSDU> auxQue;
