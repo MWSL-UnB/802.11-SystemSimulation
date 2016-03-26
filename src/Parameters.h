@@ -217,9 +217,6 @@ class Parameters {
   // IEEE 802.11e Block ACK parameters
   param_vec_bool setBA;
 
-  // IEEE 802.11n MPDU aggregation parameters
-  param_vec_bool setMPDU_Aggregation;
-
   bool default_flag; // true if default parameters are stored
 
   void default_config(); // assigns default configuration values
@@ -277,7 +274,6 @@ public:
   double get_ppAC_VO() {return ppAC_VO.current();}
   double get_ppLegacy() {return ppLegacy.current();}
   bool get_setBA() {return setBA.current();}
-  bool get_setAggreg() {return setMPDU_Aggregation.current();}
 
 
   Position get_APPosition(int which_ap);

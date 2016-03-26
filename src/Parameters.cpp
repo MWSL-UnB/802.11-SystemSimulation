@@ -322,16 +322,12 @@ bool Parameters::assign (string s1,string s2) {
   	  if (!ppAC_VO.read_vec(s2)) return false;
 
   } else if (!s1.compare("ppLegacy")) {
-	  which_param = &ppLegacy;
-	  if (!ppLegacy.read_vec(s2)) return false;
+  	  which_param = &ppLegacy;
+  	  if (!ppLegacy.read_vec(s2)) return false;
 
   } else if (!s1.compare("setBA")){
-	  which_param = &setBA;
-	  if (!setBA.read_vec(s2)) return false;
-
-  } else if (!s1.compare("setMPDU_Aggregation")){
-	  which_param = &setMPDU_Aggregation;
-	  if (!setMPDU_Aggregation.read_vec(s2)) return false;
+      which_param = &setBA;
+      if (!setBA.read_vec(s2)) return false;
 
   } else {
     return false;
@@ -400,7 +396,7 @@ void Parameters::default_config () {
   FragmentationThresh.init("fragmentation threshold",2312);
   QueueSize.init("queue size",100);
 
-  // IEEE802.11e EDCA parameters
+  // IEEE802.11n EDCA parameters
   ppAC_BK.init("proportion of AC_BKs",0);
   ppAC_BE.init("proportion of AC_BEs",0);
   ppAC_VI.init("proportion of AC_VIs",0);
@@ -409,9 +405,6 @@ void Parameters::default_config () {
 
   // IEEE 802.11e Block ACK parameters
   setBA.init("Block Acknowledgment Flag",false);
-
-  // IEEE 802.11n MPDU Aggregation parameters
-  setMPDU_Aggregation.init("MPDU Aggregation Flag",false);
 
 }
 
