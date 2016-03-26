@@ -17,7 +17,7 @@ Log = SETUP,MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC an
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 
-Seed = 7
+Seed = 3
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters
@@ -59,10 +59,10 @@ ppAC_VO = 0
 ppLegacy = 0
 
 % setBA: if 1, all stations with non-zero TXOP time will use 802.11e's Block ACK
-setBA = 0
+setBA = 1
 
 % setMPDU_Aggregation: if 1, all stations will perform 802.11n's MPDU agregation
-setMPDU_Aggregation = 0
+setMPDU_Aggregation = 1
 
 %%%%%%%%%%%%%%%%%%%%%
 % Channel Parameters
