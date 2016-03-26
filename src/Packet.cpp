@@ -43,6 +43,7 @@ const unsigned cts_packet_overhead  = 14;
 // Define these correctly
 const unsigned addba_rqst_overhead  = 14;
 const unsigned addba_rsps_overhead  = 14;
+const unsigned delba_pckt_overhead  = 14;
 const unsigned bar_packet_overhead  = 20;
 const unsigned ba_packet_overhead   = 20;
 
@@ -199,6 +200,9 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
 	case ADDBArsps :
 		nbytes_overhead = service_field_overhead + addba_rsps_overhead;
 		break;
+	case DELBA :
+		nbytes_overhead = service_field_overhead + delba_pckt_overhead;
+		break;
 	case BAR :
 		nbytes_overhead = service_field_overhead + bar_packet_overhead;
 		break;
@@ -296,14 +300,11 @@ ostream& operator << (ostream& os, const MPDU& p) {
           return os << "ADDBA request packet " << p.id << " from " << *(p.source) << " to "
                     << *(p.target);
     case ADDBArsps:
-    	return os << "ADDBA response packet " << p.id << " from " << *(p.source) << " to "
-    			<< *(p.target);
-    case BAR:
-    	return os << "BAR packet " << p.id << " from " << *(p.source) << " to "
-    			<< *(p.target);
-    case BA:
-    	return os << "BA packet " << p.id << " from " << *(p.source) << " to "
-    			<< *(p.target);
+          return os << "ADDBA response packet " << p.id << " from " << *(p.source) << " to "
+                    << *(p.target);
+    case DELBA:
+              return os << "DELBA packet " << p.id << " from " << *(p.source) << " to "
+                        << *(p.target);
   }
 }
 
