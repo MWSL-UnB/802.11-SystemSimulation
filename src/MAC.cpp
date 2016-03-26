@@ -742,15 +742,8 @@ void MAC_private::start_TXOP() {
 			timestamp now = ptr2sch->now();
 			timestamp auxTXOPend = now;
 
-			transmission_mode which_mode = term->get_current_mode(msdu.get_target(),frag_thresh);
-
 			// TXOPend must account for RTS/CTS exchanged in the beginning of TXOP
 			TXOPend = now + rts_duration + cts_duration + SIFS;
-
-			if(BAFlag){
-				TXOPend = TXOPend + addba_rqst_duration + addba_rsps_duration + bar_duration(which_mode) +
-						ba_duration(which_mode) + timestamp(3)*SIFS;
-			}
 
 			power_dBm = term->get_power(msdu.get_target(), frag_thresh);
 
@@ -768,18 +761,14 @@ void MAC_private::start_TXOP() {
 				lastpl = auxmsdu.get_nbytes() % frag_thresh;
 				if (!lastpl) lastpl = frag_thresh;
 
+				transmission_mode which_mode = term->get_current_mode(msdu.get_target(),frag_thresh);
 				DataMPDU auxpck (frag_thresh, term, auxmsdu.get_target(),power_dBm,
 						which_mode);
 				DataMPDU auxpckLast(lastpl, term, auxmsdu.get_target(), power_dBm,
 						which_mode);
 
-				TXOPend = TXOPend + auxpckLast.get_duration();
-
-				if(BAFlag) {
-					TXOPend = TXOPend + timestamp(auxNfrags)*ack_duration(which_mode) + timestamp(2*auxNfrags)*SIFS;
-				} else {
-					TXOPend = TXOPend + timestamp(auxNfrags)*SIFS;
-				}
+				TXOPend = TXOPend + auxpckLast.get_duration() + timestamp(auxNfrags)*ack_duration(which_mode)
+						+ timestamp(2*auxNfrags)*SIFS;
 
 				if(auxNfrags != 1){
 					// Update TXOPend accordingly
