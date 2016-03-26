@@ -39,6 +39,7 @@ const unsigned data_packet_overhead = 28;
 const unsigned ack_packet_overhead  = 14;
 const unsigned rts_packet_overhead  = 20;
 const unsigned cts_packet_overhead  = 14;
+const unsigned ba_packet_overhead  = 20;
 
 /////////////////////////////
 // physical layer overhead 
@@ -186,6 +187,9 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
     case CTS :
       nbytes_overhead = service_field_overhead + cts_packet_overhead;
       break;
+    case BA :
+      nbytes_overhead = service_field_overhead + ba_packet_overhead;
+      break;
     case DUMMY :
       return;
     default :
@@ -195,6 +199,17 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
 
   nbits = nbytes_overhead*8;
   packet_duration = calc_duration (nbits, mode);
+}
+
+void MPDU::setPcks2Ack(const vector<long_integer>& pcks2Ack) {
+	switch(t) {
+	case BA:
+		break;
+	default:
+		throw(my_exception(GENERAL,
+		            "Attempt to initialize pcks2ACK for non-BA packet"));
+	}
+	pcks2ACK = pcks2Ack;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -256,6 +271,9 @@ ostream& operator << (ostream& os, const MPDU& p) {
     case RTS:
       return os << "RTS packet " << p.id << " from " << *(p.source) << " to "
                 << *(p.target);
+    case BA:
+          return os << "BA packet " << p.id << " from " << *(p.source) << " to "
+                    << *(p.target);
   }
 }
 

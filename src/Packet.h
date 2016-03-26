@@ -25,6 +25,7 @@
 
 #include "timestamp.h"
 #include "long_integer.h"
+#include <vector>
 
 class Terminal;
 
@@ -63,7 +64,7 @@ istream& operator>> (istream& is, transmission_mode& tm);
 ////////////////////////////////////////////////////////////////////////////////
 // enum packet_type                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-typedef enum {DUMMY, DATA, ACK, RTS, CTS} packet_type;
+typedef enum {DUMMY, DATA, ACK, RTS, CTS, BA} packet_type;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -127,6 +128,9 @@ protected:
   timestamp packet_duration;
   timestamp net_all_vec; // NAV field
 
+  // Used only for BA packets
+  vector<long_integer> pcks2ACK;
+
 public:
   MPDU(packet_type tp = DUMMY,    // packet type
        Terminal* from = 0,        // source terminal
@@ -141,10 +145,12 @@ public:
   timestamp         get_nav()        const {return net_all_vec;}
   unsigned          get_nbits()      const {return nbits;}
   double            get_power ()     const {return tx_power;}
-  packet_type       get_type()       const {return t;}       
-  
+  packet_type       get_type()       const {return t;}
+  const vector<long_integer>& getPcks2Ack() const {return pcks2ACK;}
+
   friend ostream& operator << (ostream& os, const MPDU& p);
-  
+
+  void setPcks2Ack(const vector<long_integer>& pcks2Ack);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
