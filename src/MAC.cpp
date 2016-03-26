@@ -1130,7 +1130,7 @@ size_t MAC_private::get_queue_size()	{
 }
 
 // Output operator << for accCat type
-ostream& operator<<(ostream& os, const accCat& AC) {
+ostream& operator<<(ostream& os, accCat& AC) {
    switch(AC){
    case AC_BK:
 	   return os << "AC_BK";

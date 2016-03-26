@@ -49,7 +49,7 @@ Radius = 10 % cell radius in meters
 % 
 % Proportion of connections belonging to each access category.
 % Connections with unspecified AC will be assigned to AC_BK.
-% If the sum of proportions is more than 1, the low priority ACs' proportions
+% If the sum of proportions is more than 1 the low priority ACs' proportions
 % will be reduced so that the new sum equals 1. 
 
 ppAC_BK = 0
