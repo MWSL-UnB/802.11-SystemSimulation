@@ -106,6 +106,9 @@ protected:
   bool TXOPflag;
   TXOPla TXOPla_win; // Flag that indicates if link adaptation will be successful or not after TXOP
 
+  // BA and aggregation parameters
+  bool BAAggFlag;
+
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts
   double        tx_data_rate; // mean transmitted data rate

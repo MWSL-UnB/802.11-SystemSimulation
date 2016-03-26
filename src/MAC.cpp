@@ -71,6 +71,8 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac){
 		BOC_flag[auxAC] = true;
 	}
 
+	BAAggFlag = mac.BAAgg;
+
 	NAV = timestamp(0);
 	nfrags = 1;
 	current_frag = 0;

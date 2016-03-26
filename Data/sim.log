@@ -1,80 +1,13 @@
 
 
 Iteration 1
-	proportion of AC_VIs = 0 , 
+	
 
 Access Point 0 created at position (0;0)
 
-Mobile Station 1 created at position (7.07836;-0.83118) with distance 7.127 m to Access Point 0
-Mobile station AC: 1. Access Point AC: 1.
-Mobile Station 2 created at position (-3.82641;1.43111) with distance 4.08528 m to Access Point 0
-Mobile station AC: 1. Access Point AC: 1.
+Mobile Station 1 created at position (10;0) with distance 10 m to Access Point 0
+Mobile station AC: 2. Access Point AC: 2.
 
-Access Point 0 is connected to Mobile Station 1 and Mobile Station 2
+Access Point 0 is connected to Mobile Station 1
 Mobile Station 1 is connected to Access Point 0
-Mobile Station 2 is connected to Access Point 0
-
-
-
-Iteration 2
-	proportion of AC_VIs = 0.25 , 
-
-Access Point 3 created at position (0;0)
-
-Mobile Station 4 created at position (7.07836;-0.83118) with distance 7.127 m to Access Point 3
-Mobile station AC: 2. Access Point AC: 1.
-Mobile Station 5 created at position (-3.82641;1.43111) with distance 4.08528 m to Access Point 3
-Mobile station AC: 1. Access Point AC: 1.
-
-Access Point 3 is connected to Mobile Station 5 and Mobile Station 4
-Mobile Station 4 is connected to Access Point 3
-Mobile Station 5 is connected to Access Point 3
-
-
-
-Iteration 3
-	proportion of AC_VIs = 0.5 , 
-
-Access Point 6 created at position (0;0)
-
-Mobile Station 7 created at position (7.07836;-0.83118) with distance 7.127 m to Access Point 6
-Mobile station AC: 2. Access Point AC: 1.
-Mobile Station 8 created at position (-3.82641;1.43111) with distance 4.08528 m to Access Point 6
-Mobile station AC: 1. Access Point AC: 2.
-
-Access Point 6 is connected to Mobile Station 8 and Mobile Station 7
-Mobile Station 7 is connected to Access Point 6
-Mobile Station 8 is connected to Access Point 6
-
-
-
-Iteration 4
-	proportion of AC_VIs = 0.75 , 
-
-Access Point 9 created at position (0;0)
-
-Mobile Station 10 created at position (7.07836;-0.83118) with distance 7.127 m to Access Point 9
-Mobile station AC: 2. Access Point AC: 1.
-Mobile Station 11 created at position (-3.82641;1.43111) with distance 4.08528 m to Access Point 9
-Mobile station AC: 2. Access Point AC: 2.
-
-Access Point 9 is connected to Mobile Station 10 and Mobile Station 11
-Mobile Station 10 is connected to Access Point 9
-Mobile Station 11 is connected to Access Point 9
-
-
-
-Iteration 5
-	proportion of AC_VIs = 1 , 
-
-Access Point 12 created at position (0;0)
-
-Mobile Station 13 created at position (7.07836;-0.83118) with distance 7.127 m to Access Point 12
-Mobile station AC: 2. Access Point AC: 2.
-Mobile Station 14 created at position (-3.82641;1.43111) with distance 4.08528 m to Access Point 12
-Mobile station AC: 2. Access Point AC: 2.
-
-Access Point 12 is connected to Mobile Station 14 and Mobile Station 13
-Mobile Station 13 is connected to Access Point 12
-Mobile Station 14 is connected to Access Point 12
 

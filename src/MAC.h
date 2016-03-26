@@ -37,10 +37,12 @@ struct mac_struct {
                          // bytes use RTS/CTS protocol)
   unsigned frag_thresh;  // fragmentation threshold, fragments must have less
                          // than frag_thresh bytes
-  unsigned queue_size;   // size of packet queue                                                
+  unsigned queue_size;   // size of packet queue
+  bool BAAgg;		 // flag for Block ACK and Aggregation
 
-  mac_struct(unsigned r, unsigned rt, unsigned ft, unsigned qs)
-            : retry(r), RTS_thresh(rt), frag_thresh(ft), queue_size(qs)  {}
+  mac_struct(unsigned r, unsigned rt, unsigned ft, unsigned qs, bool baf)
+            : retry(r), RTS_thresh(rt), frag_thresh(ft), queue_size(qs),
+			  BAAgg(baf){}
 };
 
 ////////////////////////////////////////////////////////////////////////////////
