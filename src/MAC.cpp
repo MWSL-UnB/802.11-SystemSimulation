@@ -93,7 +93,7 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac, bool
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// MAC_private::set_myAC		                                                  //
+// MAC_private::set_AC		                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::set_myAC(accCat AC) {
 
@@ -366,7 +366,9 @@ void MAC_private::cts_timed_out () {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// MAC_private::addba_rsps_timed_out										  //
+// MAC_private::cts_timed_out
+//
+// Change contention window if CTS is not received.
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::addba_rsps_timed_out() {
 	BEGIN_PROF("MAC::addba_rsps_timed_out")
@@ -406,39 +408,6 @@ void MAC_private::addba_rsps_timed_out() {
 	}
 
 	END_PROF("MAC::addba_rsps_timed_out")
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// MAC_private::ba_timed_out										  //
-////////////////////////////////////////////////////////////////////////////////
-void MAC_private::ba_timed_out() {
-	BEGIN_PROF("MAC::ba_timed_out")
-
-	if (retry_count++ >= retry_limit) {
-
-		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " did not receive BA. "
-				<< " retry count = retry limit (" << retry_limit
-				<< "), give up sending this packet and requeue packets."
-				<< endl;
-
-		term->macUnitdataMaxRetry(msdu);
-
-		packet_queue[myAC].pop_front();
-		if (get_queue_size()) new_msdu();
-
-	} else {
-		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " did not receive BA"
-				<< ". retry count = " << retry_count
-				<< ", requeue packets" << endl;
-	}
-
-	for(int k = BApckts.size(); k >= 0; k--) {
-		packet_queue[myAC].push_front(BApckts[k]);
-	}
-
-	END_PROF("MAC::ba_timed_out")
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -521,10 +490,6 @@ void MAC::phyRxEndInd(MPDU p) {
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::new_msdu() {
 
-	timestamp t;
-	if(BArqstFlag) t = ptr2sch->now() + SIFS + pck.get_duration();
-	else t = ptr2sch->now()+SIFS;
-
 	// Change BOC flag before switching AC
 	BOC_flag[myAC] = true;
 
@@ -544,7 +509,7 @@ void MAC_private::new_msdu() {
 	// If during TXOP and TXOPend is not next time increment
 	if(TXOPflag && TXOPend > ptr2sch->now() + 1) {
 		// Schedule tx_attempt to now + SIFS
-		ptr2sch->schedule(Event(t,(void*)&wrapper_to_tx_attempt,
+		ptr2sch->schedule(Event(ptr2sch->now()+SIFS,(void*)&wrapper_to_tx_attempt,
 				(void*)this));
 	} else {
 		// If not, tx_attempt is scheduled for next time increment
@@ -598,6 +563,7 @@ void MAC_private::receive_this(MPDU p) {
 		ptr2sch->remove((void*)(&wrapper_to_ack_timed_out), (void*)this);
 
 		if(BArqstFlag) {
+			BArqstFlag = false;
 
 			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 				<< ": received ACK for ADDBA request." << endl;
@@ -608,10 +574,10 @@ void MAC_private::receive_this(MPDU p) {
 			break;
 		}
 		if(BArspsFlag){
+			BArspsFlag = false;
 
 			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 				<< ": received ACK for ADDBA response." << endl;
-			BApckts.clear();
 			pcktsToACK.clear();
 
 			break;
@@ -692,31 +658,18 @@ void MAC_private::receive_this(MPDU p) {
 	///////////////////////////////////////
 	// data packet received, transmit ACK
 	case DATA : {
-
+		timestamp t_ack = now + SIFS;
 		rx_mode = p.get_mode();
 		NAV = p.get_nav();
 
-		if(BArspsFlag) {
+		ptr2sch->schedule(Event(t_ack, (void*)(&wrapper_to_send_ack),
+				(void*)this, p.get_source()));
 
-			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-					<< ": received " << p
-					<< " during Block ACK session." << endl;
+		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+				<< ": received " << p
+				<< ". Schedule ACK transmission for " << t_ack
+				<< endl;
 
-			pcktsToACK.push_back(p.get_id());
-
-		} else {
-
-			timestamp t_ack = now + SIFS;
-
-			ptr2sch->schedule(Event(t_ack, (void*)(&wrapper_to_send_ack),
-					(void*)this, p.get_source()));
-
-			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-					<< ": received " << p
-					<< ". Schedule ACK transmission for " << t_ack
-					<< endl;
-
-		}
 		// rate adaptation
 		term->la_rx_success(p.get_source(), rx_mode);
 
@@ -726,8 +679,6 @@ void MAC_private::receive_this(MPDU p) {
 	///////////////////////////////////////////////////////
 	// RTS received, if channel is not busy, transmit CTS
 	case RTS : {
-
-		set_myAC(term->get_connection_AC(p.get_source()));
 
 		if (now <= NAV) break;
 
@@ -753,20 +704,21 @@ void MAC_private::receive_this(MPDU p) {
 	case CTS : {
 		ptr2sch->remove((void*)(&wrapper_to_cts_timed_out), (void*)this);
 
-		timestamp t = now + SIFS;
+		timestamp t_data = now + SIFS;
 
 		/* If the TXOP CTS is received, tx_attempt(), not send_data():
 		 * tx_attempt() fragments packet, while send_data() simply sends next fragment.
 		 */
-		if(TXOPflag && !BAFlag) ptr2sch->schedule(Event(t, (void*)(&wrapper_to_tx_attempt),
+		if(TXOPflag && !BAFlag) ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_tx_attempt),
 				(void*)this));
-		else if(TXOPflag) ptr2sch->schedule(Event(t, (void*)(&wrapper_to_send_addba_rqst),
+		else if(TXOPflag) ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_send_addba_rqst),
 				(void*)this,p.get_source()));
-		else ptr2sch->schedule(Event(t, (void*)(&wrapper_to_send_data),(void*)this));
+		else ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_send_data),(void*)this));
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 				<< ": received " << p
-				<< ", schedule next transmission at " << t << endl;
+				<< ", schedule transmission of data packet "
+				<< pck.get_id() << " at " << t_data << endl;
 
 		// Schedule the end of the TXOP
 		if(!BAFlag && TXOPflag){
@@ -799,11 +751,7 @@ void MAC_private::receive_this(MPDU p) {
 				<< t_addba_rsps << endl;
 
 		break;
-
-	}
-	////////////////////////////////////////////////////////////////////
-	// ADDBA response received, send ACK and Data
-	case ADDBArsps : {
+	} case ADDBArsps : {
 		ptr2sch->remove((void*)(&wrapper_to_addba_rsps_timed_out), (void*)this);
 
 		if (now <= NAV) break;
@@ -825,44 +773,6 @@ void MAC_private::receive_this(MPDU p) {
 				<< t_data << endl;
 
 		if(TXOPflag) ptr2sch->schedule(Event(TXOPend,(void*)&wrapper_to_end_TXOP,(void*)this));
-
-		break;
-	}
-	////////////////////////////////////////////////////////////////////
-	// BAR received, send BA
-	case BAR : {
-
-		BArspsFlag = false;
-
-		rx_mode = p.get_mode();
-
-		timestamp t_ba = now + SIFS;
-
-		// update NAV
-		NAV = p.get_nav();
-
-		ptr2sch->schedule(Event(t_ba, (void*)&wrapper_to_send_ba,
-				(void*)this, p.get_source()));
-
-		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< ": received " << p << ". BA transmission scheduled at "
-				<< t_ba << endl;
-
-		break;
-	}
-	////////////////////////////////////////////////////////////////////
-	// BA received, requeue unacknowledged packets
-	case BA : {
-
-		ptr2sch->remove((void*)(&wrapper_to_ba_timed_out),(void*)this);
-
-		BArqstFlag = false;
-
-		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< ": received " << p << ". Requeue unacknowledged packets."
-				<< endl;
-
-		requeue_pcks(p);
 
 		break;
 	}
@@ -935,7 +845,7 @@ void MAC_private::send_addba_rsps(Terminal *to) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//MAC_private::send_addba_rqst                                                      //
+//MAC_private::send_rqst                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::send_addba_rqst(Terminal *to) {
 	BEGIN_PROF("MAC::send_addba_rqst")
@@ -969,71 +879,22 @@ void MAC_private::send_addba_rqst(Terminal *to) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//MAC_private::send_bar                                                      //
-////////////////////////////////////////////////////////////////////////////////
-void MAC_private::send_bar(Terminal *to) {
-	BEGIN_PROF("MAC::send_bar")
-
-	NAV = ptr2sch->now() + bar_duration(tx_mode);
-	timestamp t = NAV + BA_Timeout(tx_mode);
-
-	myphy->phyTxStartReq(BA_MPDU(BAR, term, to, term->get_power(to, frag_thresh),
-			tx_mode, TXOPend, pcktsToACK), true);
-
-	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-	<< ": send BAR to " << *to << ", NAV = " << TXOPend
-	<<". BA timeout scheduled to " << t << endl;
-
-	ptr2sch->schedule(Event(t,(void*)&wrapper_to_ba_timed_out,(void*)this));
-
-	END_PROF("MAC::send_bar")
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//MAC_private::send_ba                                                      //
-////////////////////////////////////////////////////////////////////////////////
-void MAC_private::send_ba(Terminal *to) {
-	BEGIN_PROF("MAC::send_ba")
-
-	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-	<< ": send BA to " << *to << ", NAV = " << NAV << endl;
-
-	myphy->phyTxStartReq(BA_MPDU(BA, term, to, term->get_power(to, frag_thresh),
-			rx_mode, NAV, pcktsToACK), true);
-
-	END_PROF("MAC::send_ba")
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // MAC_private::send_data                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::send_data() {
 	BEGIN_PROF("MAC::send_data")
 
-	BApckts.push_back(msdu);
-
 	NAV = ptr2sch->now() + pck.get_duration();
-	if(BArqstFlag) {
+	if(false) {
 
 		n_att_frags++;
 		tx_data_rate += tx_mode_to_double(pck.get_mode());
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-						<< ": send " << pck << " during Block ACK session."
+						<< ": send " << pck << ". Send next packet for Block ACK."
 						<< endl;
 
-		myphy->phyTxStartReq(pck,true);
 
-		timestamp t = ptr2sch->now() + SIFS + pck.get_duration();
-
-		if(msdu.get_id() == pcktsToACK.back()) {
-			ptr2sch->schedule(Event(t, (void*)&wrapper_to_send_bar,
-								(void*)this, pck.get_target()));
-		} else {
-			if(n_att_frags == nfrags)	new_msdu();
-			else ptr2sch->schedule(Event(t,(void*)&wrapper_to_tx_attempt,
-					(void*)this));
-		}
 
 	} else {
 		timestamp t = NAV + ACK_Timeout(pck.get_mode());
@@ -1061,7 +922,6 @@ void MAC_private::send_data() {
 void MAC_private::start_TXOP() {
 	BEGIN_PROF("MAC::start_TXOP")
 
-		BApckts.clear();
 		pcktsToACK.clear();
 
 		if(!TXOPflag && TXOPmax != 0){ // If not during TXOP and AC has a TXOP
@@ -1084,8 +944,7 @@ void MAC_private::start_TXOP() {
 
 			if(BAFlag){
 				TXOPend = TXOPend + addba_rqst_duration(which_mode) + addba_rsps_duration(which_mode) +
-						timestamp(2)*ack_duration(which_mode) + bar_duration(which_mode) +
-						ba_duration(which_mode) + timestamp(5)*SIFS;
+						timestamp(2)*ack_duration(which_mode) + timestamp(4)*SIFS;
 			}
 
 			power_dBm = term->get_power(msdu.get_target(), frag_thresh);
@@ -1097,7 +956,6 @@ void MAC_private::start_TXOP() {
 				MSDU auxmsdu = (packet_queue[myAC])[count];
 
 				pcktsToACK.push_back(auxmsdu.get_id());
-				BApckts.push_back(auxmsdu);
 
 				// Determine number of fragments
 				auxNfrags = auxmsdu.get_nbytes() / frag_thresh;
@@ -1114,11 +972,11 @@ void MAC_private::start_TXOP() {
 
 				TXOPend = TXOPend + auxpckLast.get_duration();
 
-				if(BAFlag) {
-					TXOPend = TXOPend + timestamp(auxNfrags)*SIFS;
-				} else {
+			//	if(BAFlag) {
+				//	TXOPend = TXOPend + timestamp(auxNfrags)*SIFS;
+				//} else {
 					TXOPend = TXOPend + timestamp(auxNfrags)*ack_duration(which_mode) + timestamp(2*auxNfrags)*SIFS;
-				}
+			//	}
 
 				if(auxNfrags != 1){
 					// Update TXOPend accordingly
@@ -1141,7 +999,6 @@ void MAC_private::start_TXOP() {
 			if(TXOPend > now + TXOPmax) {
 				TXOPend = auxTXOPend;
 				pcktsToACK.pop_back();
-				BApckts.pop_back();
 			}
 
 			TXOPend = TXOPend + 1;
@@ -1202,46 +1059,6 @@ void MAC_private::end_TXOP() {
 
 	END_PROF("MAC::end_TXOP")
 }
-
-////////////////////////////////////////////////////////////////////////////////
-// MAC_private::requeue_pcks                                                  //
-//                                                                            //
-// Requeues unacknowledged packets			                                  //
-////////////////////////////////////////////////////////////////////////////////
-void MAC_private::requeue_pcks(MPDU p) {
-	BEGIN_PROF("MAC::requeue_pcks")
-
-	/*MPDU *ptr2p = &p;
-	BA_MPDU *ptr2ba = dynamic_cast<BA_MPDU*>(ptr2p);
-	if(!ptr2ba)	{
-		throw(my_exception(GENERAL,
-			"Non BA_MPDU received at MAC_private::requeue_pcks(MPDU p)"));
-	}
-
-	BA_MPDU ba = *ptr2ba;*/
-
-	try {
-		BA_MPDU& ba = dynamic_cast<BA_MPDU&>(p);
-
-		for(int k = pcktsToACK.size(); k >= 0; k--) {
-			if(find(pcktsToACK.begin(), pcktsToACK.end(), (ba.get_pcks2ACK())[k])
-					== pcktsToACK.end()) {
-				if (logflag) *mylog << "\n >> " << ptr2sch->now() << "sec., " << *term
-						<< ". Packet " << pcktsToACK[k] << " not acknowledged. Requeue packet."
-						<< endl;
-				packet_queue[myAC].push_front(BApckts[k]);
-			} else {
-				term->macUnitdataStatusInd(BApckts[k], p.get_duration() + SIFS);
-			}
-		}
-
-	} catch(const std::bad_cast& e) {
-		cout << e.what() << '\n';
-	}
-
-	END_PROF("MAC::requeue_pcks")
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // MAC_private::internal_contention                       	                  //

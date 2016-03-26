@@ -29,7 +29,6 @@
 #include "log.h"
 #include <queue>
 #include <map>
-#include <algorithm>
 
 class PHY;
 class Terminal;
@@ -135,8 +134,6 @@ protected:
 
   void addba_rsps_timed_out();
 
-  void ba_timed_out();
-
   void end_nav();
   // channel released according to NAV
 
@@ -153,8 +150,6 @@ protected:
   void send_cts(Terminal *to);
   void send_addba_rsps(Terminal *to);
   void send_addba_rqst(Terminal *to);
-  void send_bar(Terminal *to);
-  void send_ba(Terminal *to);
   void send_data();
   
   void start_TXOP();
@@ -162,9 +157,6 @@ protected:
 
   void end_TXOP();
   // end TXOP time counting
-
-  void requeue_pcks(MPDU ba);
-  // requeues unacknowledged packtes
 
   void internal_contention();
   // resolves internal competition between ACs
@@ -185,9 +177,6 @@ public:
   /////////////////////////////////////////////////////
   static void wrapper_to_ack_timed_out (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->ack_timed_out();}
-
-  static void wrapper_to_ba_timed_out (void* ptr2obj) {
-      ((MAC_private*)ptr2obj)->ba_timed_out();}
 
   static void wrapper_to_check_nav (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->check_nav();}
@@ -218,12 +207,6 @@ public:
 
   static void wrapper_to_send_addba_rqst (void* ptr2obj, void* param) {
     ((MAC_private*)ptr2obj)->send_addba_rqst((Terminal*)param);}
-
-  static void wrapper_to_send_bar (void* ptr2obj, void* param) {
-      ((MAC_private*)ptr2obj)->send_bar((Terminal*)param);}
-
-  static void wrapper_to_send_ba (void* ptr2obj, void* param) {
-        ((MAC_private*)ptr2obj)->send_ba((Terminal*)param);}
 
   static void wrapper_to_send_data (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->send_data();}

@@ -143,9 +143,7 @@ public:
   timestamp         get_nav()        const {return net_all_vec;}
   unsigned          get_nbits()      const {return nbits;}
   double            get_power()     const {return tx_power;}
-  packet_type       get_type()       const {return t;}
-
-  virtual ~MPDU() {}; // Virtual destructor to make class polymorphic
+  packet_type       get_type()       const {return t;}       
   
   friend ostream& operator << (ostream& os, const MPDU& p);
   
@@ -211,7 +209,7 @@ inline timestamp bar_duration(transmission_mode tm) {
 
 class BA_MPDU: public MPDU {
 public:
-	vector<long_integer> pcks2ACK;
+	vector<long_integer> pcktsToACK;
 
 	BA_MPDU(packet_type tp = BA,   				   // packet type
 			Terminal* from = 0,                    // source terminal
@@ -219,11 +217,9 @@ public:
 			double p = 0,              			   // transmit power in dBm
 			transmission_mode r = M0,  			   // transmission mode
 			timestamp nav = timestamp(0),          // NAV
-			vector<long_integer> ptACK = {0}	   // packets to be ACKed
+			vector<long_integer> ptACK = {0}		   // packets to be ACKed
        	   	);
 
-	~BA_MPDU() {};
-
-	vector<long_integer> get_pcks2ACK() const {return pcks2ACK;}
+	vector<long_integer> get_pcktsToACK() const {return pcktsToACK;}
 };
 #endif
