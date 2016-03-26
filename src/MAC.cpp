@@ -145,19 +145,6 @@ void MAC_private::set_myAC(accCat AC) {
 void MAC_private::ack_timed_out () {
 	BEGIN_PROF("MAC::ack_timed_out")
 
-	if(BArqstFlag) {
-		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< ": did not receive ACK for ADDBA request." << endl;
-		BArqstFlag = false;
-		end_TXOP();
-		return;
-	}
-	if(BArspsFlag){
-		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< ": did not receive ACK for ADDBA response." << endl;
-		return;
-	}
-
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 	<< ": ACK time out for packet " << pck.get_id() << endl;
 
@@ -533,6 +520,9 @@ void MAC::phyRxEndInd(MPDU p) {
 // transmits next MSDU from packet queue                                      //
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::new_msdu() {
+
+	if (logflag) *mylog << "\n!!!" << ptr2sch->now() << "sec., " << *term
+		<< ". new_msdu()" << endl;
 
 	timestamp t;
 	if(BArqstFlag) t = ptr2sch->now() + SIFS + pck.get_duration();
@@ -1225,6 +1215,9 @@ void MAC_private::end_TXOP() {
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::requeue_pcks(MPDU ba) {
 	BEGIN_PROF("MAC::requeue_pcks")
+
+		if (logflag) *mylog << "\n!!!" << ptr2sch->now() << "sec., " << *term
+			<< ". Requeueing packets." << endl;
 
 		for(int k = pcktsToACK.size() - 1; k >= 0; k--) {
 			if(find((ba.get_pcks2Ack()).begin(), (ba.get_pcks2Ack()).end(), pcktsToACK[k])
