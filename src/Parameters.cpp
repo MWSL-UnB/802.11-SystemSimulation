@@ -325,10 +325,6 @@ bool Parameters::assign (string s1,string s2) {
   	  which_param = &ppLegacy;
   	  if (!ppLegacy.read_vec(s2)) return false;
 
-  } else if (!s1.compare("setBA")){
-      which_param = &setBA;
-      if (!setBA.read_vec(s2)) return false;
-
   } else {
     return false;
   }
@@ -402,9 +398,6 @@ void Parameters::default_config () {
   ppAC_VI.init("proportion of AC_VIs",0);
   ppAC_VO.init("proportion of AC_VOs",0);
   ppLegacy.init("proportion of legacies",NumberStas.current());
-
-  // IEEE 802.11e Block ACK parameters
-  setBA.init("Block Acknowledgment Flag",false);
 
 }
 

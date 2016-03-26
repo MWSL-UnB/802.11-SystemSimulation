@@ -214,8 +214,6 @@ class Parameters {
   param_vec_double ppAC_VO;
   param_vec_double ppLegacy;
 
-  // IEEE 802.11e Block ACK parameters
-  param_vec_bool setBA;
 
   bool default_flag; // true if default parameters are stored
 
@@ -273,7 +271,6 @@ public:
   double get_ppAC_VI() {return ppAC_VI.current();}
   double get_ppAC_VO() {return ppAC_VO.current();}
   double get_ppLegacy() {return ppLegacy.current();}
-  bool get_setBA() {return setBA.current();}
 
 
   Position get_APPosition(int which_ap);

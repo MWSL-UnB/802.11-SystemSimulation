@@ -44,7 +44,7 @@ unsigned Terminal_private::nterm = 0;
 // Terminal constructor                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
-                   mac_struct mac, PHY_struct phy, timestamp transient, bool baf) {
+                   mac_struct mac, PHY_struct phy, timestamp transient) {
 
   where = p;
   
@@ -57,7 +57,7 @@ Terminal::Terminal(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
   id = nterm++;
   
   myphy = new PHY(this, p, c, r, s, l, phy);
-  mymac = new MAC(this, s, r, l, mac,baf);
+  mymac = new MAC(this, s, r, l, mac);
 
   myphy->connect(mymac);
   mymac->connect(myphy);

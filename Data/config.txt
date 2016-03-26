@@ -58,8 +58,6 @@ ppAC_VI = 0, .25, .5, .75, 1
 ppAC_VO = 0
 ppLegacy = 0
 
-% setBA: if 1, all stations with non-zero TXOP time will use 802.11e's Block ACK
-setBA = 1
 
 %%%%%%%%%%%%%%%%%%%%%
 % Channel Parameters
