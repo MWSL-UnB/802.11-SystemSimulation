@@ -153,11 +153,16 @@ public:
   unsigned          get_nbits()      const {return nbits;}
   double            get_power ()     const {return tx_power;}
   packet_type       get_type()       const {return t;}
+  ACKpolicy			get_ACKpol()	 const {return ACKpol;}
   const vector<long_integer>& getPcks2Ack() const {return pcks2ACK;}
 
   friend ostream& operator << (ostream& os, const MPDU& p);
 
   void setPcks2Ack(const vector<long_integer>& pcks2Ack);
+
+  void setACKpol(ACKpolicy acKpol) {
+	  ACKpol = acKpol;
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
