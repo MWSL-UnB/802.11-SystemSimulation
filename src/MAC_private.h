@@ -103,7 +103,6 @@ protected:
   bool BAFlag;
   bool BArqstFlag;
   bool BArspsFlag;
-  timestamp time_to_send_BAR;
   vector<long_integer> pcktsToACK;
   vector<MSDU> BApckts;
 
