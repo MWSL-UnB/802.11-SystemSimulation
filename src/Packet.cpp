@@ -196,9 +196,6 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
   case ADDBArsps :
 	  nbytes_overhead = service_field_overhead + addba_rsps_overhead;
 	  break;
-  case DELBA :
-  	  nbytes_overhead = service_field_overhead + delba_pckt_overhead;
-  	  break;
   case DUMMY :
 	  return;
   default :
@@ -275,9 +272,6 @@ ostream& operator << (ostream& os, const MPDU& p) {
     case ADDBArsps:
           return os << "ADDBA response packet " << p.id << " from " << *(p.source) << " to "
                     << *(p.target);
-    case DELBA:
-              return os << "DELBA packet " << p.id << " from " << *(p.source) << " to "
-                        << *(p.target);
   }
 }
 
