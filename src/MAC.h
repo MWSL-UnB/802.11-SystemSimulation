@@ -37,13 +37,10 @@ struct mac_struct {
                          // bytes use RTS/CTS protocol)
   unsigned frag_thresh;  // fragmentation threshold, fragments must have less
                          // than frag_thresh bytes
-  unsigned queue_size;   // size of packet queue
-  bool baFlag;			 // flag for block ack
-  bool MPDUaggFlag;
+  unsigned queue_size;   // size of packet queue                                                
 
-  mac_struct(unsigned r, unsigned rt, unsigned ft, unsigned qs, bool baf, bool maf)
-            : retry(r), RTS_thresh(rt), frag_thresh(ft), queue_size(qs),
-			  baFlag(baf), MPDUaggFlag(maf)  {}
+  mac_struct(unsigned r, unsigned rt, unsigned ft, unsigned qs)
+            : retry(r), RTS_thresh(rt), frag_thresh(ft), queue_size(qs)  {}
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +66,8 @@ public:
       Scheduler* s,   // pointer to simulation scheduler
       random *r,      // pointer to random number generator
       log_file *l,    // pointer to log
-      mac_struct mac // MAC layer parameters
+      mac_struct mac, // MAC layer parameters
+	  bool baf		  // block ACK flag
      );
 
   void phyCCA_busy();
