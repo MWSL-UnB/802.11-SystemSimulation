@@ -574,6 +574,10 @@ void MAC_private::receive_this(MPDU p) {
 
 			pck = DataMPDU(msdu, pl, current_frag, nfrags, power_dBm, p.get_mode(),
 					newnav);
+			if(BAAggFlag && TXOPflag) {
+				throw(my_exception(GENERAL,
+				            "Station received ACK during TXOP with BAAggFlag set"));
+			}
 
 			ptr2sch->schedule(Event(now+SIFS, (void*)(&wrapper_to_send_data),
 					(void*)this));
@@ -980,6 +984,7 @@ void MAC_private::transmit() {
 
 		pck = DataMPDU (msdu, pl, current_frag, nfrags, power_dBm, which_mode,
 				auxnav);
+		if(BAAggFlag && TXOPflag) pck.setACKpol(blockACK);
 
 		countdown_flag = false;
 
