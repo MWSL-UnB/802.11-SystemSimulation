@@ -699,23 +699,6 @@ void MAC_private::send_cts(Terminal *to) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// MAC_private::send_cts                                                      //
-////////////////////////////////////////////////////////////////////////////////
-void MAC_private::send_addba_rsps(Terminal *to) {
-	BEGIN_PROF("MAC::send_addba_rsps")
-
-	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-	<< ": send ADDBA response to " << *to << ", NAV = " << NAV_RTS
-	<< endl;
-
-	// always send CTS at 6Mbps
-	myphy->phyTxStartReq(MPDU(ADDBArsps, term, to, term->get_power(to, frag_thresh),
-			M6, NAV_RTS), true);
-
-	END_PROF("MAC::send_addba_rsps")
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // MAC_private::send_data                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::send_data() {
@@ -882,7 +865,6 @@ void MAC_private::end_TXOP() {
 // resolves internal competition between ACs			                      //
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::internal_contention()	{
-BEGIN_PROF("MAC::internal_contention")
 
 	timestamp TTT_ACs[5];
 	timestamp minTTT = timestamp_max();
@@ -983,8 +965,6 @@ BEGIN_PROF("MAC::internal_contention")
 	if(logflag) *mylog << endl;
 
 	set_myAC(allACs[minTTT_idx]);
-
-END_PROF("MAC::internal_contention")
 }
 
 ////////////////////////////////////////////////////////////////////////////////
