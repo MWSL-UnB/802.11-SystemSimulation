@@ -35,17 +35,23 @@ class Terminal;
 // rate adaptation method or transmission data rate                           //
 ////////////////////////////////////////////////////////////////////////////////
 typedef enum {OPT,    // optimal genie-aided adaptative-rate scheme
-              SUBOPT, // suboptimal transmitter-based scheme
-              M0,     // dummy
-              M6,     // fixed rate, 6Mbps
-              M9,     //           , 9Mbps
-              M12,    //           , 12Mbps
-              M18,    //           , 18Mbps
-              M24,    //           , 24Mbps
-              M36,    //           , 36Mbps
-              M48,    //           , 48Mbps
-              M54     //           , 54Mbps
-              } transmission_mode;
+	SUBOPT, // suboptimal transmitter-based scheme
+	M0,     // dummy
+	M6,     // fixed rate, 6Mbps
+	M9,     //           , 9Mbps
+	M12,    //           , 12Mbps
+	M18,    //           , 18Mbps
+	M24,    //           , 24Mbps
+	M36,    //           , 36Mbps
+	M48,    //           , 48Mbps
+	M54     //           , 54Mbps
+} transmission_mode;
+
+typedef enum {
+	noACK,
+	normalACK,
+	blockACK
+} ACKpolicy;
 
 double tx_mode_to_double (transmission_mode tm);
 // conversion to double
@@ -130,6 +136,7 @@ protected:
 
   // Used only for BA packets
   vector<long_integer> pcks2ACK;
+  ACKpolicy ACKpol;
 
 public:
   MPDU(packet_type tp = DUMMY,    // packet type
@@ -173,7 +180,8 @@ public:
             unsigned priority = 0,
             unsigned frag = 1,
             unsigned nfrags = 1,
-            unsigned mid = 0
+            unsigned mid = 0,
+			ACKpolicy apol = normalACK
            );
 
   DataMPDU (MSDU pck,
@@ -182,7 +190,8 @@ public:
             unsigned nfrags = 1,                     
             double p = 0,
             transmission_mode r = M6,
-            timestamp nav = timestamp(0)
+            timestamp nav = timestamp(0),
+			ACKpolicy apol = normalACK
            );
   // creates a DataMPDU inheriting parameters of a given MSDU 'pck'
                             

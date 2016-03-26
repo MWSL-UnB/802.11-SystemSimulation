@@ -199,8 +199,13 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
 
   nbits = nbytes_overhead*8;
   packet_duration = calc_duration (nbits, mode);
+
+  ACKpol = noACK;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// MPDU setPcks2Ack                                                      //
+////////////////////////////////////////////////////////////////////////////////
 void MPDU::setPcks2Ack(const vector<long_integer>& pcks2Ack) {
 	switch(t) {
 	case BA:
@@ -217,7 +222,7 @@ void MPDU::setPcks2Ack(const vector<long_integer>& pcks2Ack) {
 ////////////////////////////////////////////////////////////////////////////////
 DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p, 
                     transmission_mode r, timestamp nav, unsigned priority,
-                    unsigned frag, unsigned nfrags,unsigned mid) 
+                    unsigned frag, unsigned nfrags,unsigned mid, ACKpolicy apol)
                     : nbytes_data(n), tid(priority), frag_number(frag),
                       frag_total(nfrags), msdu_id(mid){
 
@@ -227,6 +232,7 @@ DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p,
   target = to;
   tx_power = p;
   net_all_vec = nav;
+  ACKpol = apol;
   
   nbytes_overhead = service_field_overhead + data_packet_overhead;
   nbits = (nbytes_data + nbytes_overhead)*8;
@@ -235,8 +241,8 @@ DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p,
 
 ////////////////////////////////////////////////////////////////////////////////
 DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
-                    transmission_mode r, timestamp nav)
-                    : frag_number(frag), frag_total(nfrags) {
+                    transmission_mode r, timestamp nav, ACKpolicy apol)
+                    : frag_number(frag), frag_total(nfrags){
 
   t = DATA;
   nbytes_data = (n >= 0)? n : pck.get_nbytes();
@@ -247,6 +253,7 @@ DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
   msdu_id = pck.get_id();
   tx_power = p;
   net_all_vec = nav;
+  ACKpol = apol;
   
   nbytes_overhead = service_field_overhead + data_packet_overhead;
   nbits = (nbytes_data + nbytes_overhead)*8;
