@@ -83,7 +83,6 @@ protected:
   unsigned  retry_count;       // number of transmissions retry for current MSDU
   timestamp NAV;               // network allocation vector
   timestamp NAV_RTS;           // duration of packet requested to send
-  timestamp NAV_ADDBA;		   // duration of addba nav
   unsigned  nfrags;            // number of fragments in current packet
   unsigned  current_frag;      // latest transmitted fragment
 
