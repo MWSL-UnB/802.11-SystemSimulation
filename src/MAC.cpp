@@ -551,17 +551,17 @@ void MAC_private::new_msdu() {
 	msdu = packet_queue[myAC].front();
 
 	retry_count = 0;
-
 	current_frag = 0;
-
 	msdu.set_tx_time(ptr2sch->now());
 
 	// If during TXOP and TXOPend is not next time increment
 	if(TXOPflag && TXOPend > ptr2sch->now() + 1) {
 		// Schedule tx_attempt to now + SIFS
 		ptr2sch->schedule(Event(t,(void*)&wrapper_to_tx_attempt,
-				(void*)this));
+			(void*)this));
 	} else {
+		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+			<< " at new_msdu() !!!" << endl;
 		// If not, tx_attempt is scheduled for next time increment
 		ptr2sch->schedule(Event(ptr2sch->now()+1,(void*)&wrapper_to_tx_attempt,
 			(void*)this));
@@ -840,7 +840,7 @@ void MAC_private::receive_this(MPDU p) {
 				<< t_ack << ", Data transmission scheduled at "
 				<< t_data << endl;
 
-		if(TXOPflag) ptr2sch->schedule(Event(TXOPend + 1,(void*)&wrapper_to_end_TXOP,(void*)this));
+		if(TXOPflag) ptr2sch->schedule(Event(TXOPend,(void*)&wrapper_to_end_TXOP,(void*)this));
 
 		break;
 	}
@@ -1107,7 +1107,7 @@ void MAC_private::start_TXOP() {
 			if(BAFlag){
 				TXOPend = TXOPend + addba_rqst_duration(which_mode) + addba_rsps_duration(which_mode) +
 						timestamp(2)*ack_duration(which_mode) + bar_duration(which_mode) +
-						ba_duration(which_mode) + timestamp(5)*SIFS;
+						ba_duration(which_mode) + timestamp(6)*SIFS;
 			}
 
 			power_dBm = term->get_power(msdu.get_target(), frag_thresh);
@@ -1161,8 +1161,6 @@ void MAC_private::start_TXOP() {
 				TXOPend = auxTXOPend;
 			}
 
-			TXOPend = TXOPend + 1;
-
 			if (logflag) *mylog << "\n >> " << ptr2sch->now() << "sec., " << *term
 					<< ", of Access Category " << myAC << " begins TXOP scheduled to end at "
 					<< TXOPend << "sec." << "\nPackets in queue = " << count << ". TXOP duration = "
@@ -1180,6 +1178,8 @@ void MAC_private::start_TXOP() {
 
 			time_to_send_BAR = TXOPend - bar_duration(which_mode) - ba_duration(which_mode)
 					- timestamp(1)*SIFS;
+
+			TXOPend = TXOPend + 1; // So that ACK & BAR are received after TXOPend
 
 		} else { // If already during TXOP or station does not have TXOP
 			transmit();
@@ -1245,6 +1245,9 @@ void MAC_private::requeue_pcks(MPDU ba) {
 			}
 			auxDur = auxDur + pcktsDur[k] + SIFS;
 		}
+
+		if (logflag) *mylog << "\n " << ptr2sch->now() << "sec., " << *term
+				<< " at the end of requeue_pcks() !!!" << endl;
 
 	new_msdu();
 
