@@ -157,6 +157,7 @@ public:
   const vector<long_integer>& getPcks2Ack() const {return pcks2ACK;}
 
   friend ostream& operator << (ostream& os, const MPDU& p);
+  friend ostream& operator << (ostream& os, const vector<long_integer>& vec);
 
   void setPcks2Ack(const vector<long_integer>& pcks2Ack);
 

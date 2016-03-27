@@ -287,9 +287,11 @@ ostream& operator << (ostream& os, const MPDU& p) {
 ////////////////////////////////////////////////////////////////////////////////
 // vector<long_integer> output operator <<                                    //
 ////////////////////////////////////////////////////////////////////////////////
-//ostream& operator << (ostream& os, const vector<long_integer>& vec) {
-//
-//      return os << "data packet " << p.id << " from " << *(p.source) << " to "
-//                << *(p.target);
-//}
+ostream& operator << (ostream& os, const vector<long_integer>& vec) {
+	ostringstream oss;
+	for(unsigned k = 0; k < vec.size(); k++) {
+      oss << vec[k] << " ";
+	}
+	return os << oss.str();
+}
 
