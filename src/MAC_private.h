@@ -85,7 +85,6 @@ protected:
   //unsigned  contention_window; // window from which the backoff counter is chosen
   timestamp time_to_send;      // time scheduled for next transmission
   bool      countdown_flag;    // true if backoff countdown is activated
-  unsigned  retry_count;       // number of transmissions retry for current MSDU
   timestamp NAV;               // network allocation vector
   timestamp NAV_RTS;           // duration of packet requested to send
   unsigned  nfrags;            // number of fragments in current packet
@@ -111,8 +110,10 @@ protected:
 
   // BA and aggregation parameters
   bool BAAggFlag;
-  vector<long_integer> pcks2ACKids;
-  vector<DataMPDU> pcks2reque;
+  vector<long_integer> pcks2ACK_ids;
+  vector<MSDU> pcks2reque;
+  vector<timestamp> pcktsDur;
+  timestamp time_to_send_BA;
 
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts
@@ -122,6 +123,8 @@ protected:
 
   void ack_timed_out();
   
+  void ba_timed_out();
+
   void begin_countdown();
 
   void check_nav();
@@ -143,6 +146,7 @@ protected:
 
   void send_ack(Terminal *to);
   void send_cts(Terminal *to);
+  void send_ba(Terminal *to);
   void send_data();
   
   void start_TXOP();
@@ -159,6 +163,9 @@ protected:
   
   void tx_attempt();
   // begin contention for new MSDU or for new train of fragments 
+
+  void requeue_packets(vector<long_integer> bapcks);
+  // requeue packets not acknoledged by BA
     
 public:
   
@@ -170,6 +177,9 @@ public:
   /////////////////////////////////////////////////////
   static void wrapper_to_ack_timed_out (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->ack_timed_out();}
+
+  static void wrapper_to_ba_timed_out (void* ptr2obj) {
+      ((MAC_private*)ptr2obj)->ba_timed_out();}
 
   static void wrapper_to_check_nav (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->check_nav();}
@@ -191,6 +201,9 @@ public:
 
   static void wrapper_to_send_cts (void* ptr2obj, void* param) {
     ((MAC_private*)ptr2obj)->send_cts((Terminal*)param);}
+
+  static void wrapper_to_send_ba (void* ptr2obj, void* param) {
+    ((MAC_private*)ptr2obj)->send_ba((Terminal*)param);}
 
   static void wrapper_to_send_data (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->send_data();}

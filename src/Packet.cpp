@@ -163,6 +163,7 @@ MSDU::MSDU(unsigned n, Terminal* from , Terminal* to, unsigned priority,
            timestamp gen_time)
            : nbytes_data(n), tid(priority), time_created(gen_time) {
 
+  retry_count = 0;
   source = from;
   target = to;
 }
@@ -201,6 +202,7 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
   packet_duration = calc_duration (nbits, mode);
 
   ACKpol = noACK;
+  pcks2ACK.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -290,7 +292,9 @@ ostream& operator << (ostream& os, const MPDU& p) {
 ostream& operator << (ostream& os, const vector<long_integer>& vec) {
 	ostringstream oss;
 	for(unsigned k = 0; k < vec.size(); k++) {
-      oss << vec[k] << " ";
+      oss << vec[k];
+      if(k != vec.size() - 2) oss << " ";
+      else oss << " and ";
 	}
 	return os << oss.str();
 }
