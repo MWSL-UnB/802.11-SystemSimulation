@@ -42,6 +42,9 @@ typedef enum{
 }accCat;
 accCat const allACs[5] = {AC_BK, AC_BE, AC_VI, AC_VO, legacy};
 
+ostream& operator << (ostream& os, const accCat& AC);
+// Overload of output operator for accCat types
+
 typedef enum {
 	success,
 	ACKfail,
@@ -108,6 +111,8 @@ protected:
 
   // BA and aggregation parameters
   bool BAAggFlag;
+  vector<long_integer> pcks2ACKids;
+  vector<DataMPDU> pcks2reque;
 
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts

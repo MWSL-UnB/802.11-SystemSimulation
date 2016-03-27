@@ -284,4 +284,12 @@ ostream& operator << (ostream& os, const MPDU& p) {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// vector<long_integer> output operator <<                                    //
+////////////////////////////////////////////////////////////////////////////////
+//ostream& operator << (ostream& os, const vector<long_integer>& vec) {
+//
+//      return os << "data packet " << p.id << " from " << *(p.source) << " to "
+//                << *(p.target);
+//}
 

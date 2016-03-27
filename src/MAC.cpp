@@ -73,6 +73,9 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac){
 
 	BAAggFlag = mac.BAAgg;
 
+	pcks2ACKids.clear();
+	pcks2reque.clear();
+
 	NAV = timestamp(0);
 	nfrags = 1;
 	current_frag = 0;
@@ -1137,7 +1140,7 @@ size_t MAC_private::get_queue_size()	{
 }
 
 // Output operator << for accCat type
-ostream& operator<<(ostream& os, accCat& AC) {
+ostream& operator<<(ostream& os, const accCat& AC) {
    switch(AC){
    case AC_BK:
 	   return os << "AC_BK";
