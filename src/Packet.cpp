@@ -290,12 +290,10 @@ ostream& operator << (ostream& os, const MPDU& p) {
 // vector<long_integer> output operator <<                                    //
 ////////////////////////////////////////////////////////////////////////////////
 ostream& operator << (ostream& os, const vector<long_integer>& vec) {
-	ostringstream oss;
-	for(unsigned k = 0; k < vec.size(); k++) {
-      oss << vec[k];
-      if(k != vec.size() - 2) oss << " ";
-      else oss << " and ";
+	for(typename vector<long_integer>::const_iterator k = vec.begin(); k != vec.end(); k++) {
+      os << *k;
+      if(k != vec.end() - 2) os << " ";
+      else os << " and ";
 	}
-	return os << oss.str();
+	return os;
 }
-

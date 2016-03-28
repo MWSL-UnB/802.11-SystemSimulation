@@ -100,7 +100,8 @@ class MSDU : public Packet {
   timestamp time_created;
   timestamp tx_time;
   unsigned tid; // traffic identifier
-  unsigned nbytes_data;     // number of data bytes  
+  unsigned nbytes_data;     // number of data bytes
+  unsigned retry_count;		// number of MSDU retries
   
 public:
   MSDU(unsigned n = 0,            // number of data bytes
@@ -114,6 +115,8 @@ public:
   timestamp get_time_created()  const {return time_created;}
   timestamp get_tx_time()       const {return tx_time;}
   unsigned  get_tid()           const {return tid;}
+  unsigned	get_retry_count()	const {return retry_count;}
+  unsigned	inc_retry_count()	{ return retry_count++;}
   
   void set_tx_time(timestamp t) {tx_time = t;}
 };
@@ -154,7 +157,7 @@ public:
   double            get_power ()     const {return tx_power;}
   packet_type       get_type()       const {return t;}
   ACKpolicy			get_ACKpol()	 const {return ACKpol;}
-  const vector<long_integer>& getPcks2Ack() const {return pcks2ACK;}
+  vector<long_integer> getPcks2Ack() const {return pcks2ACK;}
 
   friend ostream& operator << (ostream& os, const MPDU& p);
   friend ostream& operator << (ostream& os, const vector<long_integer>& vec);
@@ -212,5 +215,8 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 inline timestamp ack_duration(transmission_mode tm) {
   return (MPDU(ACK, 0, 0, 0, tm)).get_duration();
+}
+inline timestamp ba_duration(transmission_mode tm) {
+  return (MPDU(BA, 0, 0, 0, tm)).get_duration();
 }
 #endif

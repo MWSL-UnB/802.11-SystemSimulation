@@ -114,6 +114,7 @@ protected:
   vector<MSDU> pcks2reque;
   vector<timestamp> pcktsDur;
   timestamp time_to_send_BA;
+  timestamp time_to_wait_BA;
 
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts
@@ -149,6 +150,9 @@ protected:
   void send_ba(Terminal *to);
   void send_data();
   
+  void aggreg_send();
+  // define aggregation steps
+
   void start_TXOP();
   // start TXOP time counting
 
@@ -195,6 +199,9 @@ public:
 
   static void wrapper_to_start_TXOP (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->start_TXOP();}
+
+  static void wrapper_to_aggreg_send (void* ptr2obj) {
+      ((MAC_private*)ptr2obj)->aggreg_send();}
 
   static void wrapper_to_send_ack (void* ptr2obj, void* param) {
     ((MAC_private*)ptr2obj)->send_ack((Terminal*)param);}

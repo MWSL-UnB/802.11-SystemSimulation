@@ -80,6 +80,7 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac){
 	pcks2reque.clear();
 	pcktsDur.clear();
 	time_to_send_BA = timestamp(0);
+	time_to_wait_BA = timestamp(0);
 
 	NAV = timestamp(0);
 	nfrags = 1;
@@ -201,7 +202,11 @@ void MAC_private::ba_timed_out () {
 	BEGIN_PROF("MAC::ba_timed_out")
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-		<< ": BA time out for packets " << pcks2ACK_ids << "." << endl;
+		<< ": BA time out for packets ";
+	for(unsigned k = 0; k < pcks2ACK_ids.size(); k++) {
+		if (logflag) *mylog << pcks2ACK_ids[k] << " ";
+	}
+	if (logflag) *mylog << "." << endl;
 
 	TXOPla_win = ACKfail; // Indicate that LA failed
 
@@ -463,11 +468,13 @@ void MAC::phyRxEndInd(MPDU p) {
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::new_msdu() {
 
+	timestamp now = ptr2sch->now();
+
 	// Change BOC flag before switching AC
 	BOC_flag[myAC] = true;
 
 	// Recalculate myAC, if not during TXOP or TXOP is going to end or has ended
-	if(!TXOPflag || TXOPend <= ptr2sch->now() + 1){
+	if(!TXOPflag || TXOPend <= now + 1){
 		internal_contention();
 	}
 
@@ -477,16 +484,30 @@ void MAC_private::new_msdu() {
 
 	msdu.set_tx_time(ptr2sch->now());
 
-	// If during TXOP and TXOPend is not next time increment
-	if(TXOPflag && TXOPend > ptr2sch->now() + 1) {
-		// Schedule tx_attempt to now + SIFS
-		ptr2sch->schedule(Event(ptr2sch->now()+SIFS,(void*)&wrapper_to_tx_attempt,
-				(void*)this));
-	} else {
-		// If not, tx_attempt is scheduled for next time increment
-		ptr2sch->schedule(Event(ptr2sch->now()+1,(void*)&wrapper_to_tx_attempt,
-			(void*)this));
+	timestamp t;
+
+	// Possible cases
+	if(TXOPmax == timestamp(0)) { // Station does not have TXOP at all
+		t = now + 1;
+	}else if(!TXOPflag) { // Station is NOT during TXOP
+		t = now + 1;
+	}else if(TXOPflag) { // Station is during TXOP
+		if(!BAAggFlag) { // There is NO aggregation
+			if(now + 1 < TXOPend) { // TXOP is not about to end
+				t = now + SIFS;
+			} else { // TXOP is about to end
+				t = TXOPend;
+			}
+		} else { // There is aggregation
+			if(now + 1 < time_to_send_BA) { // BA is not about to be sent
+				t = now + 1;
+			} else { // BA is about to be sent
+				t = TXOPend;
+			}
+		}
 	}
+
+	ptr2sch->schedule(Event(t,(void*)&wrapper_to_tx_attempt, (void*)this));
 }    
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -581,11 +602,7 @@ void MAC_private::receive_this(MPDU p) {
 			unsigned pl;
 			timestamp newnav;
 
-			if(TXOPflag) { // If during TXOP, NAV is simply TXOPend
-
-				newnav = TXOPend;
-
-			}else if (current_frag == nfrags) {
+			if (current_frag == nfrags) {
 				pl = msdu.get_nbytes() % frag_thresh;
 				if (!pl) pl = frag_thresh;
 
@@ -595,6 +612,8 @@ void MAC_private::receive_this(MPDU p) {
 				pl = frag_thresh;
 				newnav = now + 4*SIFS + 2*pck.get_duration() + 2*ack_duration(p.get_mode());
 			}
+
+			if(TXOPflag) newnav = TXOPend;
 
 			if (logflag) *mylog << "    schedule transmission of fragment "
 					<< current_frag << " with " << pl
@@ -618,7 +637,7 @@ void MAC_private::receive_this(MPDU p) {
 		NAV = p.get_nav();
 
 		switch(p.get_ACKpol()) {
-		case normalACK :
+		case normalACK : {
 			timestamp t_ack = now + SIFS;
 			ptr2sch->schedule(Event(t_ack, (void*)(&wrapper_to_send_ack),
 					(void*)this, p.get_source()));
@@ -628,9 +647,10 @@ void MAC_private::receive_this(MPDU p) {
 					<< "    schedule ACK transmission for " << t_ack
 					<< endl;
 			break;
-		case blockACK :
+		}
+		case blockACK : {
 			pcks2ACK_ids.push_back(p.get_id());
-			if(time_to_send_BA == 0) {
+			if(time_to_send_BA == timestamp(0)) {
 				time_to_send_BA = NAV - SIFS - ba_duration(p.get_mode());
 				ptr2sch->schedule(Event(time_to_send_BA, (void*)(&wrapper_to_send_ba),
 						(void*)this, p.get_source()));
@@ -638,10 +658,12 @@ void MAC_private::receive_this(MPDU p) {
 			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 					<< " received " << p << " during block ACK session. " << endl;
 			break;
-		default :
+		}
+		default : {
 			throw(my_exception(GENERAL,
 					"Data packet with wrong ACK policy"));
 			break;
+		}
 		}
 
 		// rate adaptation
@@ -700,9 +722,13 @@ void MAC_private::receive_this(MPDU p) {
 		ptr2sch->remove((void*)(&wrapper_to_ba_timed_out), (void*)this);
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< " received " << p << ", that acknowledges packets "
-				<< p.getPcks2Ack() << "." << endl;
+				<< " received " << p << ", that acknowledges packets ";
+		for(unsigned k = 0; k < p.getPcks2Ack().size(); k++) {
+			if (logflag) *mylog << p.getPcks2Ack()[k] << " ";
+		}
+		if (logflag) *mylog << "." << endl;
 
+		time_to_wait_BA = timestamp(0);
 		requeue_packets(p.getPcks2Ack());
 
 		break;
@@ -790,8 +816,12 @@ void MAC_private::send_ba(Terminal *to) {
 	BEGIN_PROF("MAC::send_ba")
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-	<< ": send BA to " << *to << ", acknowledging packets " << pcks2ACK_ids
-	<< endl;
+	<< ": send BA to " << *to << ", acknowledging packets ";
+	for(unsigned k = 0; k < pcks2ACK_ids.size(); k++) {
+		if (logflag) *mylog << pcks2ACK_ids[k] << " ";
+	}
+	if (logflag) *mylog << "." << endl;
+
 
 	MPDU bapck = MPDU(BA, term, to, term->get_power(to, frag_thresh),
 			rx_mode, NAV);
@@ -825,9 +855,13 @@ void MAC_private::send_data() {
 
 	if(TXOPflag && BAAggFlag) {
 		if (logflag) *mylog << ", during block ACK session." << endl;
+
 		pcks2ACK_ids.push_back(pck.get_id());
 		pcks2reque.push_back(msdu);
 		pcktsDur.push_back(pck.get_duration());
+
+		timestamp t = ptr2sch->now() + pck.get_duration() + 1;
+		ptr2sch->schedule(Event(t,(void*)&wrapper_to_aggreg_send,(void*)this));
 	} else {
 		timestamp t = NAV + ACK_Timeout(pck.get_mode());
 		if (logflag) *mylog << ", ACK timeout scheduled for "<< t << endl;
@@ -835,6 +869,45 @@ void MAC_private::send_data() {
 	}
 
 	END_PROF("MAC::send_data")
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// MAC_private::aggreg_send                                                   //
+////////////////////////////////////////////////////////////////////////////////
+void MAC_private::aggreg_send() {
+	BEGIN_PROF("MAC::aggreg_send")
+
+	if (current_frag == nfrags) {
+		packet_queue[myAC].pop_front();
+		if (get_queue_size()) new_msdu();
+	} else {
+
+		if(ptr2sch->now() + 1 >= time_to_wait_BA ) return;
+
+		++current_frag;
+
+		unsigned pl;
+
+		if (current_frag == nfrags) {
+			pl = msdu.get_nbytes() % frag_thresh;
+			if (!pl) pl = frag_thresh;
+		}
+		else {
+			pl = frag_thresh;
+		}
+
+		if (logflag) *mylog << "    schedule transmission of fragment "
+				<< current_frag << " with " << pl
+				<< " bytes and NAV = " << TXOPend << " for "
+				<< ptr2sch->now() + SIFS << endl;
+
+		pck = DataMPDU(msdu, pl, current_frag, nfrags, power_dBm, pck.get_mode(),
+				TXOPend);
+
+		send_data();
+	}
+
+	END_PROF("MAC::aggreg_send")
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -911,7 +984,7 @@ void MAC_private::start_TXOP() {
 			}
 
 			if(TXOPend > now + TXOPmax) TXOPend = auxTXOPend;
-			time_to_send_BA = TXOPend - SIFS - ba_duration(which_mode);
+			time_to_wait_BA = TXOPend - SIFS - ba_duration(which_mode);
 
 			TXOPend = TXOPend + 1;
 
