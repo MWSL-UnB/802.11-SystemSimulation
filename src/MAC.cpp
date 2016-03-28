@@ -474,7 +474,7 @@ void MAC_private::new_msdu() {
 	BOC_flag[myAC] = true;
 
 	// Recalculate myAC, if not during TXOP or TXOP is going to end or has ended
-	if(!TXOPflag || TXOPend <= now + 1){
+	if(!TXOPflag){
 		internal_contention();
 	}
 
@@ -644,7 +644,7 @@ void MAC_private::receive_this(MPDU p) {
 
 			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 					<< " received " << p
-					<< "    schedule ACK transmission for " << t_ack
+					<< ". Schedule ACK transmission for " << t_ack
 					<< endl;
 			break;
 		}
@@ -934,7 +934,7 @@ void MAC_private::start_TXOP() {
 
 			// TXOPend must account for RTS/CTS exchanged in the beginning of TXOP
 			TXOPend = now + rts_duration + cts_duration + SIFS;
-			if(BAAggFlag) TXOPend += SIFS + ba_duration(which_mode);
+			if(BAAggFlag) TXOPend += 2*SIFS + ba_duration(which_mode);
 
 			power_dBm = term->get_power(msdu.get_target(), frag_thresh);
 
@@ -958,9 +958,9 @@ void MAC_private::start_TXOP() {
 						which_mode);
 
 
-				TXOPend = TXOPend + auxpckLast.get_duration() + timestamp(auxNfrags)*ack_duration(which_mode);
-				if(BAAggFlag) TXOPend += timestamp(2*auxNfrags)*SIFS;
-				else TXOPend += timestamp(auxNfrags);
+				TXOPend = TXOPend + auxpckLast.get_duration();
+				if(BAAggFlag) TXOPend += timestamp(1);
+				else TXOPend += timestamp(auxNfrags)*ack_duration(which_mode) + 2*SIFS;
 
 				if(auxNfrags != 1){
 					// Update TXOPend accordingly
@@ -1045,6 +1045,8 @@ void MAC_private::end_TXOP() {
 	pcks2ACK_ids.clear();
 	pcks2reque.clear();
 	pcktsDur.clear();
+
+	if(get_queue_size()) internal_contention();
 
 	END_PROF("MAC::end_TXOP")
 }
@@ -1136,10 +1138,6 @@ void MAC_private::internal_contention()	{
 			<< ": packet of AC " << allACs[minTTT_idx]
 			<< " will be transmitted." << endl;
 
-	// This log line is distributed in multiple code lines
-	if(logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
-				<< ": BOCs will be frozen at: ";
-
 	// Loop to redefine BOCs
 	for(int k = 0; k < 5; k++) {
 		accCat auxAC = allACs[k];
@@ -1147,12 +1145,9 @@ void MAC_private::internal_contention()	{
 			timestamp time_diff = TTT_ACs[k] - TTT_ACs[minTTT_idx];
 			if (time_diff < timestamp(BOC_ACs[auxAC]) * aSlotTime) {
 				BOC_ACs[auxAC] = time_diff / aSlotTime;
-				if(logflag) *mylog << BOC_ACs[auxAC] << "  ";
 			}
 		}
 	}
-
-	if(logflag) *mylog << endl;
 
 	set_myAC(allACs[minTTT_idx]);
 }
