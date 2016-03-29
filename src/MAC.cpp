@@ -500,12 +500,8 @@ void MAC_private::new_msdu() {
 			}
 		} else { // There is aggregation
 			if(now + 1 < time_to_wait_BA) { // BA is not about to be sent
-				if (logflag) *mylog << "\n !!! " << ptr2sch->now() << "sec., " << *term
-					<< ": BA is NOT about to be sent." << endl;
 				t = now + 1;
 			} else { // BA is about to be sent
-				if (logflag) *mylog << "\n !!! " << ptr2sch->now() << "sec., " << *term
-					<< ": BA IS about to be sent." << endl;
 				t = TXOPend + 1;
 			}
 		}
@@ -862,7 +858,7 @@ void MAC_private::send_data() {
 		pcks2reque.push_back(msdu);
 		pcktsDur.push_back(pck.get_duration());
 
-		timestamp t = ptr2sch->now() + pck.get_duration() + 1;
+		timestamp t = ptr2sch->now() + pck.get_duration();
 		ptr2sch->schedule(Event(t,(void*)&wrapper_to_aggreg_send,(void*)this));
 	} else {
 		timestamp t = NAV + ACK_Timeout(pck.get_mode());
@@ -961,7 +957,7 @@ void MAC_private::start_TXOP() {
 
 				TXOPend = TXOPend + auxpckLast.get_duration();
 				if(BAAggFlag) {
-					if(count != 0) TXOPend += timestamp(1);
+					//if(count != 0) TXOPend += timestamp(1);
 				}
 				else TXOPend += timestamp(auxNfrags)*ack_duration(which_mode) + 2*SIFS;
 
@@ -995,11 +991,6 @@ void MAC_private::start_TXOP() {
 					<< ", of Access Category " << myAC << " begins TXOP scheduled to end at "
 					<< TXOPend << "sec." << "\nPackets in queue = " << count << ". TXOP duration = "
 					<< TXOPend - now << " sec." << endl;
-
-			if(BAAggFlag) {
-				if (logflag) *mylog << "\n !!! " << ptr2sch->now() << "sec., " << *term
-					<< ": time to wait for BA set to " << time_to_wait_BA << "." << endl;
-			}
 
 			myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,M6,TXOPend),
 					true);
