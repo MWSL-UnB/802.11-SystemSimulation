@@ -499,10 +499,14 @@ void MAC_private::new_msdu() {
 				t = TXOPend;
 			}
 		} else { // There is aggregation
-			if(now + 1 < time_to_send_BA) { // BA is not about to be sent
+			if(now + 1 < time_to_wait_BA) { // BA is not about to be sent
+				if (logflag) *mylog << "\n !!! " << ptr2sch->now() << "sec., " << *term
+					<< ": BA is NOT about to be sent." << endl;
 				t = now + 1;
 			} else { // BA is about to be sent
-				t = TXOPend;
+				if (logflag) *mylog << "\n !!! " << ptr2sch->now() << "sec., " << *term
+					<< ": BA IS about to be sent." << endl;
+				t = TXOPend + 1;
 			}
 		}
 	}
@@ -651,7 +655,7 @@ void MAC_private::receive_this(MPDU p) {
 		case blockACK : {
 			pcks2ACK_ids.push_back(p.get_id());
 			if(time_to_send_BA == timestamp(0)) {
-				time_to_send_BA = NAV - SIFS - ba_duration(p.get_mode());
+				time_to_send_BA = NAV - ba_duration(p.get_mode()) - timestamp(1);
 				ptr2sch->schedule(Event(time_to_send_BA, (void*)(&wrapper_to_send_ba),
 						(void*)this, p.get_source()));
 			}
@@ -766,8 +770,6 @@ void MAC_private::requeue_packets(vector<long_integer> bapcks) {
 		}
 		auxDur += pcktsDur[k];
 	}
-
-	if(get_queue_size()) new_msdu();
 
 	END_PROF("MAC::requeue_packets")
 }
@@ -957,9 +959,10 @@ void MAC_private::start_TXOP() {
 				DataMPDU auxpckLast(lastpl, term, auxmsdu.get_target(), power_dBm,
 						which_mode);
 
-
 				TXOPend = TXOPend + auxpckLast.get_duration();
-				if(BAAggFlag) TXOPend += timestamp(1);
+				if(BAAggFlag) {
+					if(count != 0) TXOPend += timestamp(1);
+				}
 				else TXOPend += timestamp(auxNfrags)*ack_duration(which_mode) + 2*SIFS;
 
 				if(auxNfrags != 1){
@@ -992,6 +995,11 @@ void MAC_private::start_TXOP() {
 					<< ", of Access Category " << myAC << " begins TXOP scheduled to end at "
 					<< TXOPend << "sec." << "\nPackets in queue = " << count << ". TXOP duration = "
 					<< TXOPend - now << " sec." << endl;
+
+			if(BAAggFlag) {
+				if (logflag) *mylog << "\n !!! " << ptr2sch->now() << "sec., " << *term
+					<< ": time to wait for BA set to " << time_to_wait_BA << "." << endl;
+			}
 
 			myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,M6,TXOPend),
 					true);
