@@ -622,7 +622,7 @@ void MAC_private::receive_this(MPDU p) {
 
 
 			pck = DataMPDU(msdu, pl, current_frag, nfrags, power_dBm, p.get_mode(),
-					newnav);
+					newnav,normalACK);
 
 			ptr2sch->schedule(Event(now+SIFS, (void*)(&wrapper_to_send_data),
 					(void*)this));
@@ -900,7 +900,7 @@ void MAC_private::aggreg_send() {
 				<< ptr2sch->now() + SIFS << endl;
 
 		pck = DataMPDU(msdu, pl, current_frag, nfrags, power_dBm, pck.get_mode(),
-				TXOPend);
+				TXOPend,blockACK);
 
 		send_data();
 	}
@@ -950,10 +950,16 @@ void MAC_private::start_TXOP() {
 				lastpl = auxmsdu.get_nbytes() % frag_thresh;
 				if (!lastpl) lastpl = frag_thresh;
 
-				DataMPDU auxpck (frag_thresh, term, auxmsdu.get_target(),power_dBm,
+				DataMPDU auxpck = DataMPDU(frag_thresh, term, auxmsdu.get_target(),power_dBm,
 						which_mode);
-				DataMPDU auxpckLast(lastpl, term, auxmsdu.get_target(), power_dBm,
+				DataMPDU auxpckLast = DataMPDU(lastpl, term, auxmsdu.get_target(), power_dBm,
 						which_mode);
+				if(BAAggFlag){
+					DataMPDU auxpck = DataMPDU(frag_thresh, term, auxmsdu.get_target(),power_dBm,
+							which_mode,timestamp(0),blockACK);
+					DataMPDU auxpckLast = DataMPDU(lastpl, term, auxmsdu.get_target(), power_dBm,
+							which_mode,timestamp(0),blockACK);
+				}
 
 				TXOPend = TXOPend + auxpckLast.get_duration();
 				if(!BAAggFlag) TXOPend += timestamp(auxNfrags)*ack_duration(which_mode) + 2*SIFS;
@@ -1171,7 +1177,9 @@ void MAC_private::transmit() {
 
 	myphy->cancel_notify_busy_channel();
 
-	DataMPDU auxpck (pl, term, msdu.get_target(), power_dBm, which_mode);
+	DataMPDU auxpck(pl, term, msdu.get_target(), power_dBm, which_mode);
+	if(BAAggFlag && TXOPflag) auxpck = DataMPDU(pl, term, msdu.get_target(), power_dBm,
+			which_mode,timestamp(0),blockACK);
 
 	if (auxpck.get_nbytes_mac() < RTS_threshold) { // Basic DCF protocol, without RTS/CTS exchange
 
@@ -1212,8 +1220,10 @@ void MAC_private::transmit() {
 					5*SIFS + 1;
 		}
 
-		pck = DataMPDU (msdu, pl, current_frag, nfrags, power_dBm, which_mode,
-				newnav);
+		if(BAAggFlag && TXOPflag)pck = DataMPDU (msdu, pl, current_frag, nfrags, power_dBm, which_mode,
+				newnav,blockACK);
+		else pck = DataMPDU (msdu, pl, current_frag, nfrags, power_dBm, which_mode,
+				newnav,normalACK);
 
 		timestamp t = NAV + CTS_Timeout;
 

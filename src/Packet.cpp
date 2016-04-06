@@ -239,6 +239,8 @@ DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p,
   ACKpol = apol;
   
   nbytes_overhead = service_field_overhead + data_packet_overhead;
+  if(ACKpol == blockACK) nbytes_overhead += mpdu_delimiter_overhead;
+
   nbits = (nbytes_data + nbytes_overhead)*8;
   packet_duration = calc_duration (nbits, mode);
 }
@@ -260,6 +262,8 @@ DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
   ACKpol = apol;
   
   nbytes_overhead = service_field_overhead + data_packet_overhead;
+  if(ACKpol == blockACK) nbytes_overhead += mpdu_delimiter_overhead;
+
   nbits = (nbytes_data + nbytes_overhead)*8;
   packet_duration = calc_duration (nbits, mode);
 
