@@ -39,6 +39,7 @@ const unsigned data_packet_overhead = 28;
 const unsigned ack_packet_overhead  = 14;
 const unsigned rts_packet_overhead  = 20;
 const unsigned cts_packet_overhead  = 14;
+const unsigned ba_packet_overhead  = 20;
 
 /////////////////////////////
 // physical layer overhead 
@@ -46,7 +47,6 @@ const unsigned service_field_overhead = 2; // service field (in OFDM symbols)
 const unsigned phy_overhead = 5; // preambles + SIGNAL field (in OFDM symbols)
 const unsigned coding_overhead = 6; // number of termination bits
 
-////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 // enum transmission_mode                                                     //
 ////////////////////////////////////////////////////////////////////////////////
@@ -163,6 +163,7 @@ MSDU::MSDU(unsigned n, Terminal* from , Terminal* to, unsigned priority,
            timestamp gen_time)
            : nbytes_data(n), tid(priority), time_created(gen_time) {
 
+  retry_count = 0;
   source = from;
   target = to;
 }
@@ -187,6 +188,9 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
     case CTS :
       nbytes_overhead = service_field_overhead + cts_packet_overhead;
       break;
+    case BA :
+      nbytes_overhead = service_field_overhead + ba_packet_overhead;
+      break;
     case DUMMY :
       return;
     default :
@@ -196,6 +200,23 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
 
   nbits = nbytes_overhead*8;
   packet_duration = calc_duration (nbits, mode);
+
+  ACKpol = noACK;
+  pcks2ACK.clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// MPDU setPcks2Ack                                                      //
+////////////////////////////////////////////////////////////////////////////////
+void MPDU::setPcks2Ack(const vector<long_integer>& pcks2Ack) {
+	switch(t) {
+	case BA:
+		break;
+	default:
+		throw(my_exception(GENERAL,
+		            "Attempt to initialize pcks2ACK for non-BA packet"));
+	}
+	pcks2ACK = pcks2Ack;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -203,7 +224,7 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
 ////////////////////////////////////////////////////////////////////////////////
 DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p, 
                     transmission_mode r, timestamp nav, unsigned priority,
-                    unsigned frag, unsigned nfrags,unsigned mid) 
+                    unsigned frag, unsigned nfrags,unsigned mid, ACKpolicy apol)
                     : nbytes_data(n), tid(priority), frag_number(frag),
                       frag_total(nfrags), msdu_id(mid){
 
@@ -213,6 +234,7 @@ DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p,
   target = to;
   tx_power = p;
   net_all_vec = nav;
+  ACKpol = apol;
   
   nbytes_overhead = service_field_overhead + data_packet_overhead;
   nbits = (nbytes_data + nbytes_overhead)*8;
@@ -221,8 +243,8 @@ DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p,
 
 ////////////////////////////////////////////////////////////////////////////////
 DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
-                    transmission_mode r, timestamp nav)
-                    : frag_number(frag), frag_total(nfrags) {
+                    transmission_mode r, timestamp nav, ACKpolicy apol)
+                    : frag_number(frag), frag_total(nfrags){
 
   t = DATA;
   nbytes_data = (n >= 0)? n : pck.get_nbytes();
@@ -233,6 +255,7 @@ DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
   msdu_id = pck.get_id();
   tx_power = p;
   net_all_vec = nav;
+  ACKpol = apol;
   
   nbytes_overhead = service_field_overhead + data_packet_overhead;
   nbits = (nbytes_data + nbytes_overhead)*8;
@@ -257,7 +280,20 @@ ostream& operator << (ostream& os, const MPDU& p) {
     case RTS:
       return os << "RTS packet " << p.id << " from " << *(p.source) << " to "
                 << *(p.target);
+    case BA:
+          return os << "BA packet " << p.id << " from " << *(p.source) << " to "
+                    << *(p.target);
   }
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
+// vector<long_integer> output operator <<                                    //
+////////////////////////////////////////////////////////////////////////////////
+ostream& operator << (ostream& os, const vector<long_integer>& vec) {
+	for(typename vector<long_integer>::const_iterator k = vec.begin(); k != vec.end(); k++) {
+      os << *k;
+      if(k != vec.end() - 2) os << " ";
+      else os << " and ";
+	}
+	return os;
+}

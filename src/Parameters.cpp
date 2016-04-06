@@ -318,12 +318,16 @@ bool Parameters::assign (string s1,string s2) {
   	  if (!ppAC_VI.read_vec(s2)) return false;
 
   } else if (!s1.compare("ppAC_VO")) {
-  	  which_param = &ppAC_VO;
-  	  if (!ppAC_VO.read_vec(s2)) return false;
+	  which_param = &ppAC_VO;
+	  if (!ppAC_VO.read_vec(s2)) return false;
 
   } else if (!s1.compare("ppLegacy")) {
-  	  which_param = &ppLegacy;
-  	  if (!ppLegacy.read_vec(s2)) return false;
+	  which_param = &ppLegacy;
+	  if (!ppLegacy.read_vec(s2)) return false;
+
+  } else if (!s1.compare("set_BA_agg")) {
+	  which_param = &set_BA_agg;
+	  if (!set_BA_agg.read_vec(s2)) return false;
 
   } else {
     return false;
@@ -398,6 +402,8 @@ void Parameters::default_config () {
   ppAC_VI.init("proportion of AC_VIs",0);
   ppAC_VO.init("proportion of AC_VOs",0);
   ppLegacy.init("proportion of legacies",NumberStas.current());
+
+  set_BA_agg.init("BA and Aggregation Flag",false);
 
 }
 

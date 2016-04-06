@@ -354,7 +354,8 @@ void Simulation::init_terminals(){
 			sim_par.get_LAFailLimit(), sim_par.get_UseRxMode());
 
 	mac_struct mac(sim_par.get_RetryLimit(), sim_par.get_RTSThreshold(),
-			sim_par.get_FragmentationThresh(), sim_par.get_QueueSize());
+			sim_par.get_FragmentationThresh(), sim_par.get_QueueSize(),
+			sim_par.get_set_BA_agg());
 
 	PHY_struct phy(sim_par.get_NoiseVariance(), sim_par.get_CCASensitivity());
 

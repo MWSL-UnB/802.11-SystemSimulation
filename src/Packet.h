@@ -25,6 +25,7 @@
 
 #include "timestamp.h"
 #include "long_integer.h"
+#include <vector>
 
 class Terminal;
 
@@ -34,17 +35,23 @@ class Terminal;
 // rate adaptation method or transmission data rate                           //
 ////////////////////////////////////////////////////////////////////////////////
 typedef enum {OPT,    // optimal genie-aided adaptative-rate scheme
-              SUBOPT, // suboptimal transmitter-based scheme
-              M0,     // dummy
-              M6,     // fixed rate, 6Mbps
-              M9,     //           , 9Mbps
-              M12,    //           , 12Mbps
-              M18,    //           , 18Mbps
-              M24,    //           , 24Mbps
-              M36,    //           , 36Mbps
-              M48,    //           , 48Mbps
-              M54     //           , 54Mbps
-              } transmission_mode;
+	SUBOPT, // suboptimal transmitter-based scheme
+	M0,     // dummy
+	M6,     // fixed rate, 6Mbps
+	M9,     //           , 9Mbps
+	M12,    //           , 12Mbps
+	M18,    //           , 18Mbps
+	M24,    //           , 24Mbps
+	M36,    //           , 36Mbps
+	M48,    //           , 48Mbps
+	M54     //           , 54Mbps
+} transmission_mode;
+
+typedef enum {
+	noACK,
+	normalACK,
+	blockACK
+} ACKpolicy;
 
 double tx_mode_to_double (transmission_mode tm);
 // conversion to double
@@ -63,7 +70,7 @@ istream& operator>> (istream& is, transmission_mode& tm);
 ////////////////////////////////////////////////////////////////////////////////
 // enum packet_type                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-typedef enum {DUMMY, DATA, ACK, RTS, CTS} packet_type;
+typedef enum {DUMMY, DATA, ACK, RTS, CTS, BA} packet_type;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +100,8 @@ class MSDU : public Packet {
   timestamp time_created;
   timestamp tx_time;
   unsigned tid; // traffic identifier
-  unsigned nbytes_data;     // number of data bytes  
+  unsigned nbytes_data;     // number of data bytes
+  unsigned retry_count;		// number of MSDU retries
   
 public:
   MSDU(unsigned n = 0,            // number of data bytes
@@ -107,6 +115,8 @@ public:
   timestamp get_time_created()  const {return time_created;}
   timestamp get_tx_time()       const {return tx_time;}
   unsigned  get_tid()           const {return tid;}
+  unsigned	get_retry_count()	const {return retry_count;}
+  unsigned	inc_retry_count()	{ return retry_count++;}
   
   void set_tx_time(timestamp t) {tx_time = t;}
 };
@@ -127,6 +137,10 @@ protected:
   timestamp packet_duration;
   timestamp net_all_vec; // NAV field
 
+  // Used only for BA packets
+  vector<long_integer> pcks2ACK;
+  ACKpolicy ACKpol;
+
 public:
   MPDU(packet_type tp = DUMMY,    // packet type
        Terminal* from = 0,        // source terminal
@@ -141,10 +155,18 @@ public:
   timestamp         get_nav()        const {return net_all_vec;}
   unsigned          get_nbits()      const {return nbits;}
   double            get_power ()     const {return tx_power;}
-  packet_type       get_type()       const {return t;}       
-  
+  packet_type       get_type()       const {return t;}
+  ACKpolicy			get_ACKpol()	 const {return ACKpol;}
+  vector<long_integer> getPcks2Ack() const {return pcks2ACK;}
+
   friend ostream& operator << (ostream& os, const MPDU& p);
-  
+  friend ostream& operator << (ostream& os, const vector<long_integer>& vec);
+
+  void setPcks2Ack(const vector<long_integer>& pcks2Ack);
+
+  void setACKpol(ACKpolicy acKpol) {
+	  ACKpol = acKpol;
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -167,7 +189,8 @@ public:
             unsigned priority = 0,
             unsigned frag = 1,
             unsigned nfrags = 1,
-            unsigned mid = 0
+            unsigned mid = 0,
+			ACKpolicy apol = normalACK
            );
 
   DataMPDU (MSDU pck,
@@ -176,7 +199,8 @@ public:
             unsigned nfrags = 1,                     
             double p = 0,
             transmission_mode r = M6,
-            timestamp nav = timestamp(0)
+            timestamp nav = timestamp(0),
+			ACKpolicy apol = normalACK
            );
   // creates a DataMPDU inheriting parameters of a given MSDU 'pck'
                             
@@ -191,5 +215,8 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 inline timestamp ack_duration(transmission_mode tm) {
   return (MPDU(ACK, 0, 0, 0, tm)).get_duration();
+}
+inline timestamp ba_duration(transmission_mode tm) {
+  return (MPDU(BA, 0, 0, 0, tm)).get_duration();
 }
 #endif

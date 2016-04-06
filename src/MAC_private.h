@@ -42,6 +42,9 @@ typedef enum{
 }accCat;
 accCat const allACs[5] = {AC_BK, AC_BE, AC_VI, AC_VO, legacy};
 
+ostream& operator << (ostream& os, const accCat& AC);
+// Overload of output operator for accCat types
+
 typedef enum {
 	success,
 	ACKfail,
@@ -82,7 +85,6 @@ protected:
   //unsigned  contention_window; // window from which the backoff counter is chosen
   timestamp time_to_send;      // time scheduled for next transmission
   bool      countdown_flag;    // true if backoff countdown is activated
-  unsigned  retry_count;       // number of transmissions retry for current MSDU
   timestamp NAV;               // network allocation vector
   timestamp NAV_RTS;           // duration of packet requested to send
   unsigned  nfrags;            // number of fragments in current packet
@@ -106,6 +108,14 @@ protected:
   bool TXOPflag;
   TXOPla TXOPla_win; // Flag that indicates if link adaptation will be successful or not after TXOP
 
+  // BA and aggregation parameters
+  bool BAAggFlag;
+  vector<long_integer> pcks2ACK_ids;
+  vector<MSDU> pcks2reque;
+  vector<timestamp> pcktsDur;
+  timestamp time_to_send_BA;
+  timestamp time_to_wait_BA;
+
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts
   double        tx_data_rate; // mean transmitted data rate
@@ -114,6 +124,8 @@ protected:
 
   void ack_timed_out();
   
+  void ba_timed_out();
+
   void begin_countdown();
 
   void check_nav();
@@ -135,8 +147,12 @@ protected:
 
   void send_ack(Terminal *to);
   void send_cts(Terminal *to);
+  void send_ba(Terminal *to);
   void send_data();
   
+  void aggreg_send();
+  // define aggregation steps
+
   void start_TXOP();
   // start TXOP time counting
 
@@ -151,6 +167,9 @@ protected:
   
   void tx_attempt();
   // begin contention for new MSDU or for new train of fragments 
+
+  void requeue_packets(vector<long_integer> bapcks);
+  // requeue packets not acknoledged by BA
     
 public:
   
@@ -162,6 +181,9 @@ public:
   /////////////////////////////////////////////////////
   static void wrapper_to_ack_timed_out (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->ack_timed_out();}
+
+  static void wrapper_to_ba_timed_out (void* ptr2obj) {
+      ((MAC_private*)ptr2obj)->ba_timed_out();}
 
   static void wrapper_to_check_nav (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->check_nav();}
@@ -178,11 +200,17 @@ public:
   static void wrapper_to_start_TXOP (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->start_TXOP();}
 
+  static void wrapper_to_aggreg_send (void* ptr2obj) {
+      ((MAC_private*)ptr2obj)->aggreg_send();}
+
   static void wrapper_to_send_ack (void* ptr2obj, void* param) {
     ((MAC_private*)ptr2obj)->send_ack((Terminal*)param);}
 
   static void wrapper_to_send_cts (void* ptr2obj, void* param) {
     ((MAC_private*)ptr2obj)->send_cts((Terminal*)param);}
+
+  static void wrapper_to_send_ba (void* ptr2obj, void* param) {
+    ((MAC_private*)ptr2obj)->send_ba((Terminal*)param);}
 
   static void wrapper_to_send_data (void* ptr2obj) {
     ((MAC_private*)ptr2obj)->send_data();}
