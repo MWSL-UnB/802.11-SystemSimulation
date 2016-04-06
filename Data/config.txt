@@ -17,7 +17,7 @@ Log = SETUP, MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC a
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 
-Seed = 8
+Seed = 3
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters
@@ -59,7 +59,7 @@ ppAC_VO = 0
 ppLegacy = 0
 
 %% set_BA_agg: if 1 all stations will perform Block ACK and MPDU aggregation
-set_BA_agg = 0;
+set_BA_agg = 1;
 
 %%%%%%%%%%%%%%%%%%%%%
 % Channel Parameters

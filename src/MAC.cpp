@@ -956,10 +956,7 @@ void MAC_private::start_TXOP() {
 						which_mode);
 
 				TXOPend = TXOPend + auxpckLast.get_duration();
-				if(BAAggFlag) {
-					//if(count != 0) TXOPend += timestamp(1);
-				}
-				else TXOPend += timestamp(auxNfrags)*ack_duration(which_mode) + 2*SIFS;
+				if(!BAAggFlag) TXOPend += timestamp(auxNfrags)*ack_duration(which_mode) + 2*SIFS;
 
 				if(auxNfrags != 1){
 					// Update TXOPend accordingly
@@ -1182,9 +1179,10 @@ void MAC_private::transmit() {
 		if(TXOPflag) auxnav = TXOPend;
 		else auxnav = ptr2sch->now() + auxpck.get_duration() + SIFS + ack_duration(which_mode);
 
-		pck = DataMPDU (msdu, pl, current_frag, nfrags, power_dBm, which_mode,
-				auxnav);
-		if(BAAggFlag && TXOPflag) pck.setACKpol(blockACK);
+		if(BAAggFlag && TXOPflag) pck = DataMPDU (msdu, pl, current_frag, nfrags, power_dBm, which_mode,
+				auxnav,blockACK);
+		else pck = DataMPDU (msdu, pl, current_frag, nfrags, power_dBm, which_mode,
+				auxnav,normalACK);
 
 		countdown_flag = false;
 

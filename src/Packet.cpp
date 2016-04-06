@@ -40,6 +40,7 @@ const unsigned ack_packet_overhead  = 14;
 const unsigned rts_packet_overhead  = 20;
 const unsigned cts_packet_overhead  = 14;
 const unsigned ba_packet_overhead  = 20;
+const unsigned mpdu_delimiter_overhead = 4;
 
 /////////////////////////////
 // physical layer overhead 
@@ -198,10 +199,11 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
             "Packet type not supported in MPDU constructor"));
   }
 
+  ACKpol = noACK;
+
   nbits = nbytes_overhead*8;
   packet_duration = calc_duration (nbits, mode);
 
-  ACKpol = noACK;
   pcks2ACK.clear();
 }
 
