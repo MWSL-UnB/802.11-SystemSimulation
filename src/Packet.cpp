@@ -226,7 +226,8 @@ void MPDU::setPcks2Ack(const vector<long_integer>& pcks2Ack) {
 ////////////////////////////////////////////////////////////////////////////////
 DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p, 
                     transmission_mode r, timestamp nav, unsigned priority,
-                    unsigned frag, unsigned nfrags,unsigned mid, ACKpolicy apol)
+                    unsigned frag, unsigned nfrags,unsigned mid, ACKpolicy apol,
+					bool addP)
                     : nbytes_data(n), tid(priority), frag_number(frag),
                       frag_total(nfrags), msdu_id(mid){
 
@@ -241,13 +242,16 @@ DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p,
   nbytes_overhead = service_field_overhead + data_packet_overhead;
   if(ACKpol == blockACK) nbytes_overhead += mpdu_delimiter_overhead;
 
+  if(ACKpol == normalACK && !addP) throw(my_exception(GENERAL,
+          "Normal ACK packet without preamble."));
+
   nbits = (nbytes_data + nbytes_overhead)*8;
-  packet_duration = calc_duration (nbits, mode, true);
+  packet_duration = calc_duration (nbits, mode, addP);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
-                    transmission_mode r, timestamp nav, ACKpolicy apol)
+                    transmission_mode r, timestamp nav, ACKpolicy apol, bool addP)
                     : frag_number(frag), frag_total(nfrags){
 
   t = DATA;
@@ -265,7 +269,7 @@ DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
   if(ACKpol == blockACK) nbytes_overhead += mpdu_delimiter_overhead;
 
   nbits = (nbytes_data + nbytes_overhead)*8;
-  packet_duration = calc_duration (nbits, mode, true);
+  packet_duration = calc_duration (nbits, mode, addP);
 
 }
 

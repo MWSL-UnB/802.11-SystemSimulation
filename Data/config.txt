@@ -17,7 +17,7 @@ Log = SETUP, MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC a
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 
-Seed = 3
+Seed = 1,2,3,4,5,6,7,8,9,10
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters
@@ -53,8 +53,8 @@ Radius = 10 % cell radius in meters
 % will be reduced so that the new sum equals 1. 
 
 ppAC_BK = 0
-ppAC_BE = 0
-ppAC_VI = 1
+ppAC_BE = 1
+ppAC_VI = 1,0.5
 ppAC_VO = 0
 ppLegacy = 0
 

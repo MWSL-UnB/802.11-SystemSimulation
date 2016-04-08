@@ -190,7 +190,8 @@ public:
             unsigned frag = 1,
             unsigned nfrags = 1,
             unsigned mid = 0,
-			ACKpolicy apol = normalACK
+			ACKpolicy apol = normalACK,
+			bool addP = true
            );
 
   DataMPDU (MSDU pck,
@@ -200,7 +201,8 @@ public:
             double p = 0,
             transmission_mode r = M6,
             timestamp nav = timestamp(0),
-			ACKpolicy apol = normalACK
+			ACKpolicy apol = normalACK,
+			bool addP = true
            );
   // creates a DataMPDU inheriting parameters of a given MSDU 'pck'
                             
