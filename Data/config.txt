@@ -17,7 +17,7 @@ Log = SETUP, MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC a
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 
-Seed = 1,2,3,4,5,6,7,8,9,10
+Seed = 3
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters
@@ -53,8 +53,8 @@ Radius = 10 % cell radius in meters
 % will be reduced so that the new sum equals 1. 
 
 ppAC_BK = 0
-ppAC_BE = 1
-ppAC_VI = 1,0.5
+ppAC_BE = 0
+ppAC_VI = 1
 ppAC_VO = 0
 ppLegacy = 0
 
@@ -83,7 +83,7 @@ NumberSinus = 20 % number of sinewaves to emulate Rayleigh fading.
 % PHY Parameters
 
 
-TxMode = SUBOPT%,M12,M24,M36,M54,OPT,SUBOPT 
+TxMode = SUBOPT%,M12,M24,M36,M54,OPT,SUBOPT
           % M6,M9,M12,M18,M24,M36,M48,M54: no link adaptation, always transmit at fixed rate with maximum power
           % OPT: genie-aided link adaptation
           % SUBOPT: transmitter-based link adaptation
