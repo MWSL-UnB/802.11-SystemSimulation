@@ -40,6 +40,7 @@ const unsigned ack_packet_overhead  = 14;
 const unsigned rts_packet_overhead  = 20;
 const unsigned cts_packet_overhead  = 14;
 const unsigned ba_packet_overhead  = 20;
+const unsigned mpdu_delimiter_overhead = 4;
 
 /////////////////////////////
 // physical layer overhead 
@@ -117,7 +118,7 @@ istream& operator>> (istream& is, transmission_mode& tm) {
 //
 // calculates the packet duration                                             //
 ////////////////////////////////////////////////////////////////////////////////
-timestamp calc_duration (unsigned nbits, transmission_mode mode) {
+timestamp calc_duration (unsigned nbits, transmission_mode mode, bool addPre) {
 
   unsigned bits_per_symbol;
 
@@ -143,7 +144,7 @@ timestamp calc_duration (unsigned nbits, transmission_mode mode) {
   if ((nbits+coding_overhead)%bits_per_symbol) nsymbols++;
 
   // add preambles and SIGNAL field
-  nsymbols += phy_overhead;
+  if(addPre) nsymbols += phy_overhead;
 
   // calculate time
   return timestamp(double(nsymbols) * symbol_period);
@@ -198,10 +199,11 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
             "Packet type not supported in MPDU constructor"));
   }
 
-  nbits = nbytes_overhead*8;
-  packet_duration = calc_duration (nbits, mode);
-
   ACKpol = noACK;
+
+  nbits = nbytes_overhead*8;
+  packet_duration = calc_duration (nbits, mode, true);
+
   pcks2ACK.clear();
 }
 
@@ -224,7 +226,8 @@ void MPDU::setPcks2Ack(const vector<long_integer>& pcks2Ack) {
 ////////////////////////////////////////////////////////////////////////////////
 DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p, 
                     transmission_mode r, timestamp nav, unsigned priority,
-                    unsigned frag, unsigned nfrags,unsigned mid, ACKpolicy apol)
+                    unsigned frag, unsigned nfrags,unsigned mid, ACKpolicy apol,
+					bool addP)
                     : nbytes_data(n), tid(priority), frag_number(frag),
                       frag_total(nfrags), msdu_id(mid){
 
@@ -237,13 +240,18 @@ DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p,
   ACKpol = apol;
   
   nbytes_overhead = service_field_overhead + data_packet_overhead;
+  if(ACKpol == blockACK) nbytes_overhead += mpdu_delimiter_overhead;
+
+  if(ACKpol == normalACK && !addP) throw(my_exception(GENERAL,
+          "Normal ACK packet without preamble."));
+
   nbits = (nbytes_data + nbytes_overhead)*8;
-  packet_duration = calc_duration (nbits, mode);
+  packet_duration = calc_duration (nbits, mode, addP);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
-                    transmission_mode r, timestamp nav, ACKpolicy apol)
+                    transmission_mode r, timestamp nav, ACKpolicy apol, bool addP)
                     : frag_number(frag), frag_total(nfrags){
 
   t = DATA;
@@ -258,8 +266,10 @@ DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
   ACKpol = apol;
   
   nbytes_overhead = service_field_overhead + data_packet_overhead;
+  if(ACKpol == blockACK) nbytes_overhead += mpdu_delimiter_overhead;
+
   nbits = (nbytes_data + nbytes_overhead)*8;
-  packet_duration = calc_duration (nbits, mode);
+  packet_duration = calc_duration (nbits, mode, addP);
 
 }
 
