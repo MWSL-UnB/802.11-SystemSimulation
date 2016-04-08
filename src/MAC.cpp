@@ -138,7 +138,7 @@ void MAC_private::set_myAC(accCat AC) {
 	TXOPend = ptr2sch->now();
 	TXOPla_win = success;
 
-	firstPckFlag = false;
+	preambFlag = true;
 
 }
 
@@ -624,7 +624,7 @@ void MAC_private::receive_this(MPDU p) {
 
 
 			pck = DataMPDU(msdu, pl, current_frag, nfrags, power_dBm, p.get_mode(),
-					newnav,normalACK);
+					newnav,normalACK,true);
 
 			ptr2sch->schedule(Event(now+SIFS, (void*)(&wrapper_to_send_data),
 					(void*)this));
@@ -705,7 +705,10 @@ void MAC_private::receive_this(MPDU p) {
 		/* If the TXOP CTS is received, tx_attempt(), not send_data():
 		 * tx_attempt() fragments packet, while send_data() simply sends next fragment.
 		 */
-		if(TXOPflag) ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_tx_attempt),(void*)this));
+		if(TXOPflag) {
+			if(BAAggFlag) preambFlag = true;
+			ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_tx_attempt),(void*)this));
+		}
 		else ptr2sch->schedule(Event(t_data, (void*)(&wrapper_to_send_data),(void*)this));
 
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
@@ -902,7 +905,7 @@ void MAC_private::aggreg_send() {
 				<< ptr2sch->now() + SIFS << endl;
 
 		pck = DataMPDU(msdu, pl, current_frag, nfrags, power_dBm, pck.get_mode(),
-				TXOPend,blockACK);
+				TXOPend,blockACK,preambFlag);
 
 		send_data();
 	}
@@ -953,14 +956,16 @@ void MAC_private::start_TXOP() {
 				if (!lastpl) lastpl = frag_thresh;
 
 				ACKpolicy apol  = BAAggFlag ? blockACK:normalACK;
+				bool prea = ((count != 0) && BAAggFlag) ? false:true;
 
 				DataMPDU auxpck = DataMPDU(frag_thresh, term, auxmsdu.get_target(),power_dBm,
-						which_mode,timestamp(0),apol);
+						which_mode,timestamp(0),0,0,0,0,apol,prea);
 				DataMPDU auxpckLast = DataMPDU(lastpl, term, auxmsdu.get_target(), power_dBm,
-						which_mode,timestamp(0),apol);
+						which_mode,timestamp(0),0,0,0,0,apol,prea);
 
 				TXOPend = TXOPend + auxpckLast.get_duration();
 				if(!BAAggFlag) TXOPend += timestamp(auxNfrags)*ack_duration(which_mode) + 2*SIFS;
+				else if(count != 0) TXOPend += timestamp(auxNfrags)*timestamp(1);
 
 				if(auxNfrags != 1){
 					// Update TXOPend accordingly
@@ -1176,7 +1181,8 @@ void MAC_private::transmit() {
 	myphy->cancel_notify_busy_channel();
 
 	ACKpolicy apol = (BAAggFlag && TXOPflag) ? blockACK : normalACK;
-	DataMPDU auxpck = DataMPDU(pl, term, msdu.get_target(), power_dBm,which_mode,timestamp(0),apol);
+	DataMPDU auxpck = DataMPDU(pl, term, msdu.get_target(), power_dBm,which_mode,timestamp(0),
+			apol,preambFlag);
 
 	if (auxpck.get_nbytes_mac() < RTS_threshold) { // Basic DCF protocol, without RTS/CTS exchange
 
@@ -1185,7 +1191,8 @@ void MAC_private::transmit() {
 		else auxnav = ptr2sch->now() + auxpck.get_duration() + SIFS + ack_duration(which_mode);
 
 		pck = DataMPDU (msdu, pl, current_frag, nfrags, power_dBm, which_mode,
-				auxnav,apol);
+				auxnav,apol,preambFlag);
+		if(BAAggFlag && TXOPflag) preambFlag = false;
 
 		countdown_flag = false;
 
@@ -1216,7 +1223,8 @@ void MAC_private::transmit() {
 		}
 
 		ACKpolicy apol = (BAAggFlag && TXOPflag) ? blockACK:normalACK;
-		pck = DataMPDU (msdu, pl, current_frag, nfrags, power_dBm, which_mode,newnav,apol);
+		pck = DataMPDU (msdu, pl, current_frag, nfrags, power_dBm, which_mode,newnav,apol,preambFlag);
+		if(BAAggFlag && TXOPflag) preambFlag = false;
 
 		timestamp t = NAV + CTS_Timeout;
 
