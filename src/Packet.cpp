@@ -118,7 +118,7 @@ istream& operator>> (istream& is, transmission_mode& tm) {
 //
 // calculates the packet duration                                             //
 ////////////////////////////////////////////////////////////////////////////////
-timestamp calc_duration (unsigned nbits, transmission_mode mode) {
+timestamp calc_duration (unsigned nbits, transmission_mode mode, bool addPre) {
 
   unsigned bits_per_symbol;
 
@@ -144,7 +144,7 @@ timestamp calc_duration (unsigned nbits, transmission_mode mode) {
   if ((nbits+coding_overhead)%bits_per_symbol) nsymbols++;
 
   // add preambles and SIGNAL field
-  nsymbols += phy_overhead;
+  if(addPre) nsymbols += phy_overhead;
 
   // calculate time
   return timestamp(double(nsymbols) * symbol_period);
@@ -202,7 +202,7 @@ MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
   ACKpol = noACK;
 
   nbits = nbytes_overhead*8;
-  packet_duration = calc_duration (nbits, mode);
+  packet_duration = calc_duration (nbits, mode, true);
 
   pcks2ACK.clear();
 }
@@ -242,7 +242,7 @@ DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p,
   if(ACKpol == blockACK) nbytes_overhead += mpdu_delimiter_overhead;
 
   nbits = (nbytes_data + nbytes_overhead)*8;
-  packet_duration = calc_duration (nbits, mode);
+  packet_duration = calc_duration (nbits, mode, true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +265,7 @@ DataMPDU::DataMPDU (MSDU pck, int n, unsigned frag, unsigned nfrags, double p,
   if(ACKpol == blockACK) nbytes_overhead += mpdu_delimiter_overhead;
 
   nbits = (nbytes_data + nbytes_overhead)*8;
-  packet_duration = calc_duration (nbits, mode);
+  packet_duration = calc_duration (nbits, mode, true);
 
 }
 
