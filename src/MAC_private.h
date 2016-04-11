@@ -61,7 +61,7 @@ protected:
   Scheduler* ptr2sch;  // pointer to simulation scheduler
   random*    randgen;  // pointer to random number generator
 
-  map<accCat,deque<MSDU>> packet_queue;
+  map< accCat,deque<MSDU> > packet_queue;
   map<accCat,unsigned> CW_ACs;	 // Contention window of all ACs
   map<accCat,unsigned> BOC_ACs;  // Backoff Counter (BOC) of front packets of ACs queues
   map<accCat,bool> BOC_flag; 	 // Flag that defines if the BOC has to be recalculated to
