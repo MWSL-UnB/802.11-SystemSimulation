@@ -203,6 +203,8 @@ void MAC_private::ack_timed_out () {
 void MAC_private::ba_timed_out () {
 	BEGIN_PROF("MAC::ba_timed_out")
 
+	//time_to_wait_BA = timestamp(0);
+
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 		<< ": BA time out for packets ";
 	for(unsigned k = 0; k < pcks2ACK_ids.size(); k++) {
@@ -216,6 +218,8 @@ void MAC_private::ba_timed_out () {
 	auxvec.clear();
 	requeue_packets(auxvec);
 
+	if (get_queue_size()) new_msdu();
+
 	END_PROF("MAC::ba_timed_out")
 }
 
@@ -228,8 +232,6 @@ void MAC_private::begin_countdown() {
 
 	// if channel is free now, schedule transmission for time
 	// AIFS + contention window
-	// CHANGE HERE!
-	//backoff_counter = randgen->discrete_uniform(0,CW_ACs[myAC]-1);
 	time_to_send = ptr2sch->now() + AIFS + timestamp(BOC_ACs[myAC]) * aSlotTime;
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
@@ -354,6 +356,7 @@ void MAC_private::cts_timed_out () {
 		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 			<< " did not receive TXOP CTS. Terminate TXOP." << endl;
 		TXOPla_win = CTSfail;
+		time_to_wait_BA = timestamp(0);
 		end_TXOP(); // Finish TXOP before it starts
 		return;
 	} else {
@@ -894,8 +897,8 @@ void MAC_private::aggreg_send() {
 	BEGIN_PROF("MAC::aggreg_send")
 
 	if(ptr2sch->now() + 1 >= time_to_wait_BA ) {
-		//if (current_frag == nfrags) packet_queue[myAC].pop_front();
-		ptr2sch->schedule(Event(TXOPend,(void*)&wrapper_to_ba_timed_out,(void*)this));
+		if (current_frag == nfrags) packet_queue[myAC].pop_front();
+		ptr2sch->schedule(Event(TXOPend + 1,(void*)&wrapper_to_ba_timed_out,(void*)this));
 		return;
 	}
 
@@ -1064,8 +1067,12 @@ void MAC_private::end_TXOP() {
 
 	TXOPla_win = success;
 
-	if (current_frag == nfrags) {
-		if (get_queue_size()) new_msdu();
+	if (logflag) *mylog << "\n!!! " << ptr2sch->now() << "sec., " << *term
+			<< "conditions:" << current_frag << " " << nfrags << " "
+			<< get_queue_size() << " " << time_to_wait_BA << endl;
+
+	if (current_frag == nfrags && get_queue_size() && time_to_wait_BA == timestamp(0)) {
+		new_msdu();
 	}
 
 	END_PROF("MAC::end_TXOP")
@@ -1281,7 +1288,7 @@ unsigned MAC::macUnitdataReq(MSDU p) {
 		accCat auxAC = term->get_connection_AC(p.get_target());
 		packet_queue[auxAC].push_back(p);
 
-		if (get_queue_size() == 1) new_msdu();
+		if (get_queue_size() == 1 && !TXOPflag) new_msdu();
 	}
 
 	return get_queue_size();

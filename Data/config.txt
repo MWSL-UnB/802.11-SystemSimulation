@@ -17,7 +17,7 @@ Log = SETUP, MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC a
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 
-Seed = 2
+Seed = 8,9
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters
