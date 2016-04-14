@@ -3,7 +3,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Simulation control parameters
 
-MaxSimTime = 1 %0.1025  % maximum simulation time in seconds
+MaxSimTime = 1.1 %0.1025  % maximum simulation time in seconds
 TempOutputInterval = 1 % interval between temporary outputs
 TransientTime = .1 % ignore first TransientTime seconds 
 Confidence = .95 % for calculation of confidence interval (if more than one seed), default = .95
@@ -17,7 +17,7 @@ Log = SETUP, MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC a
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 
-Seed = 8,9
+Seed = 1,2,3,4,5
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters
@@ -83,7 +83,7 @@ NumberSinus = 20 % number of sinewaves to emulate Rayleigh fading.
 % PHY Parameters
 
 
-TxMode = M54%,M12,M24,M36,M54,OPT,SUBOPT
+TxMode = M54%M6,M9,M12,M24,M36,M54,OPT,SUBOPT
           % M6,M9,M12,M18,M24,M36,M48,M54: no link adaptation, always transmit at fixed rate with maximum power
           % OPT: genie-aided link adaptation
           % SUBOPT: transmitter-based link adaptation
@@ -123,7 +123,7 @@ PacketLength = 1000 %,500(.3);1000(.2);1500(.3);2100(.2)
   % Number of data bytes in a packet
   % variable-length packets can be considered by giving several lengths with the corresponding
   % probabilities, e.g., 250(.4);1000(.3);2000(.3)
-DataRate = 2 %,2,5%.01,.05,.1,.2,.3,.4,.5,.6,.7,.8 % offered load in Mbps per link
+DataRate = 30 %,2,5%.01,.05,.1,.2,.3,.4,.5,.6,.7,.8 % offered load in Mbps per link
 DownlinkFactor = 1 % offered downstream load is DataRate * DownlinkFactor
 UplinkFactor = 1 % offered upstream load is DataRate * UplinkFactor
 ArrivalTime = EXP % arrival time distribution (EXP,CONSTANT)

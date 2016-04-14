@@ -191,7 +191,11 @@ void MAC_private::ack_timed_out () {
 				<< ", CW = " << CW_ACs[myAC] << ", try again"
 				<< endl;
 
-		tx_attempt();
+		if(TXOPmax == timestamp(0))	tx_attempt();
+		else if(TXOPflag) {
+			ptr2sch->remove((void*)(&wrapper_to_end_TXOP), (void*)this);
+			end_TXOP();
+		}
 	}
 
 	END_PROF("MAC::ack_timed_out")
@@ -203,7 +207,7 @@ void MAC_private::ack_timed_out () {
 void MAC_private::ba_timed_out () {
 	BEGIN_PROF("MAC::ba_timed_out")
 
-	//time_to_wait_BA = timestamp(0);
+	time_to_wait_BA = timestamp(0);
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 		<< ": BA time out for packets ";
@@ -503,17 +507,11 @@ void MAC_private::new_msdu() {
 		if(!BAAggFlag) { // There is NO aggregation
 			if(now + 1 < TXOPend) { // TXOP is not about to end
 				t = now + SIFS;
-			} /*else { // TXOP is about to end
-				t = TXOPend;
-			}*/
+			}
 		} else { // There is aggregation
 			if(now + 1 < time_to_wait_BA) { // BA is not about to be sent
 				t = now + 1;
-			} /*else { // BA is about to be sent
-				if (logflag) *mylog << "\n!!!" << ptr2sch->now() << "sec., " << *term
-						<< "BA is about to be sent" <<  endl;
-				t = TXOPend + 1;
-			}*/
+			}
 		}
 	}
 
@@ -1009,7 +1007,7 @@ void MAC_private::start_TXOP() {
 			}
 
 			if(TXOPend > now + TXOPmax) TXOPend = auxTXOPend;
-			time_to_wait_BA = TXOPend - SIFS - ba_duration(which_mode);
+			if(BAAggFlag) time_to_wait_BA = TXOPend - SIFS - ba_duration(which_mode);
 
 			TXOPend = TXOPend + 1;
 
@@ -1071,7 +1069,9 @@ void MAC_private::end_TXOP() {
 			<< "conditions:" << current_frag << " " << nfrags << " "
 			<< get_queue_size() << " " << time_to_wait_BA << endl;
 
-	if (current_frag == nfrags && get_queue_size() && time_to_wait_BA == timestamp(0)) {
+	if (get_queue_size() && time_to_wait_BA == timestamp(0)) {
+		if (logflag) *mylog << "\n!!! " << ptr2sch->now() << "sec., " << *term
+			<< "entered end_TXOP() condition." << endl;
 		new_msdu();
 	}
 
@@ -1285,10 +1285,12 @@ unsigned MAC::macUnitdataReq(MSDU p) {
 	if (get_queue_size() >= max_queue_size) {
 		term->macUnitdataQueueOverflow(p);
 	} else {
+		if (logflag) *mylog << "\n!!! " << ptr2sch->now() << "sec., " << *term
+			<< "got new packet." << endl;
 		accCat auxAC = term->get_connection_AC(p.get_target());
 		packet_queue[auxAC].push_back(p);
 
-		if (get_queue_size() == 1 && !TXOPflag) new_msdu();
+		if (get_queue_size() == 1 && time_to_wait_BA == timestamp(0)) new_msdu();
 	}
 
 	return get_queue_size();
