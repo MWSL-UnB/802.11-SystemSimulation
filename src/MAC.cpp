@@ -191,7 +191,11 @@ void MAC_private::ack_timed_out () {
 				<< ", CW = " << CW_ACs[myAC] << ", try again"
 				<< endl;
 
-		tx_attempt();
+		if(TXOPmax == timestamp(0))	tx_attempt();
+		else if(TXOPflag) {
+			ptr2sch->remove((void*)(&wrapper_to_end_TXOP), (void*)this);
+			end_TXOP();
+		}
 	}
 
 	END_PROF("MAC::ack_timed_out")
@@ -202,6 +206,8 @@ void MAC_private::ack_timed_out () {
 ////////////////////////////////////////////////////////////////////////////////
 void MAC_private::ba_timed_out () {
 	BEGIN_PROF("MAC::ba_timed_out")
+
+	time_to_wait_BA = timestamp(0);
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 		<< ": BA time out for packets ";
@@ -216,6 +222,8 @@ void MAC_private::ba_timed_out () {
 	auxvec.clear();
 	requeue_packets(auxvec);
 
+	if (get_queue_size()) new_msdu();
+
 	END_PROF("MAC::ba_timed_out")
 }
 
@@ -228,8 +236,6 @@ void MAC_private::begin_countdown() {
 
 	// if channel is free now, schedule transmission for time
 	// AIFS + contention window
-	// CHANGE HERE!
-	//backoff_counter = randgen->discrete_uniform(0,CW_ACs[myAC]-1);
 	time_to_send = ptr2sch->now() + AIFS + timestamp(BOC_ACs[myAC]) * aSlotTime;
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
@@ -351,8 +357,12 @@ void MAC_private::cts_timed_out () {
 #endif
 
 	if(TXOPflag){
+		if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
+			<< " did not receive TXOP CTS. Terminate TXOP." << endl;
 		TXOPla_win = CTSfail;
+		time_to_wait_BA = timestamp(0);
 		end_TXOP(); // Finish TXOP before it starts
+		return;
 	} else {
 		// Since a RTS/CTS exchange will happen in the beginning of the TXOP, RTS will not fail during
 		// TXOP
@@ -486,7 +496,7 @@ void MAC_private::new_msdu() {
 
 	msdu.set_tx_time(ptr2sch->now());
 
-	timestamp t;
+	timestamp t = timestamp(0);
 
 	// Possible cases
 	if(TXOPmax == timestamp(0)) { // Station does not have TXOP at all
@@ -497,19 +507,17 @@ void MAC_private::new_msdu() {
 		if(!BAAggFlag) { // There is NO aggregation
 			if(now + 1 < TXOPend) { // TXOP is not about to end
 				t = now + SIFS;
-			} else { // TXOP is about to end
-				t = TXOPend;
 			}
 		} else { // There is aggregation
 			if(now + 1 < time_to_wait_BA) { // BA is not about to be sent
 				t = now + 1;
-			} else { // BA is about to be sent
-				t = TXOPend + 1;
 			}
 		}
 	}
 
-	ptr2sch->schedule(Event(t,(void*)&wrapper_to_tx_attempt, (void*)this));
+	if(t != timestamp(0)) {
+		ptr2sch->schedule(Event(t,(void*)&wrapper_to_tx_attempt, (void*)this));
+	}
 }    
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -756,12 +764,14 @@ void MAC_private::requeue_packets(vector<long_integer> bapcks) {
 			// If BA acknowledges packet
 			term->macUnitdataStatusInd(pcks2reque[k],auxDur);
 		} else { // If BA does not acknowledge packet
-			if(pcks2reque[k].inc_retry_count() >= retry_limit) {
+			pcks2reque[k].inc_retry_count();
+			if(pcks2reque[k].get_retry_count() >= retry_limit) {
 				if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 						<< ": Packet " << pcks2ACK_ids[k] << " not acknowledged. "
 						<< "retry counter = retry_limit("
 						<< pcks2reque[k].get_retry_count() << "). Give up sending this packet."
 						<< endl;
+				term->macUnitdataMaxRetry(msdu);
 			} else {
 				if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 						<< ": Packet " << pcks2ACK_ids[k] << " not acknowledged. Retry counter: "
@@ -771,6 +781,10 @@ void MAC_private::requeue_packets(vector<long_integer> bapcks) {
 		}
 		auxDur += pcktsDur[k];
 	}
+
+	pcks2ACK_ids.clear();
+	pcks2reque.clear();
+	pcktsDur.clear();
 
 	END_PROF("MAC::requeue_packets")
 }
@@ -880,12 +894,16 @@ void MAC_private::send_data() {
 void MAC_private::aggreg_send() {
 	BEGIN_PROF("MAC::aggreg_send")
 
+	if(ptr2sch->now() + 1 >= time_to_wait_BA ) {
+		if (current_frag == nfrags) packet_queue[myAC].pop_front();
+		ptr2sch->schedule(Event(TXOPend + 1,(void*)&wrapper_to_ba_timed_out,(void*)this));
+		return;
+	}
+
 	if (current_frag == nfrags) {
 		packet_queue[myAC].pop_front();
 		if (get_queue_size()) new_msdu();
 	} else {
-
-		if(ptr2sch->now() + 1 >= time_to_wait_BA ) return;
 
 		++current_frag;
 
@@ -989,7 +1007,7 @@ void MAC_private::start_TXOP() {
 			}
 
 			if(TXOPend > now + TXOPmax) TXOPend = auxTXOPend;
-			time_to_wait_BA = TXOPend - SIFS - ba_duration(which_mode);
+			if(BAAggFlag) time_to_wait_BA = TXOPend - SIFS - ba_duration(which_mode);
 
 			TXOPend = TXOPend + 1;
 
@@ -1047,11 +1065,15 @@ void MAC_private::end_TXOP() {
 
 	TXOPla_win = success;
 
-	pcks2ACK_ids.clear();
-	pcks2reque.clear();
-	pcktsDur.clear();
+	if (logflag) *mylog << "\n!!! " << ptr2sch->now() << "sec., " << *term
+			<< "conditions:" << current_frag << " " << nfrags << " "
+			<< get_queue_size() << " " << time_to_wait_BA << endl;
 
-	if(get_queue_size()) internal_contention();
+	if (get_queue_size() && time_to_wait_BA == timestamp(0)) {
+		if (logflag) *mylog << "\n!!! " << ptr2sch->now() << "sec., " << *term
+			<< "entered end_TXOP() condition." << endl;
+		new_msdu();
+	}
 
 	END_PROF("MAC::end_TXOP")
 }
@@ -1263,10 +1285,12 @@ unsigned MAC::macUnitdataReq(MSDU p) {
 	if (get_queue_size() >= max_queue_size) {
 		term->macUnitdataQueueOverflow(p);
 	} else {
+		if (logflag) *mylog << "\n!!! " << ptr2sch->now() << "sec., " << *term
+			<< "got new packet." << endl;
 		accCat auxAC = term->get_connection_AC(p.get_target());
 		packet_queue[auxAC].push_back(p);
 
-		if (get_queue_size() == 1) new_msdu();
+		if (get_queue_size() == 1 && time_to_wait_BA == timestamp(0)) new_msdu();
 	}
 
 	return get_queue_size();
