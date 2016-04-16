@@ -51,5 +51,5 @@ plot(offeData,100.*m_queOF,'r--*','LineWidth',2);
 grid on;
 xlabel('Taxa de dados oferecida a MAC [Mbps]');
 ylabel('Oveflow [%]');
-legend('Com agregacao','Sem agregacao','Location','NorthWest');
+legend('Com agregação','Sem agregação','Location','NorthWest');
 print('-dbmp','overVSOffer');

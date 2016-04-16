@@ -56,5 +56,5 @@ hold off;
 grid on;
 xlabel('Taxa de dados oferecida a MAC [Mbps]');
 ylabel('Throughput [Mbps]');
-legend('Com agregacao','Sem agregacao','Location','SouthEast');
+legend('Com agregação','Sem agregação','Location','SouthEast');
 print('-dbmp','thrVSOffer');

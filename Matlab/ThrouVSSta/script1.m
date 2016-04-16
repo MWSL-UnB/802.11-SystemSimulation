@@ -76,28 +76,31 @@ effNT = 100*mThrNT./(simTime*offeData);
      
 %% Plot
 
-fittedBA = fit(nStasBA,effBA,'poly2');
+fittedBA = fit(nStasBA,effBA,'cubicinterp');
 h1 = plot(fittedBA,'-');
 set(h1,'LineWidth',2);
 hold on;
-plot(nStasBA,effBA,'o','LineWidth',2);
 
-fitted = fit(nStas,eff,'poly2');
+fitted = fit(nStas,eff,'cubicinterp');
 h2 = plot(fitted,'r-');
 set(h2,'LineWidth',2);
 hold on;
 plot(nStas,eff,'ro','LineWidth',2);
 
-fittedNT = fit(nStasNT,effNT,'poly2');
+fittedNT = fit(nStasNT,effNT,'cubicinterp');
 h3 = plot(fittedNT,'g-');
 set(h3,'LineWidth',2);
 hold on;
 plot(nStasNT,effNT,'go','LineWidth',2);
 
-axis([1 15 45 100]);
-xlabel('Numero de estacoes');
-ylabel('Eficiencia de Throughput Medio [%]')
 legend off
+axis([1 15 45 100]);
+xlabel('Número de estações');
+ylabel('Eficiência de Throughput Médio [%]')
+legend([h1 h2 h3],'Com agregação','Sem agregação','Sem TXOP');
+plot(nStasBA,effBA,'o','LineWidth',2);
+plot(nStas,eff,'ro','LineWidth',2);
+plot(nStasNT,effNT,'go','LineWidth',2);
 grid on;
 hold off;
 print('-dbmp','thrVSSta');
