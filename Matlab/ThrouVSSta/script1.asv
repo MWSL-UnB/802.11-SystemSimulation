@@ -46,21 +46,49 @@ thr = [0.45598  0.49902  0.475762 0.467119 0.424739 0.467287 0.428468 0.494538 0
        3.78242  4.38673  4.33562  3.86381  3.85999  4.30389  3.58397  4.09157  4.10747  3.915    ;... % 12
        3.664    4.19971  4.42797  3.83993  4.13783  4.1143   4.10361  3.96545  4.11128  4.02305  ;... % 13
        3.38294  4.30797  4.29199  3.78784  4.04997  4.42392  4.16324  4.13113  4.0538   4.14577  ;... % 14
-       4.07978  4.45546  4.42213  4.21592];   % 15
+       4.07978  4.45546  4.42213  4.21592  4.03445  4.16395  3.55598  4.18799  4.03949  4.03087  ];   % 15
      
 mThr = mean(thr,2)./nStas;
+eff = 100*mThr./(simTime*offeData);
+
+%% Without TXOP
+
+nStasNT = [1:15]';
+%          1        2       3         4       5         6       7         8        9        0
+thrNT = [;... % 1
+       ;... % 2
+       ;... % 3
+       ;... % 4
+       ;... % 5
+       ;... % 6
+       ;... % 7
+       ;... % 8
+       ;... % 9
+       ;... % 10
+       ;... % 11
+       ;... % 12
+       ;... % 13
+       ;... % 14
+       ];   % 15
+     
+mThr = mean(thrNT,2)./nStas;
 eff = 100*mThr./(simTime*offeData);
      
 %% Plot
 
-fittedBA = fit(nStasBA,effBA,'smoothingspline');
-h = plot(fittedBA,'-');
-set(h,'LineWidth',2);
+fittedBA = fit(nStasBA,effBA,'poly2');
+h1 = plot(fittedBA,'-');
+set(h1,'LineWidth',2);
 hold on;
 plot(nStasBA,effBA,'o','LineWidth',2);
 
+fitted = fit(nStas,eff,'poly2');
+h2 = plot(fitted,'r-');
+set(h2,'LineWidth',2);
+hold on;
+plot(nStas,eff,'ro','LineWidth',2);
 
-
+axis([1 15 45 100]);
 xlabel('Numero de estacoes');
 ylabel('Eficiencia de Throughput Medio [%]')
 legend off

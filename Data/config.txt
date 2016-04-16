@@ -17,7 +17,7 @@ Log = SETUP  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 
-Seed = 1,2,3,4,5,6,7,8,9,0%
+Seed = 5,6,7,8,9,0%1,2,3,4,
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters
@@ -35,7 +35,7 @@ Seed = 1,2,3,4,5,6,7,8,9,0%
 % No terminal movement supported so far.
 
 NumberAPs = 1 % number of access points
-NumberStas = 1%2%3%4%5%6%7%8%9%10%11%12%13%14%15 % number of mobile terminals %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+NumberStas = 15 % number of mobile terminals %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Radius = 50 % cell radius in meters
 
 
