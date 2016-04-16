@@ -35,7 +35,7 @@ Seed = 1,2,3,4,5%
 % No terminal movement supported so far.
 
 NumberAPs = 1 % number of access points
-NumberStas = 15 % number of mobile terminals 
+NumberStas = 15 % number of mobile terminals %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Radius = 50 % cell radius in meters
 
 
@@ -119,7 +119,7 @@ CCASensitivity_dBm = -98.0 % carrier sensing sensitivity
 % constant-length packets are assumed
 % the interval between packets is exponentially distributed
 
-PacketLength = 2000 %,500(.3);1000(.2);1500(.3);2100(.2)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+PacketLength = 50%100%200%300%400%500%600%700%800%900%1000 %,500(.3);1000(.2);1500(.3);2100(.2)
   % Number of data bytes in a packet
   % variable-length packets can be considered by giving several lengths with the corresponding
   % probabilities, e.g., 250(.4);1000(.3);2000(.3)
