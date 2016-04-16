@@ -104,3 +104,7 @@ plot(nStasNT,effNT,'go','LineWidth',2);
 grid on;
 hold off;
 print('-dbmp','thrVSSta');
+
+%% Save data
+
+save data1

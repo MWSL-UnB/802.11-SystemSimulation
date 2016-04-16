@@ -17,7 +17,7 @@ Log = SETUP  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 
-Seed = 5,6,7,8,9,0%1,2,3,4,
+Seed = 1%,2,3,4,5
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters
@@ -53,13 +53,13 @@ Radius = 50 % cell radius in meters
 % will be reduced so that the new sum equals 1. 
 
 ppAC_BK = 0
-ppAC_BE = 1
-ppAC_VI = 0
+ppAC_BE = 0
+ppAC_VI = 1
 ppAC_VO = 0
 ppLegacy = 0
 
 %% set_BA_agg: if 1 all stations will perform Block ACK and MPDU aggregation
-set_BA_agg = 0;
+set_BA_agg = 1;
 
 %%%%%%%%%%%%%%%%%%%%%
 % Channel Parameters
@@ -119,7 +119,7 @@ CCASensitivity_dBm = -98.0 % carrier sensing sensitivity
 % constant-length packets are assumed
 % the interval between packets is exponentially distributed
 
-PacketLength = 500 %,500(.3);1000(.2);1500(.3);2100(.2)
+PacketLength = 100 %,500(.3);1000(.2);1500(.3);2100(.2)
   % Number of data bytes in a packet
   % variable-length packets can be considered by giving several lengths with the corresponding
   % probabilities, e.g., 250(.4);1000(.3);2000(.3)
@@ -132,5 +132,5 @@ ArrivalTime = EXP % arrival time distribution (EXP,CONSTANT)
 % MAC Parameters
 RTSThreshold = 10000          % packets with more than RTSThreshold bytes employ RTS/CTS
 RetryLimit = 10000            % packets retransmitted more than RetryLimit times are discarded
-FragmentationThreshold = 1500 % maximum MPDU size, larger packets are fragmented
+FragmentationThreshold = 3000 % maximum MPDU size, larger packets are fragmented
 QueueSize = 1000              % size of MAC waiting queue

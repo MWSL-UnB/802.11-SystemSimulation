@@ -58,3 +58,7 @@ xlabel('Taxa de dados oferecida a MAC [Mbps]');
 ylabel('Throughput [Mbps]');
 legend('Com agregação','Sem agregação','Location','SouthEast');
 print('-dbmp','thrVSOffer');
+
+%% Save data
+
+save data1

@@ -53,3 +53,7 @@ xlabel('Taxa de dados oferecida a MAC [Mbps]');
 ylabel('Oveflow [%]');
 legend('Com agregação','Sem agregação','Location','NorthWest');
 print('-dbmp','overVSOffer');
+
+%% Save data
+
+save data2
