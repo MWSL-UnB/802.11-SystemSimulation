@@ -76,18 +76,18 @@ effNT = 100*mThrNT./(simTime*offeData);
      
 %% Plot
 
-fittedBA = fit(nStasBA,effBA,'cubicinterp');
+fittedBA = fit(nStasBA,effBA,'smoothingspline');
 h1 = plot(fittedBA,'-');
 set(h1,'LineWidth',2);
 hold on;
 
-fitted = fit(nStas,eff,'cubicinterp');
+fitted = fit(nStas,eff,'smoothingspline');
 h2 = plot(fitted,'r-');
 set(h2,'LineWidth',2);
 hold on;
 plot(nStas,eff,'ro','LineWidth',2);
 
-fittedNT = fit(nStasNT,effNT,'cubicinterp');
+fittedNT = fit(nStasNT,effNT,'smoothingspline');
 h3 = plot(fittedNT,'g-');
 set(h3,'LineWidth',2);
 hold on;
