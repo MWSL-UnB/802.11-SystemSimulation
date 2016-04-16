@@ -24,3 +24,7 @@ ylabel('Overhead total [%]');
 grid on
 hold off
 print('-dbmp','overhVSpckSiz');
+
+%% Save data
+
+save data1
