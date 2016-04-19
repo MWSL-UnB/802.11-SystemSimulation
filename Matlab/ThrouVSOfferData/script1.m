@@ -47,16 +47,39 @@ thr = [1.82423 1.77001 1.89376 2.09239 1.79777 ;... % 1
 m_thr = mean(thr,2);
 m_perSta = m_thr./2;
 
+%% Without TXOP
+
+offeDataNT = [1 5 10 11 12 14 15 20 25 30 35 40 45 50];
+thrNT = [1.73624 1.89316 1.89611 2.20425 2.00601;... % 1
+         10.0591 10.2471 9.92712 9.88978 10.0877;... % 5
+         19.7998 19.9093 19.4876 20.4537 20.0617;... % 10
+         21.752  22.4477 21.5548 21.0633 21.7407;... % 11
+         23.0796 23.4312 23.3115 21.0285 22.72  ;... % 12
+         23.1838 23.4073 23.4959 21.0955 22.9966;... % 14
+         23.1035 23.4465 23.398  21.0623 22.9836;... % 15
+         23.1664 23.3997 23.4954 21.031  23.0054;... % 20
+         23.2071 23.4557 23.3662 20.9979 22.9839;... % 25
+         23.1352 23.4397 23.4073 21.0476 23.0062;... % 30
+         23.1678 23.421  23.4716 21.1274 23.0223;... % 35
+         23.1514 23.4314 23.445  21.0635 22.959 ;... % 40
+         23.0718 23.4236 23.3914 20.991  22.9587;... % 45
+         23.1357 23.4631 23.5436 20.9999 22.9838];   % 50
+       
+m_thrNT = mean(thrNT,2);
+m_perStaNT = m_thrNT./2;
+
 %% Plot
 
 plot(offeDataBA,m_perStaBA,'b-o','LineWidth',2);
 hold on;
 plot(offeData,m_perSta,'r--*','LineWidth',2);
+hold on;
+plot(offeDataNT,m_perStaNT,'g-.+','LineWidth',2);
 hold off;
 grid on;
 xlabel('Taxa de dados oferecida a MAC [Mbps]');
 ylabel('Throughput [Mbps]');
-legend('Com agregação','Sem agregação','Location','SouthEast');
+legend('Com agregação','Sem agregação','Sem TXOP','Location','SouthEast');
 print('-dbmp','thrVSOffer');
 
 %% Save data

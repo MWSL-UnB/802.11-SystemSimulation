@@ -25,7 +25,7 @@ thrBA = [0.515988 0.475575 0.530536 0.546736 0.479758 0.528566 0.465785 0.49475 
          4.09593  4.59795  4.78168  4.27918  4.56321  4.62235  4.60347  4.3999  4.5674   4.35106  ;... % 14
          4.19597  4.71173  4.71865  4.55767  4.67476  4.50911  4.44377  4.51997 4.42158  4.80061  ];   % 15
      
-mThrBA = mean(thrBA,2)./nStasBA;
+mThrBA = mean(thrBA,2)./(simTime*nStasBA);
 effBA = 100*mThrBA./(simTime*offeData);
 
 %% Without BA and Aggregation
@@ -48,7 +48,7 @@ thr = [0.45598  0.49902  0.475762 0.467119 0.424739 0.467287 0.428468 0.494538 0
        3.38294  4.30797  4.29199  3.78784  4.04997  4.42392  4.16324  4.13113  4.0538   4.14577  ;... % 14
        4.07978  4.45546  4.42213  4.21592  4.03445  4.16395  3.55598  4.18799  4.03949  4.03087  ];   % 15
      
-mThr = mean(thr,2)./nStas;
+mThr = mean(thr,2)./(simTime*nStas);
 eff = 100*mThr./(simTime*offeData);
 
 %% Without TXOP
@@ -71,36 +71,41 @@ thrNT = [0.51179  0.394866 0.470503 0.544695 0.468133 0.537167 0.485594 0.487901
          3.016    4.07997  4.38761  3.48763  3.61197  3.88325  3.78361  3.67594  3.80797  3.81584  ;... % 14
          2.91598  4.13199  4.39939  3.65597  3.69938  3.51148  3.79168  3.81599  3.75599  3.93415  ];   % 15
      
-mThrNT = mean(thrNT,2)./nStasNT;
+mThrNT = mean(thrNT,2)./(simTime*nStasNT);
 effNT = 100*mThrNT./(simTime*offeData);
      
+%% Throughput normalizado
+
+normThr = [mThrBA mThr mThrNT]./offeData;
+disp('Throughput normalizado minimo');
+disp(min(normThr));
+
 %% Plot
 
-fittedBA = fit(nStasBA,effBA,'smoothingspline');
+fittedBA = fit(nStasBA,1e3*mThrBA,'smoothingspline');
 h1 = plot(fittedBA,'-');
 set(h1,'LineWidth',2);
 hold on;
+plot(nStasBA,1e3*mThrBA,'o','LineWidth',2);
 
-fitted = fit(nStas,eff,'smoothingspline');
+fitted = fit(nStas,1e3*mThr,'smoothingspline');
 h2 = plot(fitted,'r-');
 set(h2,'LineWidth',2);
 hold on;
-plot(nStas,eff,'ro','LineWidth',2);
+plot(nStas,1e3*mThr,'ro','LineWidth',2);
 
-fittedNT = fit(nStasNT,effNT,'smoothingspline');
+fittedNT = fit(nStasNT,1e3*mThrNT,'smoothingspline');
 h3 = plot(fittedNT,'g-');
 set(h3,'LineWidth',2);
 hold on;
-plot(nStasNT,effNT,'go','LineWidth',2);
+plot(nStasNT,1e3*mThrNT,'go','LineWidth',2);
 
 legend off
-axis([1 15 45 100]);
+axis([1 15 200 500]);
 xlabel('Número de estações');
-ylabel('Eficiência de Throughput Médio [%]')
+ylabel('Throughput Médio [kbps]')
 legend([h1 h2 h3],'Com agregação','Sem agregação','Sem TXOP');
-plot(nStasBA,effBA,'o','LineWidth',2);
-plot(nStas,eff,'ro','LineWidth',2);
-plot(nStasNT,effNT,'go','LineWidth',2);
+set(gca,'xtick',[1:15]);
 grid on;
 hold off;
 print('-dbmp','thrVSSta');

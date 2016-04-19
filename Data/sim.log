@@ -1,65 +1,55 @@
 
 
 Iteration 1
-	seed = 1 
+	
 
 Access Point 0 created at position (0;0)
 
-Mobile Station 1 created at position (40;0) with distance 40 m to Access Point 0
-Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 1 created at position (-22.463;-35.9713) with distance 42.409 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 2 created at position (-19.272;31.9681) with distance 37.3279 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 3 created at position (9.99726;41.8483) with distance 43.0259 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 4 created at position (30.9505;-36.3361) with distance 47.731 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 5 created at position (43.1848;13.0101) with distance 45.102 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 6 created at position (-26.6181;39.3896) with distance 47.5401 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 7 created at position (-3.91865;-5.66889) with distance 6.89146 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 8 created at position (-19.3956;36.3817) with distance 41.2288 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 9 created at position (-12.1277;-0.838639) with distance 12.1567 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 10 created at position (38.6704;23.744) with distance 45.3782 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 11 created at position (35.847;-27.2127) with distance 45.006 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 12 created at position (35.8536;15.3023) with distance 38.9826 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 13 created at position (13.1771;-0.634529) with distance 13.1923 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 14 created at position (7.66731;-41.4586) with distance 42.1616 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
+Mobile Station 15 created at position (31.2628;21.433) with distance 37.9043 m to Access Point 0
+Mobile station AC: AC_BE. Access Point AC: AC_BE.
 
-Access Point 0 is connected to Mobile Station 1
+Access Point 0 is connected to Mobile Station 1, Mobile Station 3, Mobile Station 2, Mobile Station 4, Mobile Station 5, Mobile Station 6, Mobile Station 10, Mobile Station 7, Mobile Station 8, Mobile Station 9, Mobile Station 11, Mobile Station 12, Mobile Station 13, Mobile Station 14 and Mobile Station 15
 Mobile Station 1 is connected to Access Point 0
-
-
-
-Iteration 2
-	seed = 2 
-
-Access Point 2 created at position (0;0)
-
-Mobile Station 3 created at position (40;0) with distance 40 m to Access Point 2
-Mobile station AC: AC_VI. Access Point AC: AC_VI.
-
-Access Point 2 is connected to Mobile Station 3
-Mobile Station 3 is connected to Access Point 2
-
-
-
-Iteration 3
-	seed = 3 
-
-Access Point 4 created at position (0;0)
-
-Mobile Station 5 created at position (40;0) with distance 40 m to Access Point 4
-Mobile station AC: AC_VI. Access Point AC: AC_VI.
-
-Access Point 4 is connected to Mobile Station 5
-Mobile Station 5 is connected to Access Point 4
-
-
-
-Iteration 4
-	seed = 4 
-
-Access Point 6 created at position (0;0)
-
-Mobile Station 7 created at position (40;0) with distance 40 m to Access Point 6
-Mobile station AC: AC_VI. Access Point AC: AC_VI.
-
-Access Point 6 is connected to Mobile Station 7
-Mobile Station 7 is connected to Access Point 6
-
-
-
-Iteration 5
-	seed = 5 
-
-Access Point 8 created at position (0;0)
-
-Mobile Station 9 created at position (40;0) with distance 40 m to Access Point 8
-Mobile station AC: AC_VI. Access Point AC: AC_VI.
-
-Access Point 8 is connected to Mobile Station 9
-Mobile Station 9 is connected to Access Point 8
+Mobile Station 2 is connected to Access Point 0
+Mobile Station 3 is connected to Access Point 0
+Mobile Station 4 is connected to Access Point 0
+Mobile Station 5 is connected to Access Point 0
+Mobile Station 6 is connected to Access Point 0
+Mobile Station 7 is connected to Access Point 0
+Mobile Station 8 is connected to Access Point 0
+Mobile Station 9 is connected to Access Point 0
+Mobile Station 10 is connected to Access Point 0
+Mobile Station 11 is connected to Access Point 0
+Mobile Station 12 is connected to Access Point 0
+Mobile Station 13 is connected to Access Point 0
+Mobile Station 14 is connected to Access Point 0
+Mobile Station 15 is connected to Access Point 0
 
