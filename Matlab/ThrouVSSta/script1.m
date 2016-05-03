@@ -86,25 +86,26 @@ fittedBA = fit(nStasBA,1e3*mThrBA,'smoothingspline');
 h1 = plot(fittedBA,'-');
 set(h1,'LineWidth',2);
 hold on;
-plot(nStasBA,1e3*mThrBA,'o','LineWidth',2);
+plot(nStasBA,1e3*mThrBA,'o');
 
 fitted = fit(nStas,1e3*mThr,'smoothingspline');
 h2 = plot(fitted,'r-');
 set(h2,'LineWidth',2);
 hold on;
-plot(nStas,1e3*mThr,'ro','LineWidth',2);
+plot(nStas,1e3*mThr,'ro');
 
 fittedNT = fit(nStasNT,1e3*mThrNT,'smoothingspline');
 h3 = plot(fittedNT,'g-');
 set(h3,'LineWidth',2);
 hold on;
-plot(nStasNT,1e3*mThrNT,'go','LineWidth',2);
+plot(nStasNT,1e3*mThrNT,'go');
 
 legend off
 axis([1 15 200 500]);
 xlabel('Número de estações');
 ylabel('Throughput Médio [kbps]')
-legend([h1 h2 h3],'Com agregação','Sem agregação','Sem TXOP');
+legend([h1 h2 h3],'Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP',...
+    'Location','SouthWest');
 set(gca,'xtick',[1:15]);
 grid on;
 hold off;

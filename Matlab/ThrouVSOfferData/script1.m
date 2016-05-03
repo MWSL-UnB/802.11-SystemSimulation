@@ -79,7 +79,7 @@ hold off;
 grid on;
 xlabel('Taxa de dados oferecida a MAC [Mbps]');
 ylabel('Throughput [Mbps]');
-legend('Com agregação','Sem agregação','Sem TXOP','Location','SouthEast');
+legend('Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP','Location','SouthEast');
 print('-dbmp','thrVSOffer');
 
 %% Save data

@@ -106,7 +106,7 @@ ylabel('Throughput Médio [kbps]');
 grid on;
 axis tight;
 hold off;
-legend([h1 h2 h3],'Com agregação','Sem agregação','Sem TXOP',...
+legend([h1 h2 h3],'Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP',...
     'Location','SouthEast')
 
 print('-dbmp','thrVSPckSz');
