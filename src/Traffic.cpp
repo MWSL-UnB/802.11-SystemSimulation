@@ -39,6 +39,7 @@ ostream& operator<< (ostream& os, const arrival_time_type& att) {
   switch (att) {
     case CONSTANT : return os << "constant";
     case EXP      : return os << "exponential";
+    default	      : return os << "undefined";
   }
 }
 
@@ -85,7 +86,7 @@ istream& operator>> (istream& is, discrete_prob& uv) {
   string::size_type pos;
   uv.pl.clear();
 
-  int count = 0;
+  unsigned count = 0;
   double total_prob = 0;
 
   char c;

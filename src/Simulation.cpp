@@ -437,7 +437,7 @@ void Simulation::init_terminals(){
 
 		double min_dist = HUGE_VAL;
 		int min_index = -1;
-		for (int count = 0; count < sim_par.get_NumberAPs(); count++) {
+		for (unsigned count = 0; count < sim_par.get_NumberAPs(); count++) {
 			double dist = pos.distance(sim_par.get_APPosition(count));
 			if (dist < min_dist) {
 				min_dist = dist;
