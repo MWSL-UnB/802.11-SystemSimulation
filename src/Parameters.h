@@ -55,6 +55,9 @@ protected:
   virtual ostream& put(ostream& os) const = 0;
 
 public:
+
+  virtual ~param_vec() {};
+
   virtual bool next() = 0;           // one iteration over parameter vector
   virtual void reset() = 0;          // reset iterator
   virtual unsigned size() const = 0; // return number of elements
@@ -78,6 +81,9 @@ template <class T> class param_vec_ : public param_vec {
   typename vector<T>::iterator it;
 
 public:
+
+  virtual ~param_vec_() {};
+
   param_vec_() {it = vec.begin();};
 
   void init(const string& s, T val, const string& u = "");
@@ -276,7 +282,7 @@ public:
   bool get_set_BA_agg() {return set_BA_agg.current();}
 
 
-  Position get_APPosition(int which_ap);
+  Position get_APPosition(unsigned which_ap);
   // returns position of AP number 'which_ap'
   
   unsigned get_number_of_Seeds()     {return Seed.size();}

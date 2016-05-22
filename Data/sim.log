@@ -5,9 +5,12 @@ Iteration 1
 
 Access Point 0 created at position (0;0)
 
-Mobile Station 1 created at position (165;0) with distance 165 m to Access Point 0
+Mobile Station 1 created at position (-4.4926;-7.19426) with distance 8.4818 m to Access Point 0
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 2 created at position (-3.85439;6.39363) with distance 7.46557 m to Access Point 0
 Mobile station AC: AC_VI. Access Point AC: AC_VI.
 
-Access Point 0 is connected to Mobile Station 1
+Access Point 0 is connected to Mobile Station 1 and Mobile Station 2
 Mobile Station 1 is connected to Access Point 0
+Mobile Station 2 is connected to Access Point 0
 

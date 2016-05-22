@@ -94,6 +94,7 @@ public:
           channel_struct p,
           log_file* l
           );
+  ~Channel() {};
 
   void new_link(PHY* pt1, PHY* pt2);
   // creates an active time-variant channel link between two terminals

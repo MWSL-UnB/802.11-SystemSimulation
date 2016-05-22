@@ -84,7 +84,11 @@ protected:
   static long_integer packet_count;
   long_integer id;
 
-  Packet() {id = packet_count++;}
+  Packet() {
+	  id = packet_count++;
+	  source = 0;
+	  target = 0;
+  }
 
 public:
   long_integer      get_id ()        const {return id;}
@@ -97,28 +101,28 @@ public:
 // class MSDU                                                                 //
 ////////////////////////////////////////////////////////////////////////////////
 class MSDU : public Packet {
-  timestamp time_created;
-  timestamp tx_time;
-  unsigned tid; // traffic identifier
-  unsigned nbytes_data;     // number of data bytes
-  unsigned retry_count;		// number of MSDU retries
-  
-public:
-  MSDU(unsigned n = 0,            // number of data bytes
-       Terminal* from = 0,        // source terminal
-       Terminal* to = 0,          // target terminal
-       unsigned priority = 0,     // traffic identifier
-       timestamp gen_time = timestamp(0)     // time that packet was generated
-       );
+	unsigned nbytes_data;     // number of data bytes
+	unsigned tid; // traffic identifier
+	timestamp time_created;
+	unsigned retry_count;		// number of MSDU retries
+	timestamp tx_time;
 
-  unsigned  get_nbytes()        const {return nbytes_data;}
-  timestamp get_time_created()  const {return time_created;}
-  timestamp get_tx_time()       const {return tx_time;}
-  unsigned  get_tid()           const {return tid;}
-  unsigned	get_retry_count()	const {return retry_count;}
-  unsigned	inc_retry_count()	{ return retry_count++;}
-  
-  void set_tx_time(timestamp t) {tx_time = t;}
+public:
+	MSDU(unsigned n = 0,            // number of data bytes
+			Terminal* from = 0,        // source terminal
+			Terminal* to = 0,          // target terminal
+			unsigned priority = 0,     // traffic identifier
+			timestamp gen_time = timestamp(0)     // time that packet was generated
+	);
+
+	timestamp get_time_created()  const {return time_created;}
+	timestamp get_tx_time()       const {return tx_time;}
+	unsigned  get_tid()           const {return tid;}
+	unsigned  get_nbytes()        const {return nbytes_data;}
+	unsigned	get_retry_count()	const {return retry_count;}
+	unsigned	inc_retry_count()	{ return retry_count++;}
+
+	void set_tx_time(timestamp t) {tx_time = t;}
 };
 
 ////////////////////////////////////////////////////////////////////////////////

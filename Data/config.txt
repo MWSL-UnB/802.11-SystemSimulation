@@ -3,7 +3,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Simulation control parameters
 
-MaxSimTime = 1.1 %0.1025  % maximum simulation time in seconds
+MaxSimTime = 60 %0.1025  % maximum simulation time in seconds
 TempOutputInterval = 1 % interval between temporary outputs
 TransientTime = .1 % ignore first TransientTime seconds 
 Confidence = .95 % for calculation of confidence interval (if more than one seed), default = .95
@@ -35,7 +35,7 @@ Seed = 5%1,2,3,4,
 % No terminal movement supported so far.
 
 NumberAPs = 1 % number of access points
-NumberStas = 1 % number of mobile terminals 
+NumberStas = 2 % number of mobile terminals 
 Radius = 10 % cell radius in meters %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -123,7 +123,7 @@ PacketLength = 1000
   % Number of data bytes in a packet
   % variable-length packets can be considered by giving several lengths with the corresponding
   % probabilities, e.g., 250(.4);1000(.3);2000(.3)
-DataRate = 0.5 %,2,5%.01,.05,.1,.2,.3,.4,.5,.6,.7,.8 % offered load in Mbps per link
+DataRate = 1 %,2,5%.01,.05,.1,.2,.3,.4,.5,.6,.7,.8 % offered load in Mbps per link
 DownlinkFactor = 0 % offered downstream load is DataRate * DownlinkFactor
 UplinkFactor = 1 % offered upstream load is DataRate * UplinkFactor
 ArrivalTime = EXP % arrival time distribution (EXP,CONSTANT)
