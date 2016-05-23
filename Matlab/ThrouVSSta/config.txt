@@ -17,7 +17,24 @@ Log = SETUP  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 
-Seed = 5%1,2,3,4,5%
+Seed = 1,2,3,4,5,6,7,8,9,0%
+
+%%%%%%%%%%%%%%%%%%%%%
+% Access Category (AC) parameters
+% 
+% Proportion of connections belonging to each access category.
+% Connections with unspecified AC will be assigned to AC_BK.
+% If the sum of proportions is more than 1 the low priority ACs' proportions
+% will be reduced so that the new sum equals 1. 
+
+ppAC_BK = 0
+ppAC_BE = 1
+ppAC_VI = 1,0
+ppAC_VO = 0
+ppLegacy = 0
+
+%% set_BA_agg: if 1 all stations will perform Block ACK and MPDU aggregation
+set_BA_agg = 1,0;
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters
@@ -35,31 +52,13 @@ Seed = 5%1,2,3,4,5%
 % No terminal movement supported so far.
 
 NumberAPs = 1 % number of access points
-NumberStas = 1 % number of mobile terminals 
+NumberStas = 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 % number of mobile terminals 
 Radius = 50 % cell radius in meters
 
 
 % if NumberAPs > 1
 %APPosition_0 = (-20;0)
 %APPosition_1 = (20;0)
-
-
-%%%%%%%%%%%%%%%%%%%%%
-% Access Category (AC) parameters
-% 
-% Proportion of connections belonging to each access category.
-% Connections with unspecified AC will be assigned to AC_BK.
-% If the sum of proportions is more than 1 the low priority ACs' proportions
-% will be reduced so that the new sum equals 1. 
-
-ppAC_BK = 0
-ppAC_BE = 0
-ppAC_VI = 1
-ppAC_VO = 0
-ppLegacy = 0
-
-%% set_BA_agg: if 1 all stations will perform Block ACK and MPDU aggregation
-set_BA_agg = 0;
 
 %%%%%%%%%%%%%%%%%%%%%
 % Channel Parameters
