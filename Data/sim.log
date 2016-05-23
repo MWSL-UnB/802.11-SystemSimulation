@@ -1,16 +1,800 @@
 
 
 Iteration 1
-	
+	cell radius = 50 meters, seed = 1 
 
 Access Point 0 created at position (0;0)
 
-Mobile Station 1 created at position (-4.4926;-7.19426) with distance 8.4818 m to Access Point 0
+Mobile Station 1 created at position (28.1343;-36.3487) with distance 45.9648 m to Access Point 0
 Mobile station AC: AC_VI. Access Point AC: AC_VI.
-Mobile Station 2 created at position (-3.85439;6.39363) with distance 7.46557 m to Access Point 0
+Mobile Station 2 created at position (-17.7146;-20.3742) with distance 26.9984 m to Access Point 0
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 3 created at position (28.1307;-8.00706) with distance 29.2481 m to Access Point 0
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 4 created at position (-24.2552;-18.6971) with distance 30.6251 m to Access Point 0
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 5 created at position (-15.1526;-24.4973) with distance 28.8049 m to Access Point 0
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 6 created at position (-6.26698;29.4398) with distance 30.0994 m to Access Point 0
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 7 created at position (42.2801;-26.0159) with distance 49.6431 m to Access Point 0
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 8 created at position (18.9287;43.8699) with distance 47.7794 m to Access Point 0
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 9 created at position (-39.218;-28.5561) with distance 48.5129 m to Access Point 0
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 10 created at position (31.277;-27.3877) with distance 41.5733 m to Access Point 0
 Mobile station AC: AC_VI. Access Point AC: AC_VI.
 
-Access Point 0 is connected to Mobile Station 1 and Mobile Station 2
+Access Point 0 is connected to Mobile Station 5, Mobile Station 10, Mobile Station 7, Mobile Station 9, Mobile Station 1, Mobile Station 3, Mobile Station 2, Mobile Station 4, Mobile Station 6 and Mobile Station 8
 Mobile Station 1 is connected to Access Point 0
 Mobile Station 2 is connected to Access Point 0
+Mobile Station 3 is connected to Access Point 0
+Mobile Station 4 is connected to Access Point 0
+Mobile Station 5 is connected to Access Point 0
+Mobile Station 6 is connected to Access Point 0
+Mobile Station 7 is connected to Access Point 0
+Mobile Station 8 is connected to Access Point 0
+Mobile Station 9 is connected to Access Point 0
+Mobile Station 10 is connected to Access Point 0
+
+
+
+Iteration 2
+	cell radius = 50 meters, seed = 2 
+
+Access Point 11 created at position (0;0)
+
+Mobile Station 12 created at position (-3.56021;-22.6257) with distance 22.9041 m to Access Point 11
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 13 created at position (-23.1838;36.7746) with distance 43.4726 m to Access Point 11
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 14 created at position (15.1204;-0.668299) with distance 15.1351 m to Access Point 11
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 15 created at position (-28.9438;-1.94545) with distance 29.0091 m to Access Point 11
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 16 created at position (27.1602;6.03738) with distance 27.8231 m to Access Point 11
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 17 created at position (28.9108;-10.4893) with distance 30.7548 m to Access Point 11
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 18 created at position (40.2867;-18.3854) with distance 44.2837 m to Access Point 11
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 19 created at position (18.0422;-32.3772) with distance 37.0649 m to Access Point 11
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 20 created at position (-18.9623;15.4633) with distance 24.468 m to Access Point 11
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 21 created at position (-30.5859;8.676) with distance 31.7926 m to Access Point 11
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 11 is connected to Mobile Station 12, Mobile Station 20, Mobile Station 21, Mobile Station 13, Mobile Station 14, Mobile Station 17, Mobile Station 15, Mobile Station 16, Mobile Station 18 and Mobile Station 19
+Mobile Station 12 is connected to Access Point 11
+Mobile Station 13 is connected to Access Point 11
+Mobile Station 14 is connected to Access Point 11
+Mobile Station 15 is connected to Access Point 11
+Mobile Station 16 is connected to Access Point 11
+Mobile Station 17 is connected to Access Point 11
+Mobile Station 18 is connected to Access Point 11
+Mobile Station 19 is connected to Access Point 11
+Mobile Station 20 is connected to Access Point 11
+Mobile Station 21 is connected to Access Point 11
+
+
+
+Iteration 3
+	cell radius = 50 meters, seed = 3 
+
+Access Point 22 created at position (0;0)
+
+Mobile Station 23 created at position (13.249;38.0697) with distance 40.3093 m to Access Point 22
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 24 created at position (7.85568;24.1067) with distance 25.3544 m to Access Point 22
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 25 created at position (-0.465954;33.3316) with distance 33.3348 m to Access Point 22
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 26 created at position (-14.7238;35.5269) with distance 38.4571 m to Access Point 22
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 27 created at position (19.8142;10.9073) with distance 22.618 m to Access Point 22
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 28 created at position (12.2061;32.2218) with distance 34.4562 m to Access Point 22
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 29 created at position (-24.7191;-1.51813) with distance 24.7657 m to Access Point 22
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 30 created at position (-24.9872;17.4429) with distance 30.4732 m to Access Point 22
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 31 created at position (33.6258;13.4534) with distance 36.2172 m to Access Point 22
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 32 created at position (-27.9301;-2.43829) with distance 28.0363 m to Access Point 22
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 22 is connected to Mobile Station 30, Mobile Station 24, Mobile Station 25, Mobile Station 28, Mobile Station 26, Mobile Station 27, Mobile Station 29, Mobile Station 32, Mobile Station 31 and Mobile Station 23
+Mobile Station 23 is connected to Access Point 22
+Mobile Station 24 is connected to Access Point 22
+Mobile Station 25 is connected to Access Point 22
+Mobile Station 26 is connected to Access Point 22
+Mobile Station 27 is connected to Access Point 22
+Mobile Station 28 is connected to Access Point 22
+Mobile Station 29 is connected to Access Point 22
+Mobile Station 30 is connected to Access Point 22
+Mobile Station 31 is connected to Access Point 22
+Mobile Station 32 is connected to Access Point 22
+
+
+
+Iteration 4
+	cell radius = 50 meters, seed = 4 
+
+Access Point 33 created at position (0;0)
+
+Mobile Station 34 created at position (-34.3246;-5.25369) with distance 34.7243 m to Access Point 33
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 35 created at position (3.2129;36.6233) with distance 36.764 m to Access Point 33
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 36 created at position (-0.640225;-45.0083) with distance 45.0128 m to Access Point 33
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 37 created at position (28.4652;-15.8895) with distance 32.5998 m to Access Point 33
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 38 created at position (35.522;22.9946) with distance 42.315 m to Access Point 33
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 39 created at position (16.1937;-20.8178) with distance 26.3746 m to Access Point 33
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 40 created at position (-16.987;-37.7041) with distance 41.354 m to Access Point 33
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 41 created at position (26.3056;-35.7441) with distance 44.3805 m to Access Point 33
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 42 created at position (-13.0599;40.1875) with distance 42.2563 m to Access Point 33
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 43 created at position (-5.21148;32.1869) with distance 32.6061 m to Access Point 33
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 33 is connected to Mobile Station 39, Mobile Station 37, Mobile Station 38, Mobile Station 43, Mobile Station 41, Mobile Station 34, Mobile Station 35, Mobile Station 36, Mobile Station 40 and Mobile Station 42
+Mobile Station 34 is connected to Access Point 33
+Mobile Station 35 is connected to Access Point 33
+Mobile Station 36 is connected to Access Point 33
+Mobile Station 37 is connected to Access Point 33
+Mobile Station 38 is connected to Access Point 33
+Mobile Station 39 is connected to Access Point 33
+Mobile Station 40 is connected to Access Point 33
+Mobile Station 41 is connected to Access Point 33
+Mobile Station 42 is connected to Access Point 33
+Mobile Station 43 is connected to Access Point 33
+
+
+
+Iteration 5
+	cell radius = 50 meters, seed = 5 
+
+Access Point 44 created at position (0;0)
+
+Mobile Station 45 created at position (-22.463;-35.9713) with distance 42.409 m to Access Point 44
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 46 created at position (-19.272;31.9681) with distance 37.3279 m to Access Point 44
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 47 created at position (9.99726;41.8483) with distance 43.0259 m to Access Point 44
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 48 created at position (30.9505;-36.3361) with distance 47.731 m to Access Point 44
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 49 created at position (43.1848;13.0101) with distance 45.102 m to Access Point 44
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 50 created at position (-26.6181;39.3896) with distance 47.5401 m to Access Point 44
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 51 created at position (-3.91865;-5.66889) with distance 6.89146 m to Access Point 44
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 52 created at position (-19.3956;36.3817) with distance 41.2288 m to Access Point 44
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 53 created at position (-12.1277;-0.838639) with distance 12.1567 m to Access Point 44
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 54 created at position (38.6704;23.744) with distance 45.3782 m to Access Point 44
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 44 is connected to Mobile Station 53, Mobile Station 54, Mobile Station 50, Mobile Station 51, Mobile Station 52, Mobile Station 46, Mobile Station 48, Mobile Station 49, Mobile Station 45 and Mobile Station 47
+Mobile Station 45 is connected to Access Point 44
+Mobile Station 46 is connected to Access Point 44
+Mobile Station 47 is connected to Access Point 44
+Mobile Station 48 is connected to Access Point 44
+Mobile Station 49 is connected to Access Point 44
+Mobile Station 50 is connected to Access Point 44
+Mobile Station 51 is connected to Access Point 44
+Mobile Station 52 is connected to Access Point 44
+Mobile Station 53 is connected to Access Point 44
+Mobile Station 54 is connected to Access Point 44
+
+
+
+Iteration 6
+	cell radius = 50 meters, seed = 6 
+
+Access Point 55 created at position (0;0)
+
+Mobile Station 56 created at position (-0.0559286;7.21083) with distance 7.21105 m to Access Point 55
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 57 created at position (-43.4763;19.4701) with distance 47.6369 m to Access Point 55
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 58 created at position (8.98816;30.8928) with distance 32.1738 m to Access Point 55
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 59 created at position (10.6445;3.02868) with distance 11.067 m to Access Point 55
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 60 created at position (5.02907;39.1271) with distance 39.4489 m to Access Point 55
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 61 created at position (5.81082;-3.55049) with distance 6.80967 m to Access Point 55
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 62 created at position (9.30606;-24.2772) with distance 25.9997 m to Access Point 55
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 63 created at position (24.292;34.3888) with distance 42.1034 m to Access Point 55
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 64 created at position (-15.3512;-17.7655) with distance 23.4791 m to Access Point 55
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 65 created at position (-21.9594;9.58653) with distance 23.9608 m to Access Point 55
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 55 is connected to Mobile Station 63, Mobile Station 62, Mobile Station 64, Mobile Station 65, Mobile Station 59, Mobile Station 60, Mobile Station 57, Mobile Station 61, Mobile Station 56 and Mobile Station 58
+Mobile Station 56 is connected to Access Point 55
+Mobile Station 57 is connected to Access Point 55
+Mobile Station 58 is connected to Access Point 55
+Mobile Station 59 is connected to Access Point 55
+Mobile Station 60 is connected to Access Point 55
+Mobile Station 61 is connected to Access Point 55
+Mobile Station 62 is connected to Access Point 55
+Mobile Station 63 is connected to Access Point 55
+Mobile Station 64 is connected to Access Point 55
+Mobile Station 65 is connected to Access Point 55
+
+
+
+Iteration 7
+	cell radius = 50 meters, seed = 7 
+
+Access Point 66 created at position (0;0)
+
+Mobile Station 67 created at position (-7.52072;-47.443) with distance 48.0354 m to Access Point 66
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 68 created at position (14.7449;-38.3148) with distance 41.054 m to Access Point 66
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 69 created at position (-43.0567;10.615) with distance 44.3459 m to Access Point 66
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 70 created at position (27.02;-40.1444) with distance 48.3906 m to Access Point 66
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 71 created at position (10.5289;-25.3103) with distance 27.413 m to Access Point 66
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 72 created at position (-11.6814;-37.9889) with distance 39.7443 m to Access Point 66
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 73 created at position (33.1419;3.33542) with distance 33.3093 m to Access Point 66
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 74 created at position (-3.71016;-11.3966) with distance 11.9853 m to Access Point 66
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 75 created at position (-49.5441;5.71287) with distance 49.8724 m to Access Point 66
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 76 created at position (4.12826;-26.5519) with distance 26.8709 m to Access Point 66
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 66 is connected to Mobile Station 72, Mobile Station 71, Mobile Station 73, Mobile Station 67, Mobile Station 75, Mobile Station 69, Mobile Station 68, Mobile Station 70, Mobile Station 74 and Mobile Station 76
+Mobile Station 67 is connected to Access Point 66
+Mobile Station 68 is connected to Access Point 66
+Mobile Station 69 is connected to Access Point 66
+Mobile Station 70 is connected to Access Point 66
+Mobile Station 71 is connected to Access Point 66
+Mobile Station 72 is connected to Access Point 66
+Mobile Station 73 is connected to Access Point 66
+Mobile Station 74 is connected to Access Point 66
+Mobile Station 75 is connected to Access Point 66
+Mobile Station 76 is connected to Access Point 66
+
+
+
+Iteration 8
+	cell radius = 50 meters, seed = 8 
+
+Access Point 77 created at position (0;0)
+
+Mobile Station 78 created at position (35.3918;-4.1559) with distance 35.635 m to Access Point 77
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 79 created at position (7.15556;42.651) with distance 43.2471 m to Access Point 77
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 80 created at position (-26.4507;-37.9526) with distance 46.2605 m to Access Point 77
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 81 created at position (21.8761;0.319386) with distance 21.8784 m to Access Point 77
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 82 created at position (-12.9744;-34.6116) with distance 36.9635 m to Access Point 77
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 83 created at position (17.8637;18.4897) with distance 25.7095 m to Access Point 77
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 84 created at position (20.3111;34.1493) with distance 39.733 m to Access Point 77
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 85 created at position (-9.96349;-47.934) with distance 48.9585 m to Access Point 77
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 86 created at position (7.98098;-40.0038) with distance 40.7922 m to Access Point 77
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 87 created at position (26.948;-23.6219) with distance 35.8356 m to Access Point 77
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 77 is connected to Mobile Station 85, Mobile Station 86, Mobile Station 81, Mobile Station 83, Mobile Station 82, Mobile Station 87, Mobile Station 84, Mobile Station 78, Mobile Station 80 and Mobile Station 79
+Mobile Station 78 is connected to Access Point 77
+Mobile Station 79 is connected to Access Point 77
+Mobile Station 80 is connected to Access Point 77
+Mobile Station 81 is connected to Access Point 77
+Mobile Station 82 is connected to Access Point 77
+Mobile Station 83 is connected to Access Point 77
+Mobile Station 84 is connected to Access Point 77
+Mobile Station 85 is connected to Access Point 77
+Mobile Station 86 is connected to Access Point 77
+Mobile Station 87 is connected to Access Point 77
+
+
+
+Iteration 9
+	cell radius = 50 meters, seed = 9 
+
+Access Point 88 created at position (0;0)
+
+Mobile Station 89 created at position (-16.6577;29.4528) with distance 33.837 m to Access Point 88
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 90 created at position (14.4474;21.6531) with distance 26.0304 m to Access Point 88
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 91 created at position (-5.71463;-23.7569) with distance 24.4346 m to Access Point 88
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 92 created at position (-35.4194;33.6315) with distance 48.8427 m to Access Point 88
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 93 created at position (15.9487;-4.74913) with distance 16.6408 m to Access Point 88
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 94 created at position (-26.5382;-37.478) with distance 45.9225 m to Access Point 88
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 95 created at position (-8.39914;-8.15352) with distance 11.7058 m to Access Point 88
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 96 created at position (-13.149;-13.086) with distance 18.551 m to Access Point 88
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 97 created at position (0.717178;46.4747) with distance 46.4803 m to Access Point 88
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 98 created at position (-16.5436;3.83262) with distance 16.9818 m to Access Point 88
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 88 is connected to Mobile Station 97, Mobile Station 89, Mobile Station 90, Mobile Station 92, Mobile Station 91, Mobile Station 94, Mobile Station 95, Mobile Station 93, Mobile Station 96 and Mobile Station 98
+Mobile Station 89 is connected to Access Point 88
+Mobile Station 90 is connected to Access Point 88
+Mobile Station 91 is connected to Access Point 88
+Mobile Station 92 is connected to Access Point 88
+Mobile Station 93 is connected to Access Point 88
+Mobile Station 94 is connected to Access Point 88
+Mobile Station 95 is connected to Access Point 88
+Mobile Station 96 is connected to Access Point 88
+Mobile Station 97 is connected to Access Point 88
+Mobile Station 98 is connected to Access Point 88
+
+
+
+Iteration 10
+	cell radius = 50 meters, seed = 0 
+
+Access Point 99 created at position (0;0)
+
+Mobile Station 100 created at position (1.90775;35.3856) with distance 35.437 m to Access Point 99
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 101 created at position (-38.7976;2.45229) with distance 38.875 m to Access Point 99
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 102 created at position (11.9559;-7.3074) with distance 14.0122 m to Access Point 99
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 103 created at position (-34.086;36.0469) with distance 49.6108 m to Access Point 99
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 104 created at position (-36.1668;-18.96) with distance 40.8352 m to Access Point 99
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 105 created at position (9.64879;-35.6065) with distance 36.8906 m to Access Point 99
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 106 created at position (-33.8104;27.4493) with distance 43.5501 m to Access Point 99
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 107 created at position (11.661;-38.0103) with distance 39.7588 m to Access Point 99
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 108 created at position (-23.2924;34.1272) with distance 41.3183 m to Access Point 99
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 109 created at position (-19.0508;8.71947) with distance 20.9514 m to Access Point 99
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 99 is connected to Mobile Station 101, Mobile Station 105, Mobile Station 103, Mobile Station 108, Mobile Station 106, Mobile Station 107, Mobile Station 104, Mobile Station 109, Mobile Station 100 and Mobile Station 102
+Mobile Station 100 is connected to Access Point 99
+Mobile Station 101 is connected to Access Point 99
+Mobile Station 102 is connected to Access Point 99
+Mobile Station 103 is connected to Access Point 99
+Mobile Station 104 is connected to Access Point 99
+Mobile Station 105 is connected to Access Point 99
+Mobile Station 106 is connected to Access Point 99
+Mobile Station 107 is connected to Access Point 99
+Mobile Station 108 is connected to Access Point 99
+Mobile Station 109 is connected to Access Point 99
+
+
+
+Iteration 11
+	cell radius = 100 meters, seed = 1 
+
+Access Point 110 created at position (0;0)
+
+Mobile Station 111 created at position (56.2687;-72.6973) with distance 91.9297 m to Access Point 110
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 112 created at position (-35.4292;-40.7483) with distance 53.9968 m to Access Point 110
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 113 created at position (56.2615;-16.0141) with distance 58.4962 m to Access Point 110
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 114 created at position (-48.5103;-37.3942) with distance 61.2501 m to Access Point 110
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 115 created at position (-30.3052;-48.9947) with distance 57.6097 m to Access Point 110
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 116 created at position (-12.534;58.8796) with distance 60.1989 m to Access Point 110
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 117 created at position (84.5601;-52.0318) with distance 99.2861 m to Access Point 110
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 118 created at position (37.8574;87.7399) with distance 95.5587 m to Access Point 110
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 119 created at position (-78.436;-57.1122) with distance 97.0258 m to Access Point 110
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 120 created at position (62.554;-54.7754) with distance 83.1466 m to Access Point 110
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 110 is connected to Mobile Station 120, Mobile Station 113, Mobile Station 116, Mobile Station 114, Mobile Station 117, Mobile Station 118, Mobile Station 119, Mobile Station 111, Mobile Station 112 and Mobile Station 115
+Mobile Station 111 is connected to Access Point 110
+Mobile Station 112 is connected to Access Point 110
+Mobile Station 113 is connected to Access Point 110
+Mobile Station 114 is connected to Access Point 110
+Mobile Station 115 is connected to Access Point 110
+Mobile Station 116 is connected to Access Point 110
+Mobile Station 117 is connected to Access Point 110
+Mobile Station 118 is connected to Access Point 110
+Mobile Station 119 is connected to Access Point 110
+Mobile Station 120 is connected to Access Point 110
+
+
+
+Iteration 12
+	cell radius = 100 meters, seed = 2 
+
+Access Point 121 created at position (0;0)
+
+Mobile Station 122 created at position (-7.12042;-45.2515) with distance 45.8082 m to Access Point 121
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 123 created at position (-46.3677;73.5492) with distance 86.9451 m to Access Point 121
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 124 created at position (30.2407;-1.3366) with distance 30.2703 m to Access Point 121
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 125 created at position (-57.8875;-3.89089) with distance 58.0181 m to Access Point 121
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 126 created at position (54.3204;12.0748) with distance 55.6462 m to Access Point 121
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 127 created at position (57.8215;-20.9786) with distance 61.5096 m to Access Point 121
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 128 created at position (80.5734;-36.7707) with distance 88.5673 m to Access Point 121
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 129 created at position (36.0843;-64.7545) with distance 74.1298 m to Access Point 121
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 130 created at position (-37.9246;30.9266) with distance 48.936 m to Access Point 121
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 131 created at position (-61.1718;17.352) with distance 63.5853 m to Access Point 121
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 121 is connected to Mobile Station 131, Mobile Station 128, Mobile Station 124, Mobile Station 125, Mobile Station 127, Mobile Station 126, Mobile Station 122, Mobile Station 123, Mobile Station 129 and Mobile Station 130
+Mobile Station 122 is connected to Access Point 121
+Mobile Station 123 is connected to Access Point 121
+Mobile Station 124 is connected to Access Point 121
+Mobile Station 125 is connected to Access Point 121
+Mobile Station 126 is connected to Access Point 121
+Mobile Station 127 is connected to Access Point 121
+Mobile Station 128 is connected to Access Point 121
+Mobile Station 129 is connected to Access Point 121
+Mobile Station 130 is connected to Access Point 121
+Mobile Station 131 is connected to Access Point 121
+
+
+
+Iteration 13
+	cell radius = 100 meters, seed = 3 
+
+Access Point 132 created at position (0;0)
+
+Mobile Station 133 created at position (26.4981;76.1393) with distance 80.6185 m to Access Point 132
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 134 created at position (15.7114;48.2134) with distance 50.7088 m to Access Point 132
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 135 created at position (-0.931908;66.6632) with distance 66.6697 m to Access Point 132
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 136 created at position (-29.4476;71.0538) with distance 76.9142 m to Access Point 132
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 137 created at position (39.6284;21.8146) with distance 45.2359 m to Access Point 132
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 138 created at position (24.4121;64.4436) with distance 68.9125 m to Access Point 132
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 139 created at position (-49.4382;-3.03626) with distance 49.5314 m to Access Point 132
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 140 created at position (-49.9743;34.8858) with distance 60.9464 m to Access Point 132
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 141 created at position (67.2515;26.9067) with distance 72.4344 m to Access Point 132
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 142 created at position (-55.8602;-4.87659) with distance 56.0727 m to Access Point 132
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 132 is connected to Mobile Station 141, Mobile Station 137, Mobile Station 142, Mobile Station 138, Mobile Station 139, Mobile Station 140, Mobile Station 133, Mobile Station 134, Mobile Station 136 and Mobile Station 135
+Mobile Station 133 is connected to Access Point 132
+Mobile Station 134 is connected to Access Point 132
+Mobile Station 135 is connected to Access Point 132
+Mobile Station 136 is connected to Access Point 132
+Mobile Station 137 is connected to Access Point 132
+Mobile Station 138 is connected to Access Point 132
+Mobile Station 139 is connected to Access Point 132
+Mobile Station 140 is connected to Access Point 132
+Mobile Station 141 is connected to Access Point 132
+Mobile Station 142 is connected to Access Point 132
+
+
+
+Iteration 14
+	cell radius = 100 meters, seed = 4 
+
+Access Point 143 created at position (0;0)
+
+Mobile Station 144 created at position (-68.6492;-10.5074) with distance 69.4487 m to Access Point 143
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 145 created at position (6.42581;73.2467) with distance 73.528 m to Access Point 143
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 146 created at position (-1.28045;-90.0165) with distance 90.0256 m to Access Point 143
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 147 created at position (56.9304;-31.7789) with distance 65.1995 m to Access Point 143
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 148 created at position (71.0439;45.9892) with distance 84.63 m to Access Point 143
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 149 created at position (32.3875;-41.6357) with distance 52.7492 m to Access Point 143
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 150 created at position (-33.9739;-75.4081) with distance 82.708 m to Access Point 143
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 151 created at position (52.6113;-71.4881) with distance 88.7609 m to Access Point 143
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 152 created at position (-26.1197;80.375) with distance 84.5126 m to Access Point 143
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 153 created at position (-10.423;64.3738) with distance 65.2121 m to Access Point 143
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 143 is connected to Mobile Station 148, Mobile Station 145, Mobile Station 146, Mobile Station 149, Mobile Station 147, Mobile Station 144, Mobile Station 150, Mobile Station 151, Mobile Station 152 and Mobile Station 153
+Mobile Station 144 is connected to Access Point 143
+Mobile Station 145 is connected to Access Point 143
+Mobile Station 146 is connected to Access Point 143
+Mobile Station 147 is connected to Access Point 143
+Mobile Station 148 is connected to Access Point 143
+Mobile Station 149 is connected to Access Point 143
+Mobile Station 150 is connected to Access Point 143
+Mobile Station 151 is connected to Access Point 143
+Mobile Station 152 is connected to Access Point 143
+Mobile Station 153 is connected to Access Point 143
+
+
+
+Iteration 15
+	cell radius = 100 meters, seed = 5 
+
+Access Point 154 created at position (0;0)
+
+Mobile Station 155 created at position (-44.926;-71.9426) with distance 84.818 m to Access Point 154
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 156 created at position (-38.5439;63.9363) with distance 74.6557 m to Access Point 154
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 157 created at position (19.9945;83.6966) with distance 86.0517 m to Access Point 154
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 158 created at position (61.901;-72.6723) with distance 95.462 m to Access Point 154
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 159 created at position (86.3696;26.0202) with distance 90.204 m to Access Point 154
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 160 created at position (-53.2362;78.7792) with distance 95.0802 m to Access Point 154
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 161 created at position (-7.83731;-11.3378) with distance 13.7829 m to Access Point 154
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 162 created at position (-38.7912;72.7633) with distance 82.4576 m to Access Point 154
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 163 created at position (-24.2554;-1.67728) with distance 24.3133 m to Access Point 154
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 164 created at position (77.3409;47.4881) with distance 90.7564 m to Access Point 154
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 154 is connected to Mobile Station 161, Mobile Station 162, Mobile Station 163, Mobile Station 164, Mobile Station 160, Mobile Station 158, Mobile Station 159, Mobile Station 156, Mobile Station 157 and Mobile Station 155
+Mobile Station 155 is connected to Access Point 154
+Mobile Station 156 is connected to Access Point 154
+Mobile Station 157 is connected to Access Point 154
+Mobile Station 158 is connected to Access Point 154
+Mobile Station 159 is connected to Access Point 154
+Mobile Station 160 is connected to Access Point 154
+Mobile Station 161 is connected to Access Point 154
+Mobile Station 162 is connected to Access Point 154
+Mobile Station 163 is connected to Access Point 154
+Mobile Station 164 is connected to Access Point 154
+
+
+
+Iteration 16
+	cell radius = 100 meters, seed = 6 
+
+Access Point 165 created at position (0;0)
+
+Mobile Station 166 created at position (-0.111857;14.4217) with distance 14.4221 m to Access Point 165
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 167 created at position (-86.9527;38.9403) with distance 95.2739 m to Access Point 165
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 168 created at position (17.9763;61.7856) with distance 64.3476 m to Access Point 165
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 169 created at position (21.289;6.05735) with distance 22.134 m to Access Point 165
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 170 created at position (10.0581;78.2541) with distance 78.8979 m to Access Point 165
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 171 created at position (11.6216;-7.10098) with distance 13.6193 m to Access Point 165
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 172 created at position (18.6121;-48.5545) with distance 51.9995 m to Access Point 165
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 173 created at position (48.584;68.7776) with distance 84.2067 m to Access Point 165
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 174 created at position (-30.7023;-35.5309) with distance 46.9583 m to Access Point 165
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 175 created at position (-43.9189;19.1731) with distance 47.9215 m to Access Point 165
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 165 is connected to Mobile Station 166, Mobile Station 175, Mobile Station 172, Mobile Station 173, Mobile Station 174, Mobile Station 168, Mobile Station 171, Mobile Station 169, Mobile Station 170 and Mobile Station 167
+Mobile Station 166 is connected to Access Point 165
+Mobile Station 167 is connected to Access Point 165
+Mobile Station 168 is connected to Access Point 165
+Mobile Station 169 is connected to Access Point 165
+Mobile Station 170 is connected to Access Point 165
+Mobile Station 171 is connected to Access Point 165
+Mobile Station 172 is connected to Access Point 165
+Mobile Station 173 is connected to Access Point 165
+Mobile Station 174 is connected to Access Point 165
+Mobile Station 175 is connected to Access Point 165
+
+
+
+Iteration 17
+	cell radius = 100 meters, seed = 7 
+
+Access Point 176 created at position (0;0)
+
+Mobile Station 177 created at position (-15.0414;-94.8859) with distance 96.0707 m to Access Point 176
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 178 created at position (29.4898;-76.6295) with distance 82.108 m to Access Point 176
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 179 created at position (-86.1134;21.23) with distance 88.6917 m to Access Point 176
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 180 created at position (54.04;-80.2888) with distance 96.7813 m to Access Point 176
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 181 created at position (21.0578;-50.6206) with distance 54.8259 m to Access Point 176
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 182 created at position (-23.3629;-75.9778) with distance 79.4887 m to Access Point 176
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 183 created at position (66.2838;6.67084) with distance 66.6186 m to Access Point 176
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 184 created at position (-7.42031;-22.7931) with distance 23.9706 m to Access Point 176
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 185 created at position (-99.0882;11.4257) with distance 99.7448 m to Access Point 176
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 186 created at position (8.25651;-53.1038) with distance 53.7418 m to Access Point 176
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 176 is connected to Mobile Station 184, Mobile Station 185, Mobile Station 186, Mobile Station 183, Mobile Station 182, Mobile Station 181, Mobile Station 178, Mobile Station 180, Mobile Station 179 and Mobile Station 177
+Mobile Station 177 is connected to Access Point 176
+Mobile Station 178 is connected to Access Point 176
+Mobile Station 179 is connected to Access Point 176
+Mobile Station 180 is connected to Access Point 176
+Mobile Station 181 is connected to Access Point 176
+Mobile Station 182 is connected to Access Point 176
+Mobile Station 183 is connected to Access Point 176
+Mobile Station 184 is connected to Access Point 176
+Mobile Station 185 is connected to Access Point 176
+Mobile Station 186 is connected to Access Point 176
+
+
+
+Iteration 18
+	cell radius = 100 meters, seed = 8 
+
+Access Point 187 created at position (0;0)
+
+Mobile Station 188 created at position (70.7836;-8.3118) with distance 71.27 m to Access Point 187
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 189 created at position (14.3111;85.3021) with distance 86.4942 m to Access Point 187
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 190 created at position (-52.9013;-75.9052) with distance 92.5211 m to Access Point 187
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 191 created at position (43.7521;0.638773) with distance 43.7568 m to Access Point 187
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 192 created at position (-25.9489;-69.2232) with distance 73.927 m to Access Point 187
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 193 created at position (35.7274;36.9793) with distance 51.419 m to Access Point 187
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 194 created at position (40.6221;68.2985) with distance 79.466 m to Access Point 187
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 195 created at position (-19.927;-95.8679) with distance 97.917 m to Access Point 187
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 196 created at position (15.962;-80.0076) with distance 81.5844 m to Access Point 187
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 197 created at position (53.896;-47.2438) with distance 71.6712 m to Access Point 187
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 187 is connected to Mobile Station 188, Mobile Station 189, Mobile Station 197, Mobile Station 194, Mobile Station 195, Mobile Station 193, Mobile Station 192, Mobile Station 196, Mobile Station 190 and Mobile Station 191
+Mobile Station 188 is connected to Access Point 187
+Mobile Station 189 is connected to Access Point 187
+Mobile Station 190 is connected to Access Point 187
+Mobile Station 191 is connected to Access Point 187
+Mobile Station 192 is connected to Access Point 187
+Mobile Station 193 is connected to Access Point 187
+Mobile Station 194 is connected to Access Point 187
+Mobile Station 195 is connected to Access Point 187
+Mobile Station 196 is connected to Access Point 187
+Mobile Station 197 is connected to Access Point 187
+
+
+
+Iteration 19
+	cell radius = 100 meters, seed = 9 
+
+Access Point 198 created at position (0;0)
+
+Mobile Station 199 created at position (-33.3155;58.9055) with distance 67.6741 m to Access Point 198
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 200 created at position (28.8948;43.3062) with distance 52.0609 m to Access Point 198
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 201 created at position (-11.4293;-47.5139) with distance 48.8692 m to Access Point 198
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 202 created at position (-70.8387;67.2631) with distance 97.6855 m to Access Point 198
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 203 created at position (31.8975;-9.49825) with distance 33.2816 m to Access Point 198
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 204 created at position (-53.0764;-74.956) with distance 91.845 m to Access Point 198
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 205 created at position (-16.7983;-16.307) with distance 23.4116 m to Access Point 198
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 206 created at position (-26.2979;-26.172) with distance 37.1019 m to Access Point 198
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 207 created at position (1.43436;92.9495) with distance 92.9605 m to Access Point 198
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 208 created at position (-33.0873;7.66524) with distance 33.9636 m to Access Point 198
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 198 is connected to Mobile Station 208, Mobile Station 206, Mobile Station 207, Mobile Station 201, Mobile Station 204, Mobile Station 202, Mobile Station 203, Mobile Station 205, Mobile Station 199 and Mobile Station 200
+Mobile Station 199 is connected to Access Point 198
+Mobile Station 200 is connected to Access Point 198
+Mobile Station 201 is connected to Access Point 198
+Mobile Station 202 is connected to Access Point 198
+Mobile Station 203 is connected to Access Point 198
+Mobile Station 204 is connected to Access Point 198
+Mobile Station 205 is connected to Access Point 198
+Mobile Station 206 is connected to Access Point 198
+Mobile Station 207 is connected to Access Point 198
+Mobile Station 208 is connected to Access Point 198
+
+
+
+Iteration 20
+	cell radius = 100 meters, seed = 0 
+
+Access Point 209 created at position (0;0)
+
+Mobile Station 210 created at position (3.81551;70.7711) with distance 70.8739 m to Access Point 209
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 211 created at position (-77.5952;4.90458) with distance 77.7501 m to Access Point 209
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 212 created at position (23.9118;-14.6148) with distance 28.0244 m to Access Point 209
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 213 created at position (-68.172;72.0938) with distance 99.2216 m to Access Point 209
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 214 created at position (-72.3335;-37.92) with distance 81.6704 m to Access Point 209
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 215 created at position (19.2976;-71.2129) with distance 73.7813 m to Access Point 209
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 216 created at position (-67.6208;54.8987) with distance 87.1001 m to Access Point 209
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 217 created at position (23.3219;-76.0207) with distance 79.5176 m to Access Point 209
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 218 created at position (-46.5848;68.2544) with distance 82.6365 m to Access Point 209
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+Mobile Station 219 created at position (-38.1016;17.4389) with distance 41.9028 m to Access Point 209
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 209 is connected to Mobile Station 211, Mobile Station 212, Mobile Station 210, Mobile Station 217, Mobile Station 215, Mobile Station 214, Mobile Station 219, Mobile Station 216, Mobile Station 218 and Mobile Station 213
+Mobile Station 210 is connected to Access Point 209
+Mobile Station 211 is connected to Access Point 209
+Mobile Station 212 is connected to Access Point 209
+Mobile Station 213 is connected to Access Point 209
+Mobile Station 214 is connected to Access Point 209
+Mobile Station 215 is connected to Access Point 209
+Mobile Station 216 is connected to Access Point 209
+Mobile Station 217 is connected to Access Point 209
+Mobile Station 218 is connected to Access Point 209
+Mobile Station 219 is connected to Access Point 209
 

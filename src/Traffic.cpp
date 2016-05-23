@@ -89,7 +89,7 @@ istream& operator>> (istream& is, discrete_prob& uv) {
   unsigned count = 0;
   double total_prob = 0;
 
-  char c;
+  char c = 0;
   do {
 
     ++count;
@@ -169,7 +169,7 @@ double discrete_prob::mean() const {
 // the inverse of the c.d.f. for the argument 'randval'.                      //
 ////////////////////////////////////////////////////////////////////////////////
 int discrete_prob::new_value(double randval) const {
-  double p;
+  //double p;
   for (vector<pair<int,double> >::const_iterator it = pl.begin();
        it != pl.end(); ++it) {
     if (randval <= it->second) return it->first;

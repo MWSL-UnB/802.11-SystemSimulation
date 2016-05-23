@@ -75,6 +75,7 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac){
 	}
 
 	BAAggFlag = mac.BAAgg;
+	TXOPflag = false;
 
 	pcks2ACK_ids.clear();
 	pcks2reque.clear();
