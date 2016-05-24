@@ -24,6 +24,7 @@
 #define _mypaths_h 1
 
 #define W_DIR "C:\\Users\\Calil\\Documents\\Dev C++ Workspace\\WiFi System\\SystemSimulation\\"
+//#define W_DIR "C:\\Users\\User\\Documents\\Calil\\WiFi System\\SystemSimulation\\"
 #define DEFAULT_DIR "Data"
 #define CONFIG_FILE_NAME "config.txt"
 #define OUTPUT_FILE_NAME "results"
