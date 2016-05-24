@@ -1,137 +1,110 @@
 clc
 clear all
 close all
-
 %% General
 
 offeData = 0.5;
 simTime = 1.1;
 
-%% With BA and Aggregation
+%% Get Results
 
-distBA = [5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100 105 110 115 120 125 130 135 140 145 150 155 160 165 170]';
-%           1       2           3       4       5
-thrBA = [0.510492 0.59183  0.489558 0.457721 0.424103;... % 5
-         0.510492 0.59183  0.489558 0.457721 0.424103;... % 10
-         0.510492 0.59183  0.489558 0.457721 0.424103;... % 15
-         0.586083 0.59183  0.489558 0.492826 0.424103;... % 20
-         0.556642 0.526662 0.526662 0.536877 0.424103;... % 25
-         0.558422 0.50041  0.382266 0.639481 0.424103;... % 30
-         0.607947 0.524983 0.438227 0.509355 0.424103;... % 35
-         0.415973 0.50258  0.416761 0.476716 0.424103;... % 40
-         0.519982 0.473286 0.444985 0.468953 0.424103;... % 45
-         0.507511 0.38741  0.487955 0.52412  0.487554;... % 50
-         0.495983 0.39785  0.395018 0.450926 0.463823;... % 55
-         0.543999 0.55941  0.489421 0.618179 0.410839;... % 60
-         0.39198  0.416269 0.415435 0.50943  0.518545;... % 65
-         0.399998 0.474949 0.409902 0.459415 0.500877;... % 70
-         0.415985 0.390729 0.355403 0.553275 0.474122;... % 75
-         0.535915 0.495815 0.48693  0.561481 0.498022;... % 80
-         0.423986 0.574186 0.527947 0.481913 0.543732;... % 85
-         0.431988 0.610101 0.499622 0.503248 0.57395 ;... % 90
-         0.535961 0.405279 0.383698 0.507474 0.623998;... % 95
-         0.25599  0.623989 0.367957 0.501319 0.511999;... % 100
-         0.14398  0.527822 0.399599 0.56887  0.48695;... % 105
-         0.087998 0.415954 0.287717 0.615501 0.527989;... % 110
-         0.071991 0.431994 0.359874 0.557174 0.517015;... % 115
-         0        0.295985 0.255679 0.526511 0.471983;... % 120
-         0        0.295999 0.231995 0.559465 0.509822;... % 125
-         0        0.239997 0.263989 0.607322 0.577362;... % 130
-         0        0.215997 0.199979 0.375936 0.575983;... % 135
-         0        0.143994 0.151979 0.279993 0.569945;... % 140
-         0        0.215997 0.199979 0.375936 0.575983;... % 145
-         0        0.007999 0.071995 0.023999 0.535983;... % 150
-         0        0        0.111988 0.007999 0.447958;... % 155
-         0        0        0.047998 0        0.41599 ;... % 160
-         0        0        0        0        0.255986;... % 165
-         0        0        0        0        0.159999];   % 170
-     
-mThrBA = mean(thrBA(2:2:end,:),2);
-effBA = 100*mThrBA./(simTime*offeData);
+resFile = fileread('results.txt');
+resNum = strfind(resFile,'%%%% Final results %%%%');
+resStr = resFile(resNum:end);
 
-%% Without BA and Aggregation
+cellNum = strfind(resStr,'cell radius    =');
+cellLen = length('cell radius    =');
+thrNum = strfind(resStr,'Throughput (Mbps)');
+thrLen = length('Throughput (Mbps)');
+meanNum = strfind(resStr,'mean           =');
+meanNum = meanNum(1);
+meanLen = length('mean           =');
+confNum = strfind(resStr,'conf. interval =');
+confNum = confNum(1);
+confLen = length('conf. interval =');
+tranNum = strfind(resStr,'Transfer time (ms)');
 
-dist = [10 20 30 40 50 60 70 80 90 100 110 120 130 140 150 170]';
+cellInt = [cellNum+cellLen thrNum-1];
+thrInt = [meanNum+meanLen confNum-1];
+confInt = [confNum+confLen tranNum-1];
 
-thr = [0.510492 0.583842 0.489558 0.457721 0.424103;... % 10
-    0.586083 0.583842 0.489558 0.455646 0.424103;... % 20
-    0.546528 0.492464 0.398259 0.504931 0.424103;... % 30
-    0.419275 0.43051  0.500341 0.569466 0.527632;... % 40
-    0.476912 0.491601 0.488292 0.551492 0.471635;... % 50
-    0.495984 0.470208 0.468402 0.495956 0.410839;... % 60
-    0.367988 0.559444 0.447924 0.526417 0.555896;... % 70
-    0.463936 0.397009 0.495158 0.567333 0.397512;... % 80
-    0.49596  0.455332 0.471784 0.53781  0.565315;... % 90
-    0.239992 0.49554  0.415698 0.62451  0.567007;... % 100
-    0.087992 0.495861 0.383734 0.503403 0.463964;... % 110
-    0.015999 0.311982 0.359577 0.55497  0.447651;... % 120
-    0        0.223978 0.215992 0.582185 0.527966;... % 130
-    0        0.119997 0.159985 0.223989 0.39998 ;... % 140
-    0        0        0.175999 0.023999 0.575973;... % 150
-    0        0        0        0        0.119999];   % 170
+cellStr = resStr(cellInt(1):cellInt(2));
+thrStr = resStr(thrInt(1):thrInt(2));
+confStr = resStr(confInt(1):confInt(2));
 
-mThr = mean(thr,2);
-eff = 100*mThr./(simTime*offeData);
+cell = textscan(cellStr,'%f');
+cell = cell{1};
+thr = textscan(thrStr,'%f');
+thr = thr{1};
+conf = textscan(confStr,'%f');
+conf = conf{1};
 
-%% Without TXOP
+[~,maxCell] = max(cell);
+cell = cell(1:maxCell);
 
-distNT = [10 20 30 40 50 60 70 80 90 100 110 120 130 140 150 160 170]';
-%           1          2        3       4       5       6           7       8       9       0
-thrNT = [0.594186 0.427219 0.388251 0.519725 0.339653 0.5418   0.55955  0.551941 0.491662 0.404285;... % 10
-         0.594186 0.427219 0.388251 0.387815 0.339653 0.5418   0.562476 0.551941 0.491662 0.404285;... % 20
-         0.594186 0.414064 0.388251 0.527557 0.339653 0.5418   0.453746 0.551941 0.524518 0.519357;... % 30
-         0.54019  0.401851 0.388251 0.50352  0.339653 0.5418   0.513912 0.551941 0.483913 0.458937;... % 40
-         0.383581 0.400612 0.375859 0.46331  0.542121 0.555126 0.550088 0.559819 0.470891 0.447966;... % 50
-         0.575862 0.495906 0.460858 0.439093 0.32472  0.540587 0.455221 0.532831 0.494991 0.471398;... % 60
-         0.4877   0.430911 0.311819 0.594053 0.53566  0.559786 0.540444 0.551982 0.470696 0.455959;... % 70
-         0.49592  0.527337 0.455747 0.467475 0.551983 0.615168 0.513194 0.463516 0.503599 0.431943;... % 80
-         0.447989 0.623004 0.422846 0.511156 0.477526 0.567987 0.583328 0.431906 0.439778 0.383691;... % 90
-         0.359707 0.438249 0.503779 0.511408 0.483268 0.495934 0.604739 0.431983 0.135838 0.503714;... % 100
-         0.071986 0.447977 0.375585 0.408292 0.519751 0.511855 0.557303 0.535659 0        0.511591;... % 110
-         0.039997 0.311734 0.239995 0.430536 0.495988 0.487978 0.672198 0.583602 0        0.463807;... % 120
-         0        0.247997 0.271664 0.487613 0.519442 0.039951 0.631883 0.535797 0        0.191978;... % 130
-         0        0.151793 0.135992 0.191734 0.575747 0        0.327801 0.463617 0        0.007994;... % 140
-         0        0.015986 0.071985 0.023971 0.599343 0        0.175806 0.359766 0        0       ;... % 150
-         0        0        0.015999 0        0.415995 0        0.023974 0.415826 0        0       ;... % 160
-         0        0        0        0        0.111924 0        0        0.351979 0        0       ];   % 170
-
-mThrNT = mean(thrNT,2);
-effNT = 100*mThrNT./(simTime*offeData);
+%With BA and Aggregation
+thr_BA = thr(1:maxCell);
+avgThr_BA = thr_BA;
+conf_BA = conf(1:maxCell);
+%Without BA and Aggregation
+thr_noBA = thr(maxCell+1:2*maxCell);
+avgThr_noBA = thr_noBA;
+conf_noBA = conf(maxCell+1:2*maxCell);
+%Without TXOP
+thr_noTXOP = thr(3*maxCell+1:4*maxCell);
+avgThr_noTXOP = thr_noTXOP;
+conf_noTXOP = conf(3*maxCell+1:4*maxCell);
 
 %% Plot
 
-fitted1 = fit(distBA(2:2:end),1e3*mThrBA,'smoothingspline');
-h1 = plot(fitted1,'b');
+fitted_BA = fit(cell,1e3*avgThr_BA,'smoothingspline');
+h1 = plot(fitted_BA,'b');
 set(h1,'LineWidth',2);
 hold on;
-plot(distBA(2:2:end),1e3*mThrBA,'bo');
+plot(cell,1e3*avgThr_BA,'bo');
 
-fitted2 = fit(dist,1e3*mThr,'smoothingspline');
-h2 = plot(fitted2,'r');
+fitted_noBA = fit(cell,1e3*avgThr_noBA,'smoothingspline');
+h2 = plot(fitted_noBA,'r');
 set(h2,'LineWidth',2);
 hold on;
-plot(dist,1e3*mThr,'ro');
+plot(cell,1e3*avgThr_noBA,'ro');
 
-fitted3 = fit(distNT,1e3*mThrNT,'smoothingspline');
-h3 = plot(fitted3,'g');
+fitted_noTXOP = fit(cell,1e3*avgThr_noTXOP,'smoothingspline');
+h3 = plot(fitted_noTXOP,'g');
 set(h3,'LineWidth',2);
 hold on;
-plot(distNT,1e3*mThrNT,'go');
-
-% mT = (mThr + mThrBA + mThrNT)/3;
-% fitted4 = fit(distNT,1e3*mT,'smoothingspline');
-% h4 = plot(fitted4,'k');
-% set(h4,'LineWidth',2);
-% hold on;
-% plot(distNT,1e3*mT,'ko');
+plot(cell,1e3*avgThr_noTXOP,'go');
 
 legend off;
 grid on;
-% legend([h1 h2 h3 h4],'Com agregação','Sem agregação','Sem TXOP','Media')
 legend([h1 h2 h3],'Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP','Location','SouthWest')
-axis([10 170 0 550]);
+axis([5 170 0 550]);
 xlabel('Distância da estação ao ponto de acesso [m]');
 ylabel('Throughput médio [kbps]');
 hold off;
 
 print('-dbmp','thrVSdist');
+
+%% Plot average
+
+avgThr_mean = (avgThr_BA + avgThr_noBA + avgThr_noTXOP)./3;
+
+figure();
+fitted_mean = fit(cell,1e3*avgThr_mean,'smoothingspline');
+hm = plot(fitted_mean,'b');
+set(hm,'LineWidth',2);
+hold on;
+plot(cell,1e3*avgThr_mean,'bo');
+
+legend off;
+grid on;
+axis([5 170 0 550]);
+xlabel('Distância da estação ao ponto de acesso [m]');
+ylabel('Throughput médio [kbps]');
+hold off;
+
+print('-dbmp','thrVSdist_mean');
+
+%% Save data
+
+save data1
