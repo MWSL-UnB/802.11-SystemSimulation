@@ -116,6 +116,7 @@ protected:
   timestamp time_to_send_BA;
   timestamp time_to_wait_BA;
   bool preambFlag;
+  Terminal* termTXOP;
 
   // performance measures
   unsigned long n_att_frags;  // number of data fragments transmission attempts
