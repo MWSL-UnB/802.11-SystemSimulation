@@ -367,7 +367,7 @@ void Simulation::init_terminals(){
 
 	timestamp tr_time = sim_par.get_TransientTime();
 
-	for (int i = 0; i < sim_par.get_NumberAPs(); i++) {
+	for (unsigned i = 0; i < sim_par.get_NumberAPs(); i++) {
 		AccessPoint* ap = new AccessPoint(sim_par.get_APPosition(i), &main_sch, ch,
 				&randgent, &log, mac, phy, tr_time);
 		term_vector.push_back(ap);
@@ -437,7 +437,7 @@ void Simulation::init_terminals(){
 
 		double min_dist = HUGE_VAL;
 		int min_index = -1;
-		for (int count = 0; count < sim_par.get_NumberAPs(); count++) {
+		for (unsigned count = 0; count < sim_par.get_NumberAPs(); count++) {
 			double dist = pos.distance(sim_par.get_APPosition(count));
 			if (dist < min_dist) {
 				min_dist = dist;

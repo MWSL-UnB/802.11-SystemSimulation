@@ -110,7 +110,7 @@ class Link {
   timestamp time_last; // time of latest link gain update
 
 public:
-  Link() {}
+  //Link() {}
   Link(term_pair t,      // pair of linked terminals
        double path_loss, // mean path loss in dB
        double fd,        // maximum Doppler spread in Hz
@@ -194,9 +194,11 @@ protected:
   // Packet with identification 'pack_id' stopped being transmitted
 
 public:
+  virtual ~Channel_private() {};
+
   virtual double get_interf_dBm(PHY* t) = 0;
   // returns interference level in dBm at PHY '*t'
-  
+
   ////////////////////////////////////
   // wrapper functions for call-back
   static void wrapper_to_stop_send_all (void* p, long_integer i) {

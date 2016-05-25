@@ -189,7 +189,6 @@ Channel::Channel(Scheduler *s, random *r, channel_struct p, log_file *l){
   NumberSinus = p.number_sines;
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // Channel_private::busy_channel_message                                      //
 //                                                                            //
@@ -510,7 +509,7 @@ END_PROF("Channel::stop_send_one")
 // Link constructor                                                           //
 ////////////////////////////////////////////////////////////////////////////////
 Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns)
-          : terms(t), path_loss_mean(pl), n_osc(ns) {
+          : terms(t), n_osc(ns), path_loss_mean(pl) {
 
   doppler_spread = 2*M_PI*fd;
 
@@ -520,7 +519,7 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns)
   theta.resize(n_osc);
 
   valarray<double> beta(M_PI/n_osc,n_osc);
-  for (int index = 0; index < n_osc; ++index) {
+  for (unsigned index = 0; index < n_osc; ++index) {
     beta[index] *= index+1.0;
     theta[index] = r->uniform(0,2*M_PI);
   }

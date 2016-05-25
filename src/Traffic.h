@@ -133,6 +133,8 @@ public:
     ((Traffic*)ptr2obj)->new_packet();}
   // wrapper function to schedule next packet transmission
 
+  virtual ~Traffic() {};
+
 };
 #endif
 

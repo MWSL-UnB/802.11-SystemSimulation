@@ -51,7 +51,7 @@ struct adapt_struct {
                double psu, double psd, double e, unsigned msc, unsigned lfl,
                bool urm) 
                : mode(m), adapt(am), power_max(pmax), power_min(pmin),
-                 power_step_up(psu), power_step_down(psd), per(e),
+                 power_step_down(psd), power_step_up(psu), per(e),
                  max_succeed_counter(msc), la_fail_limit(lfl), use_rx_mode(urm)
                  {}
 };

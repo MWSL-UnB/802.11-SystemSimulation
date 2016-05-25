@@ -158,7 +158,7 @@ bool Parameters::assign (string s1,string s2) {
     if (!ArrivalTime.read_vec(s2)) return false;
 
   } else if (!string(s1,0,11).compare("APPosition_")){
-    int index = atol(string(s1,11,s1.size()-11).c_str());
+    unsigned index = atol(string(s1,11,s1.size()-11).c_str());
     if (index < 0 || index >= APPosition.size()) return false;
     which_param = &APPosition[index];
     if (!APPosition[index].read_vec(s2)) return false;
@@ -215,13 +215,13 @@ bool Parameters::assign (string s1,string s2) {
     which_param = &NumberAPs;
     if (!NumberAPs.read_vec(s2)) return false;
     
-    int maxNumberAPs = 0;
+    unsigned maxNumberAPs = 0;
     do {
       if (NumberAPs.current()>maxNumberAPs) maxNumberAPs = NumberAPs.current();
     } while (NumberAPs.next());
 
     APPosition.clear();
-    for (int count = 0; count < maxNumberAPs; ++count) {
+    for (unsigned count = 0; count < maxNumberAPs; ++count) {
       APPosition.push_back(param_vec_Position());
       ostringstream auxs;
       auxs << "Position of AP " << count;
@@ -412,7 +412,7 @@ void Parameters::default_config () {
 //                                                                            //
 // returns position of AP number 'which_ap'                                   //
 ////////////////////////////////////////////////////////////////////////////////
-Position Parameters::get_APPosition(int which_ap) {
+Position Parameters::get_APPosition(unsigned which_ap) {
 
   if (which_ap < 0 || which_ap >= APPosition.size()) {
     throw(my_exception("Invalid AP number in Parameters::get_APPosition"));

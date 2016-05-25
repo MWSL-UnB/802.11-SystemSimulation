@@ -75,12 +75,14 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac){
 	}
 
 	BAAggFlag = mac.BAAgg;
+	TXOPflag = false;
 
 	pcks2ACK_ids.clear();
 	pcks2reque.clear();
 	pcktsDur.clear();
 	time_to_send_BA = timestamp(0);
 	time_to_wait_BA = timestamp(0);
+	termTXOP = 0;
 
 	NAV = timestamp(0);
 	nfrags = 1;
@@ -746,6 +748,7 @@ void MAC_private::receive_this(MPDU p) {
 
 		break;
 	}
+	case DUMMY : return;
 	}
 
 	END_PROF("MAC::receive_this")
@@ -796,8 +799,7 @@ void MAC_private::send_ack(Terminal *to) {
 	BEGIN_PROF("MAC::send_ack")
 
 	// transmit ACK with data rate of received data packet
-	bool send2all = (NAV > ptr2sch->now() + ack_duration(rx_mode))?
-														  true : false;
+	//bool send2all = (NAV > ptr2sch->now() + ack_duration(rx_mode))? true : false;
 
 	if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
 			<< ": send ACK to " << *to << ", NAV = " << NAV << endl;
@@ -902,6 +904,10 @@ void MAC_private::aggreg_send() {
 
 	if (current_frag == nfrags) {
 		packet_queue[myAC].pop_front();
+		while((packet_queue[myAC].front()).get_target() != termTXOP) {
+			packet_queue[myAC].push_back(packet_queue[myAC].front());
+			packet_queue[myAC].pop_front();
+		}
 		if (get_queue_size()) new_msdu();
 	} else {
 
@@ -955,54 +961,59 @@ void MAC_private::start_TXOP() {
 
 			// TXOPend must account for RTS/CTS exchanged in the beginning of TXOP
 			TXOPend = now + rts_duration + cts_duration + SIFS;
-			if(BAAggFlag) TXOPend += 2*SIFS + ba_duration(which_mode);
+			if(BAAggFlag) {
+				termTXOP = msdu.get_target();
+				TXOPend += 2*SIFS + ba_duration(which_mode);
+			}
 
 			power_dBm = term->get_power(msdu.get_target(), frag_thresh);
 
 			while(TXOPend < now + TXOPmax && count < packet_queue[myAC].size()){
 
-				auxTXOPend = TXOPend;
-
 				MSDU auxmsdu = (packet_queue[myAC])[count];
 
-				// Determine number of fragments
-				auxNfrags = auxmsdu.get_nbytes() / frag_thresh;
-				if (auxmsdu.get_nbytes()%frag_thresh) ++auxNfrags;
+				if(!BAAggFlag || auxmsdu.get_target() == termTXOP) {
 
-				// determine packet and duration of last fragment
-				lastpl = auxmsdu.get_nbytes() % frag_thresh;
-				if (!lastpl) lastpl = frag_thresh;
+					auxTXOPend = TXOPend;
 
-				ACKpolicy apol  = BAAggFlag ? blockACK:normalACK;
-				bool prea = ((count != 0) && BAAggFlag) ? false:true;
+					// Determine number of fragments
+					auxNfrags = auxmsdu.get_nbytes() / frag_thresh;
+					if (auxmsdu.get_nbytes()%frag_thresh) ++auxNfrags;
 
-				DataMPDU auxpck = DataMPDU(frag_thresh, term, auxmsdu.get_target(),power_dBm,
-						which_mode,timestamp(0),0,0,0,0,apol,prea);
-				DataMPDU auxpckLast = DataMPDU(lastpl, term, auxmsdu.get_target(), power_dBm,
-						which_mode,timestamp(0),0,0,0,0,apol,prea);
+					// determine packet and duration of last fragment
+					lastpl = auxmsdu.get_nbytes() % frag_thresh;
+					if (!lastpl) lastpl = frag_thresh;
 
-				TXOPend = TXOPend + auxpckLast.get_duration();
-				if(!BAAggFlag) TXOPend += timestamp(auxNfrags)*ack_duration(which_mode) + 2*SIFS;
-				else if(count != 0) TXOPend += timestamp(auxNfrags)*timestamp(1);
+					ACKpolicy apol  = BAAggFlag ? blockACK:normalACK;
+					bool prea = ((count != 0) && BAAggFlag) ? false:true;
 
-				if(auxNfrags != 1){
-					// Update TXOPend accordingly
-					TXOPend = TXOPend + timestamp(auxNfrags-1)*auxpck.get_duration();
-				}
+					DataMPDU auxpck = DataMPDU(frag_thresh, term, auxmsdu.get_target(),power_dBm,
+							which_mode,timestamp(0),0,0,0,0,apol,prea);
+					DataMPDU auxpckLast = DataMPDU(lastpl, term, auxmsdu.get_target(), power_dBm,
+							which_mode,timestamp(0),0,0,0,0,apol,prea);
 
-				if (!BAAggFlag) {
-					//If an RTS/CTS is needed:
-					// For not the last packet
-					if(auxNfrags != 1 && auxpck.get_nbytes_mac() >= RTS_threshold){
-						TXOPend = TXOPend + timestamp(auxNfrags-1)*(rts_duration + cts_duration +
-								SIFS + 1);
+					TXOPend = TXOPend + auxpckLast.get_duration();
+					if(!BAAggFlag) TXOPend += timestamp(auxNfrags)*ack_duration(which_mode) + 2*SIFS;
+					else if(count != 0) TXOPend += timestamp(auxNfrags)*timestamp(1);
+
+					if(auxNfrags != 1){
+						// Update TXOPend accordingly
+						TXOPend = TXOPend + timestamp(auxNfrags-1)*auxpck.get_duration();
 					}
-					// For the last packet
-					if(auxpckLast.get_nbytes_mac() >= RTS_threshold) {
-						TXOPend = TXOPend + rts_duration + cts_duration + SIFS;
+
+					if (!BAAggFlag) {
+						//If an RTS/CTS is needed:
+						// For not the last packet
+						if(auxNfrags != 1 && auxpck.get_nbytes_mac() >= RTS_threshold){
+							TXOPend = TXOPend + timestamp(auxNfrags-1)*(rts_duration + cts_duration +
+									SIFS + 1);
+						}
+						// For the last packet
+						if(auxpckLast.get_nbytes_mac() >= RTS_threshold) {
+							TXOPend = TXOPend + rts_duration + cts_duration + SIFS;
+						}
 					}
 				}
-
 				count++;
 			}
 
@@ -1065,13 +1076,7 @@ void MAC_private::end_TXOP() {
 
 	TXOPla_win = success;
 
-	if (logflag) *mylog << "\n!!! " << ptr2sch->now() << "sec., " << *term
-			<< "conditions:" << current_frag << " " << nfrags << " "
-			<< get_queue_size() << " " << time_to_wait_BA << endl;
-
 	if (get_queue_size() && time_to_wait_BA == timestamp(0)) {
-		if (logflag) *mylog << "\n!!! " << ptr2sch->now() << "sec., " << *term
-			<< "entered end_TXOP() condition." << endl;
 		new_msdu();
 	}
 
@@ -1285,8 +1290,6 @@ unsigned MAC::macUnitdataReq(MSDU p) {
 	if (get_queue_size() >= max_queue_size) {
 		term->macUnitdataQueueOverflow(p);
 	} else {
-		if (logflag) *mylog << "\n!!! " << ptr2sch->now() << "sec., " << *term
-			<< "got new packet." << endl;
 		accCat auxAC = term->get_connection_AC(p.get_target());
 		packet_queue[auxAC].push_back(p);
 

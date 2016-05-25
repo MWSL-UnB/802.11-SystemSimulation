@@ -86,6 +86,7 @@ ostream& operator<< (ostream& os, const transmission_mode& tm) {
     case M36: return os << setw(w) << 36 << " Mbps";
     case M48: return os << setw(w) << 48 << " Mbps";
     case M54: return os << setw(w) << 54 << " Mbps";
+    default: return os << "unknown data rate.";
   }
 }
 
@@ -174,7 +175,7 @@ MSDU::MSDU(unsigned n, Terminal* from , Terminal* to, unsigned priority,
 ////////////////////////////////////////////////////////////////////////////////
 MPDU::MPDU(packet_type tp, Terminal* from, Terminal* to, double p,
            transmission_mode r, timestamp nav)
-           : t(tp), mode(r), tx_power(p), net_all_vec(nav) {
+           :  mode(r), t(tp), tx_power(p), net_all_vec(nav) {
 
   source = from;
   target = to;
@@ -228,8 +229,8 @@ DataMPDU::DataMPDU (unsigned n, Terminal* from, Terminal* to, double p,
                     transmission_mode r, timestamp nav, unsigned priority,
                     unsigned frag, unsigned nfrags,unsigned mid, ACKpolicy apol,
 					bool addP)
-                    : nbytes_data(n), tid(priority), frag_number(frag),
-                      frag_total(nfrags), msdu_id(mid){
+                    : tid(priority), frag_number(frag),
+                      frag_total(nfrags), msdu_id(mid), nbytes_data(n){
 
   t = DATA;
   mode = r;
@@ -293,6 +294,8 @@ ostream& operator << (ostream& os, const MPDU& p) {
     case BA:
           return os << "BA packet " << p.id << " from " << *(p.source) << " to "
                     << *(p.target);
+    default:
+    	return os << "unknown packet type";
   }
 }
 
