@@ -76,12 +76,12 @@ hold on;
 plot(sta,1e3*avgThr_noTXOP,'go');
 
 legend off
-axis([1 15 250 550]);
+axis([1 20 150 550]);
 xlabel('Número de estações');
 ylabel('Throughput Médio [kbps]')
 legend([h1 h2 h3],'Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP',...
     'Location','SouthWest');
-set(gca,'xtick',[1:15]);
+set(gca,'xtick',[1:20]);
 grid on;
 hold off;
 print('-dbmp','thrVSSta');

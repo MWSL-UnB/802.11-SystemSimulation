@@ -52,7 +52,7 @@ set_BA_agg = 1,0;
 % No terminal movement supported so far.
 
 NumberAPs = 1 % number of access points
-NumberStas = 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 % number of mobile terminals 
+NumberStas = 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 % number of mobile terminals 
 Radius = 50 % cell radius in meters
 
 
