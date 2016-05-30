@@ -5,12 +5,14 @@ close all
 
 offeData = 0.5;
 simTime = 1.1;
+numSta = 15;
 
 %% Get Results
 
 resFile = fileread('results.txt');
 resNum = strfind(resFile,'%%%% Final results %%%%');
 resStr = resFile(resNum:end);
+clear resFile;
 
 pckNum = strfind(resStr,'packet length  =');
 pckLen = length('packet length  =');
@@ -43,15 +45,15 @@ pck = pck(1:maxPck);
 
 %With BA and Aggregation
 thr_BA = thr(1:maxPck);
-avgThr_BA = thr_BA;
+avgThr_BA = thr_BA/numSta;
 conf_BA = conf(1:maxPck);
 %Without BA and Aggregation
 thr_noBA = thr(maxPck+1:2*maxPck);
-avgThr_noBA = thr_noBA;
+avgThr_noBA = thr_noBA/numSta;
 conf_noBA = conf(maxPck+1:2*maxPck);
 %Without TXOP
 thr_noTXOP = thr(3*maxPck+1:4*maxPck);
-avgThr_noTXOP = thr_noTXOP;
+avgThr_noTXOP = thr_noTXOP/numSta;
 conf_noTXOP = conf(3*maxPck+1:4*maxPck);
 
 %% Plot

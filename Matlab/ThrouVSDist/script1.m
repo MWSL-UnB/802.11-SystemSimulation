@@ -61,19 +61,19 @@ fitted_BA = fit(cell,1e3*avgThr_BA,'smoothingspline');
 h1 = plot(fitted_BA,'b');
 set(h1,'LineWidth',2);
 hold on;
-plot(cell,1e3*avgThr_BA,'bo');
+%plot(cell,1e3*avgThr_BA,'bo');
 
 fitted_noBA = fit(cell,1e3*avgThr_noBA,'smoothingspline');
 h2 = plot(fitted_noBA,'r');
 set(h2,'LineWidth',2);
 hold on;
-plot(cell,1e3*avgThr_noBA,'ro');
+%plot(cell,1e3*avgThr_noBA,'ro');
 
 fitted_noTXOP = fit(cell,1e3*avgThr_noTXOP,'smoothingspline');
 h3 = plot(fitted_noTXOP,'g');
 set(h3,'LineWidth',2);
 hold on;
-plot(cell,1e3*avgThr_noTXOP,'go');
+%plot(cell,1e3*avgThr_noTXOP,'go');
 
 legend off;
 grid on;
@@ -89,12 +89,12 @@ print('-dbmp','thrVSdist');
 
 avgThr_mean = (avgThr_BA + avgThr_noBA + avgThr_noTXOP)./3;
 
-figure();
+figure(2);
 fitted_mean = fit(cell,1e3*avgThr_mean,'smoothingspline');
 hm = plot(fitted_mean,'b');
 set(hm,'LineWidth',2);
 hold on;
-plot(cell,1e3*avgThr_mean,'bo');
+%plot(cell,1e3*avgThr_mean,'bo');
 
 legend off;
 grid on;
