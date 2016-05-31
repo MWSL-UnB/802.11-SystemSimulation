@@ -57,14 +57,15 @@ const unsigned coding_overhead = 6; // number of termination bits
 ///////////////////////
 double tx_mode_to_double (transmission_mode tm) {
   switch(tm) {
-    case M6 : return  6.0;
-    case M9 : return  9.0;
-    case M12: return 12.0;
-    case M18: return 18.0;
-    case M24: return 24.0;
-    case M36: return 36.0;
-    case M48: return 48.0;
-    case M54: return 54.0;
+    case M6 : return  6.5;
+    case M13: return 13.0;
+    case M19: return 19.5;
+    case M26: return 26.0;
+    case M39: return 39.0;
+    case M52: return 52.0;
+    case M58: return 58.5;
+    case M65: return 65.0;
+    case M78: return 78.0;
     default : return    0;
   }
 }
@@ -77,15 +78,16 @@ ostream& operator<< (ostream& os, const transmission_mode& tm) {
   switch(tm) {
     case OPT: return os << "OPT";
     case SUBOPT: return os << "SUBOPT";
-    case M0 : return os << setw(w) << 0 << " Mbps";
-    case M6 : return os << setw(w) <<  6 << " Mbps";
-    case M9 : return os << setw(w) <<  9 << " Mbps";
-    case M12: return os << setw(w) << 12 << " Mbps";
-    case M18: return os << setw(w) << 18 << " Mbps";
-    case M24: return os << setw(w) << 24 << " Mbps";
-    case M36: return os << setw(w) << 36 << " Mbps";
-    case M48: return os << setw(w) << 48 << " Mbps";
-    case M54: return os << setw(w) << 54 << " Mbps";
+    case M0 : return os << setw(w) << 0    << " Mbps";
+    case M6 : return os << setw(w) << 6.5  << " Mbps";
+    case M13: return os << setw(w) << 13   << " Mbps";
+    case M19: return os << setw(w) << 19.5 << " Mbps";
+    case M26: return os << setw(w) << 26   << " Mbps";
+    case M39: return os << setw(w) << 39   << " Mbps";
+    case M52: return os << setw(w) << 52   << " Mbps";
+    case M58: return os << setw(w) << 58.5 << " Mbps";
+    case M65: return os << setw(w) << 65   << " Mbps";
+    case M78: return os << setw(w) << 78   << " Mbps";
     default: return os << "unknown data rate.";
   }
 }
@@ -100,13 +102,14 @@ istream& operator>> (istream& is, transmission_mode& tm) {
   if (str == "OPT") tm = OPT;
   else if (str == "SUBOPT") tm = SUBOPT;
   else if (str == "M6") tm = M6;
-  else if (str == "M9") tm = M9;
-  else if (str == "M12") tm = M12;
-  else if (str == "M18") tm = M18;
-  else if (str == "M24") tm = M24;
-  else if (str == "M36") tm = M36;
-  else if (str == "M48") tm = M48;
-  else if (str == "M54") tm = M54;
+  else if (str == "M13") tm = M13;
+  else if (str == "M19") tm = M19;
+  else if (str == "M26") tm = M26;
+  else if (str == "M39") tm = M39;
+  else if (str == "M52") tm = M52;
+  else if (str == "M58") tm = M58;
+  else if (str == "M65") tm = M65;
+  else if (str == "M78") tm = M78;
   else is.clear(ios::failbit);
 
   return is;
@@ -124,14 +127,15 @@ timestamp calc_duration (unsigned nbits, transmission_mode mode, bool addPre) {
   unsigned bits_per_symbol;
 
   switch (mode) {
-    case M6  : bits_per_symbol =  24; break;
-    case M9  : bits_per_symbol =  36; break;
-    case M12 : bits_per_symbol =  48; break;
-    case M18 : bits_per_symbol =  72; break;
-    case M24 : bits_per_symbol =  96; break;
-    case M36 : bits_per_symbol = 144; break;
-    case M48 : bits_per_symbol = 192; break;
-    case M54 : bits_per_symbol = 216; break;
+    case M6  : bits_per_symbol =  26; break;
+    case M13 : bits_per_symbol =  52; break;
+    case M19 : bits_per_symbol =  78; break;
+    case M26 : bits_per_symbol = 104; break;
+    case M39 : bits_per_symbol = 156; break;
+    case M52 : bits_per_symbol = 208; break;
+    case M58 : bits_per_symbol = 232; break;
+    case M65 : bits_per_symbol = 260; break;
+    case M78 : bits_per_symbol = 312; break;
     case M0  :
       return timestamp(0);
     default  :

@@ -10,7 +10,7 @@ Confidence = .95 % for calculation of confidence interval (if more than one seed
 Log = SETUP  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or SCHEDULER)
              % unlike the other parameters the simulation will not iterate over this parameter
              % , the log output will be a combination of the desired elements for all iterations
-partResults = 0 % if 1, then results file will contain partial results, for each iteration
+partResults = 1 % if 1, then results file will contain partial results, for each iteration
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -53,7 +53,7 @@ set_BA_agg = 1;
 % No terminal movement supported so far.
 
 NumberAPs = 1 % number of access points
-NumberStas = 2 % number of mobile terminals 
+NumberStas = 1 % number of mobile terminals 
 Radius = 10 % cell radius in meters
 
 
@@ -83,8 +83,8 @@ NumberSinus = 20 % number of sinewaves to emulate Rayleigh fading.
 % PHY Parameters
 
 
-TxMode = M6%M6,M9,M12,M24,M36,M54,OPT,SUBOPT
-          % M6,M9,M12,M18,M24,M36,M48,M54: no link adaptation, always transmit at fixed rate with maximum power
+TxMode = M52%M6,M13,M19,M26,M39,M52,M58,M65,M78,OPT,SUBOPT
+          % M6,M13,M19,M26,M39,M52,M58,M65,M78: no link adaptation, always transmit at fixed rate with maximum power
           % OPT: genie-aided link adaptation
           % SUBOPT: transmitter-based link adaptation
 AdaptMode = RATE  % POWER: minimize power, always transmit at 6Mbps, except if lowest power reached
@@ -123,8 +123,8 @@ PacketLength = 1000 %,500(.3);1000(.2);1500(.3);2100(.2)
   % Number of data bytes in a packet
   % variable-length packets can be considered by giving several lengths with the corresponding
   % probabilities, e.g., 250(.4);1000(.3);2000(.3)
-DataRate = 1 %,2,5%.01,.05,.1,.2,.3,.4,.5,.6,.7,.8 % offered load in Mbps per link
-DownlinkFactor = 1 % offered downstream load is DataRate * DownlinkFactor
+DataRate = 50 %,2,5%.01,.05,.1,.2,.3,.4,.5,.6,.7,.8 % offered load in Mbps per link
+DownlinkFactor = 0 % offered downstream load is DataRate * DownlinkFactor
 UplinkFactor = 1 % offered upstream load is DataRate * UplinkFactor
 ArrivalTime = EXP % arrival time distribution (EXP,CONSTANT)
 
