@@ -127,15 +127,15 @@ timestamp calc_duration (unsigned nbits, transmission_mode mode, bool addPre) {
   unsigned bits_per_symbol;
 
   switch (mode) {
-    case M6  : bits_per_symbol =  26; break;
-    case M13 : bits_per_symbol =  52; break;
-    case M19 : bits_per_symbol =  78; break;
-    case M26 : bits_per_symbol = 104; break;
-    case M39 : bits_per_symbol = 156; break;
-    case M52 : bits_per_symbol = 208; break;
-    case M58 : bits_per_symbol = 232; break;
-    case M65 : bits_per_symbol = 260; break;
-    case M78 : bits_per_symbol = 312; break;
+    case M6  : bits_per_symbol =  28; break;
+    case M13 : bits_per_symbol =  56; break;
+    case M19 : bits_per_symbol =  84; break;
+    case M26 : bits_per_symbol = 113; break;
+    case M39 : bits_per_symbol = 169; break;
+    case M52 : bits_per_symbol = 225; break;
+    case M58 : bits_per_symbol = 253; break;
+    case M65 : bits_per_symbol = 282; break;
+    case M78 : bits_per_symbol = 338; break;
     case M0  :
       return timestamp(0);
     default  :
