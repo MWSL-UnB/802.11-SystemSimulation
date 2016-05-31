@@ -498,8 +498,10 @@ void Simulation::run() {
 	do {
 		n_it++;
 
-		cout << "\n\nIteration " << n_it << "\n    " << sim_par << "\n" << endl;
-		out << "\n\nIteration " << n_it << "\n    " << sim_par << "\n" << endl;
+		if(sim_par.get_partResults()) {
+			cout << "\n\nIteration " << n_it << "\n    " << sim_par << "\n" << endl;
+			out << "\n\nIteration " << n_it << "\n    " << sim_par << "\n" << endl;
+		}
 
 		if (log(log_type::setup))
 			log << "\n\nIteration " << n_it << "\n\t" << sim_par << "\n"
@@ -602,11 +604,13 @@ void Simulation::wrap_up () {
 
 	double ellapsed_time = double(main_sch.now() - sim_par.get_TransientTime());
 
-	out.setf(ios::right | ios::fixed);
-	out << "Term Position  dist. throughput transfer_t tx_time packets"
-			<< " kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power" << endl;
-	out << "        m        m      Mbps         ms      ms           "
-			<< "                                      Mbps        mW" << endl;
+	if(sim_par.get_partResults()) {
+		out.setf(ios::right | ios::fixed);
+		out << "Term Position  dist. throughput transfer_t tx_time packets"
+				<< " kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power" << endl;
+		out << "        m        m      Mbps         ms      ms           "
+				<< "                                      Mbps        mW" << endl;
+	}
 
 	for (vector<Terminal*>::iterator it = term_vector.begin();
 			it != term_vector.end(); ++it) {
@@ -621,57 +625,59 @@ void Simulation::wrap_up () {
 				(*it)->get_overflow_rate(),
 				(*it)->get_queue_length(),
 				(*it)->get_average_power()));
+		if(sim_par.get_partResults()) {
+			out << setw(4) << (*it)->get_id() << " ";
+			out.precision(0);
+			out.width(3);
+			out << (*it)->get_pos();
+			out.precision(1);
+			out << setw(5) << ((*it)->get_pos()).distance();
+			out.precision(3);
+			out << "  " << setw(8) << tp;
+			out.precision(2);
+			out << setw(12) << (*it)->get_transfer_delay() * 1000;
+			out << setw(8) << (*it)->get_transmission_delay() * 1000;
+			out << setw(8) << (*it)->get_n_packets();
+			out << setw(8) << (*it)->get_n_bytes()/1000;
+			out.precision(4);
+			out << setw(8) << (*it)->get_packet_loss_rate();
+			out << setw(9) << (*it)->get_overflow_rate();
+			out.precision(1);
+			out << setw(8) << (*it)->get_queue_length();
+			out.precision(2);
+			out << setw(10) << (*it)->get_tx_data_rate();
+			out.precision(1);
+			out << setw(9) << (*it)->get_average_power();
 
-		out << setw(4) << (*it)->get_id() << " ";
-		out.precision(0);
-		out.width(3);
-		out << (*it)->get_pos();
-		out.precision(1);
-		out << setw(5) << ((*it)->get_pos()).distance();
-		out.precision(3);
-		out << "  " << setw(8) << tp;
-		out.precision(2);
-		out << setw(12) << (*it)->get_transfer_delay() * 1000;
-		out << setw(8) << (*it)->get_transmission_delay() * 1000;
-		out << setw(8) << (*it)->get_n_packets();
-		out << setw(8) << (*it)->get_n_bytes()/1000;
-		out.precision(4);
-		out << setw(8) << (*it)->get_packet_loss_rate();
-		out << setw(9) << (*it)->get_overflow_rate();
-		out.precision(1);
-		out << setw(8) << (*it)->get_queue_length();
-		out.precision(2);
-		out << setw(10) << (*it)->get_tx_data_rate();
-		out.precision(1);
-		out << setw(9) << (*it)->get_average_power();
-
-		out << endl;
+			out << endl;
+		}
 	}
-
-	out.unsetf(ios::right | ios::fixed);
-	out.precision(6);
+	if(sim_par.get_partResults()) {
+		out.unsetf(ios::right | ios::fixed);
+		out.precision(6);
+	}
 
 	res_struct restotal(res.throughput.sum(), res.transfer_time.mean(),
 			res.transfer_time_std.mean(), res.tx_time.mean(),
 			res.tx_time_std.mean(), res.packet_loss_rate.mean(),
 			res.overflow_rate.mean(), res.queue_length.mean(),
 			res.average_power.mean());
+	if(sim_par.get_partResults()) {
+		out << "\n Total throughput = " << restotal.throughput << " Mbps\n";
+		cout << "\nTotal throughput = " << restotal.throughput << " Mbps\n";
 
-	out << "\n Total throughput = " << restotal.throughput << " Mbps\n";
-	cout << "\nTotal throughput = " << restotal.throughput << " Mbps\n";
+		out << " Average transfer time = " << restotal.transfer_time << "s\n";
+		cout << "\nAverage transfer time = " << restotal.transfer_time << "s\n";
 
-	out << " Average transfer time = " << restotal.transfer_time << "s\n";
-	cout << "\nAverage transfer time = " << restotal.transfer_time << "s\n";
+		out << " Average transmission time = " << restotal.tx_time << "s\n";
+		cout << "\nAverage transmission time = " << restotal.tx_time << "s\n";
 
-	out << " Average transmission time = " << restotal.tx_time << "s\n";
-	cout << "\nAverage transmission time = " << restotal.tx_time << "s\n";
+		out << " Packet loss rate = " << restotal.packet_loss_rate << "\n";
+		cout << "\nPacket loss rate = " << restotal.packet_loss_rate << "\n";
 
-	out << " Packet loss rate = " << restotal.packet_loss_rate << "\n";
-	cout << "\nPacket loss rate = " << restotal.packet_loss_rate << "\n";
-
-	out << " Overflow rate = " << restotal.overflow_rate << "\n";
-	cout << "\nOverflow rate = " << restotal.overflow_rate << "\n";
-
+		out << " Overflow rate = " << restotal.overflow_rate << "\n";
+		cout << "\nOverflow rate = " << restotal.overflow_rate << "\n";
+	}
 
 	results.push_back(restotal);
 }

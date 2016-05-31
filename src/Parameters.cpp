@@ -329,6 +329,10 @@ bool Parameters::assign (string s1,string s2) {
 	  which_param = &set_BA_agg;
 	  if (!set_BA_agg.read_vec(s2)) return false;
 
+  } else if (!s1.compare("partResults")) {
+  	  which_param = &partResults;
+  	  if (!partResults.read_vec(s2)) return false;
+
   } else {
     return false;
   }
