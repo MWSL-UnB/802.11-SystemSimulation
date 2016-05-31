@@ -163,6 +163,7 @@ class Parameters {
   timestamp MaxSimTime; // maximum simulation time
   timestamp TempOutputInterval; // interval for temporary outputs and display
   param_vec_log_type  Log;
+  param_vec_bool partResults;
   double Confidence; // for calculation of confidence interval
   timestamp TransientTime; // transient time to be ignored
   
@@ -280,6 +281,7 @@ public:
   double get_ppAC_VO() {return ppAC_VO.current();}
   double get_ppLegacy() {return ppLegacy.current();}
   bool get_set_BA_agg() {return set_BA_agg.current();}
+  bool get_partResults() {return partResults.current();}
 
 
   Position get_APPosition(unsigned which_ap);
