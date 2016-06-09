@@ -37,14 +37,15 @@ class Terminal;
 typedef enum {OPT,    // optimal genie-aided adaptative-rate scheme
 	SUBOPT, // suboptimal transmitter-based scheme
 	M0,     // dummy
-	M6,     // fixed rate, 6Mbps
-	M9,     //           , 9Mbps
-	M12,    //           , 12Mbps
-	M18,    //           , 18Mbps
-	M24,    //           , 24Mbps
-	M36,    //           , 36Mbps
-	M48,    //           , 48Mbps
-	M54     //           , 54Mbps
+	M6,     // fixed rate, 6.5Mbps
+	M13,    //           , 13Mbps
+	M19,    //           , 19.5Mbps
+	M26,    //           , 26Mbps
+	M39,    //           , 39Mbps
+	M52,    //           , 52Mbps
+	M58,    //           , 58Mbps
+	M65,    //           , 65Mbps
+	M78     //           , 78Mbps
 } transmission_mode;
 
 typedef enum {
@@ -61,7 +62,7 @@ inline transmission_mode& operator--(transmission_mode& tm) {
 }
 
 inline transmission_mode& operator++(transmission_mode& tm) {
-    return tm = (tm <= SUBOPT || tm == M54)? tm : transmission_mode(tm+1);
+    return tm = (tm <= SUBOPT || tm == M78)? tm : transmission_mode(tm+1);
 }
 
 ostream& operator<< (ostream& os, const transmission_mode& tm);

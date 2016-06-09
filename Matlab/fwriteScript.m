@@ -4,8 +4,8 @@ close all
 
 %%
 
-kmax = 2300;
-kmin = 10;
+kmax = 50;
+kmin = 1;
 
 fid = fopen('nums.txt','w');
 for k = kmin:kmin:kmax

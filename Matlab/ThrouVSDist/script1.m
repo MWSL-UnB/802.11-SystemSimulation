@@ -11,6 +11,7 @@ simTime = 1.1;
 resFile = fileread('results.txt');
 resNum = strfind(resFile,'%%%% Final results %%%%');
 resStr = resFile(resNum:end);
+clear resFile;
 
 cellNum = strfind(resStr,'cell radius    =');
 cellLen = length('cell radius    =');
@@ -57,19 +58,19 @@ conf_noTXOP = conf(3*maxCell+1:4*maxCell);
 
 %% Plot
 
-fitted_BA = fit(cell,1e3*avgThr_BA,'smoothingspline');
+fitted_BA = fit(cell,1e3*avgThr_BA,'smoothingspline','SmoothingParam',0.01);
 h1 = plot(fitted_BA,'b');
 set(h1,'LineWidth',2);
 hold on;
 %plot(cell,1e3*avgThr_BA,'bo');
 
-fitted_noBA = fit(cell,1e3*avgThr_noBA,'smoothingspline');
+fitted_noBA = fit(cell,1e3*avgThr_noBA,'smoothingspline','SmoothingParam',0.01);
 h2 = plot(fitted_noBA,'r');
 set(h2,'LineWidth',2);
 hold on;
 %plot(cell,1e3*avgThr_noBA,'ro');
 
-fitted_noTXOP = fit(cell,1e3*avgThr_noTXOP,'smoothingspline');
+fitted_noTXOP = fit(cell,1e3*avgThr_noTXOP,'smoothingspline','SmoothingParam',0.01);
 h3 = plot(fitted_noTXOP,'g');
 set(h3,'LineWidth',2);
 hold on;
@@ -90,7 +91,7 @@ print('-dbmp','thrVSdist');
 avgThr_mean = (avgThr_BA + avgThr_noBA + avgThr_noTXOP)./3;
 
 figure(2);
-fitted_mean = fit(cell,1e3*avgThr_mean,'smoothingspline');
+fitted_mean = fit(cell,1e3*avgThr_mean,'smoothingspline','SmoothingParam',0.01);
 hm = plot(fitted_mean,'b');
 set(hm,'LineWidth',2);
 hold on;
