@@ -67,13 +67,13 @@ fitted_noBA = fit(sta,1e3*avgThr_noBA,'smoothingspline');
 h2 = plot(fitted_noBA,'r-');
 set(h2,'LineWidth',2);
 hold on;
-plot(sta,1e3*avgThr_noBA,'ro');
+plot(sta,1e3*avgThr_noBA,'r+');
 
 fitted_noTXOP = fit(sta,1e3*avgThr_noTXOP,'smoothingspline');
 h3 = plot(fitted_noTXOP,'g-');
 set(h3,'LineWidth',2);
 hold on;
-plot(sta,1e3*avgThr_noTXOP,'go');
+plot(sta,1e3*avgThr_noTXOP,'g*');
 
 legend off
 axis([1 20 150 550]);
@@ -81,7 +81,7 @@ xlabel('Número de estações');
 ylabel('Throughput Médio [kbps]')
 legend([h1 h2 h3],'Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP',...
     'Location','SouthWest');
-set(gca,'xtick',[1:20]);
+set(gca,'xtick',1:50);
 grid on;
 hold off;
 print('-dbmp','thrVSSta');
