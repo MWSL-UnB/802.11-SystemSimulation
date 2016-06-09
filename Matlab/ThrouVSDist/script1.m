@@ -79,7 +79,7 @@ hold on;
 legend off;
 grid on;
 legend([h1 h2 h3],'Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP','Location','SouthWest')
-axis([5 170 0 550]);
+axis([5 250 0 550]);
 xlabel('Distância da estação ao ponto de acesso [m]');
 ylabel('Throughput médio [kbps]');
 hold off;
@@ -99,7 +99,7 @@ hold on;
 
 legend off;
 grid on;
-axis([5 170 0 550]);
+axis([5 250 0 550]);
 xlabel('Distância da estação ao ponto de acesso [m]');
 ylabel('Throughput médio [kbps]');
 hold off;
