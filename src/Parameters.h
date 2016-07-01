@@ -41,6 +41,17 @@
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
+// Standard to be simulated
+////////////////////////////////////////////////////////////////////////////////
+typedef enum{
+	dot11a,
+	dot11ac,
+	dot11ah
+}stand;
+
+istream& operator>> (istream& is, stand& tm);
+
+////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 // class param_vec                                                            //
 //                                                                            //
@@ -130,6 +141,7 @@ typedef param_vec_<unsigned long> param_vec_unsigned_long;
 typedef param_vec_<discrete_prob> param_vec_discrete_prob;
 typedef param_vec_<log_type> param_vec_log_type;
 typedef param_vec_<Position> param_vec_Position;
+typedef param_vec_<stand> param_vec_stand;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -167,6 +179,10 @@ class Parameters {
   double Confidence; // for calculation of confidence interval
   timestamp TransientTime; // transient time to be ignored
   
+  ////////////////////////////////
+  // standard
+  param_vec_stand dot11std;
+
   ///////////////////////
   // system configuration
   param_vec_unsigned NumberAPs; // number of access points

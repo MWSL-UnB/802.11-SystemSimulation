@@ -12,9 +12,13 @@ Log = SETUP  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or
              % , the log output will be a combination of the desired elements for all iterations
 partResults = 1 % if 1, then results file will contain partial results, for each iteration
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Standard (802.11a, 802.11ac or 802.11ah)
+
+dot11std = 802.11ac
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% all following parameters accept comma-separated multiple values for several iterations
+% All following parameters accept comma-separated multiple values for several iterations
 % The innermost iteration loop is always over the seeds, followed by the last defined parameter.
 
 

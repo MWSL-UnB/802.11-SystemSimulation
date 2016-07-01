@@ -333,6 +333,10 @@ bool Parameters::assign (string s1,string s2) {
   	  which_param = &partResults;
   	  if (!partResults.read_vec(s2)) return false;
 
+  } else if (!s1.compare("dot11std")) {
+	  which_param = &dot11std;
+	  if (!dot11std.read_vec(s2)) return false;
+
   } else {
     return false;
   }
@@ -587,3 +591,17 @@ vector<string> Parameters::get_param_str(unsigned field_width,
   return vec;
 }
 
+///////////////////////
+// input operator >> //
+///////////////////////
+istream& operator>> (istream& is, stand& st) {
+  string str;
+  is >> str;
+
+  if (str == "802.11a") st = dot11a;
+  else if (str == "802.11ac") st = dot11ac;
+  else if (str == "802.11ah") st = dot11ah;
+  else is.clear(ios::failbit);
+
+  return is;
+}

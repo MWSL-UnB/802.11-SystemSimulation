@@ -34,11 +34,20 @@ pckStr = resStr(pckInt(1):pckInt(2));
 thrStr = resStr(thrInt(1):thrInt(2));
 confStr = resStr(confInt(1):confInt(2));
 
-pck = (10:10:1000)';
+pck = (10:10:2050)';
 thr = textscan(thrStr,'%f');
 thr = thr{1};
 conf = textscan(confStr,'%f');
 conf = conf{1};
+
+switch numSta
+    case 1
+        thr = thr(1:end/2);
+        conf = conf(1:end/2);
+    case 15
+        thr = thr(end/2+1:end);
+        conf = conf(end/2+1:end);
+end
 
 [~,maxPck] = max(pck);
 pck = pck(1:maxPck);
@@ -58,23 +67,25 @@ conf_noTXOP = conf(3*maxPck+1:4*maxPck);
 
 %% Plot
 
+dtPt = 3;
+
 fitted_BA = fit(pck,1e3*avgThr_BA,'smoothingspline');
 h1 = plot(fitted_BA,'b');
 set(h1,'LineWidth',2);
 hold on;
-plot(pck,1e3*avgThr_BA,'bo');
+plot(pck(1:dtPt:end),1e3*avgThr_BA(1:dtPt:end),'bo');
 
 fitted_noBA = fit(pck,1e3*avgThr_noBA,'smoothingspline');
 h2 = plot(fitted_noBA,'r');
 set(h2,'LineWidth',2);
 hold on;
-plot(pck,1e3*avgThr_noBA,'ro');
+plot(pck(1:dtPt:end),1e3*avgThr_noBA(1:dtPt:end),'ro');
 
 fitted_noTXOP = fit(pck,1e3*avgThr_noTXOP,'smoothingspline');
 h3 = plot(fitted_noTXOP,'g');
 set(h3,'LineWidth',2);
 hold on;
-plot(pck,1e3*avgThr_noTXOP,'go');
+plot(pck(1:dtPt:end),1e3*avgThr_noTXOP(1:dtPt:end),'go');
 
 legend off;
 xlabel('Dados por pacote [Bytes]');
@@ -84,7 +95,7 @@ axis tight;
 hold off;
 legend([h1 h2 h3],'Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP',...
     'Location','SouthEast')
-
+axis([0 2000 0 350]);
 print('-dbmp','thrVSPckSz');
 
 %% Save data
