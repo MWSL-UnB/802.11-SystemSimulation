@@ -413,6 +413,8 @@ void Parameters::default_config () {
 
   set_BA_agg.init("BA and Aggregation Flag",false);
 
+  dot11std.init("802.11 Standard",dot11a);
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
