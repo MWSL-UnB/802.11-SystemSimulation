@@ -1,7 +1,7 @@
 
 
 Iteration 1
-	
+	seed = 1 
 
 Access Point 0 created at position (0;0)
 
@@ -10,4 +10,121 @@ Mobile station AC: AC_VI. Access Point AC: AC_VI.
 
 Access Point 0 is connected to Mobile Station 1
 Mobile Station 1 is connected to Access Point 0
+
+
+
+Iteration 2
+	seed = 2 
+
+Access Point 2 created at position (0;0)
+
+Mobile Station 3 created at position (10;0) with distance 10 m to Access Point 2
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 2 is connected to Mobile Station 3
+Mobile Station 3 is connected to Access Point 2
+
+
+
+Iteration 3
+	seed = 3 
+
+Access Point 4 created at position (0;0)
+
+Mobile Station 5 created at position (10;0) with distance 10 m to Access Point 4
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 4 is connected to Mobile Station 5
+Mobile Station 5 is connected to Access Point 4
+
+
+
+Iteration 4
+	seed = 4 
+
+Access Point 6 created at position (0;0)
+
+Mobile Station 7 created at position (10;0) with distance 10 m to Access Point 6
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 6 is connected to Mobile Station 7
+Mobile Station 7 is connected to Access Point 6
+
+
+
+Iteration 5
+	seed = 5 
+
+Access Point 8 created at position (0;0)
+
+Mobile Station 9 created at position (10;0) with distance 10 m to Access Point 8
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 8 is connected to Mobile Station 9
+Mobile Station 9 is connected to Access Point 8
+
+
+
+Iteration 6
+	seed = 6 
+
+Access Point 10 created at position (0;0)
+
+Mobile Station 11 created at position (10;0) with distance 10 m to Access Point 10
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 10 is connected to Mobile Station 11
+Mobile Station 11 is connected to Access Point 10
+
+
+
+Iteration 7
+	seed = 7 
+
+Access Point 12 created at position (0;0)
+
+Mobile Station 13 created at position (10;0) with distance 10 m to Access Point 12
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 12 is connected to Mobile Station 13
+Mobile Station 13 is connected to Access Point 12
+
+
+
+Iteration 8
+	seed = 8 
+
+Access Point 14 created at position (0;0)
+
+Mobile Station 15 created at position (10;0) with distance 10 m to Access Point 14
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 14 is connected to Mobile Station 15
+Mobile Station 15 is connected to Access Point 14
+
+
+
+Iteration 9
+	seed = 9 
+
+Access Point 16 created at position (0;0)
+
+Mobile Station 17 created at position (10;0) with distance 10 m to Access Point 16
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 16 is connected to Mobile Station 17
+Mobile Station 17 is connected to Access Point 16
+
+
+
+Iteration 10
+	seed = 10 
+
+Access Point 18 created at position (0;0)
+
+Mobile Station 19 created at position (10;0) with distance 10 m to Access Point 18
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 18 is connected to Mobile Station 19
+Mobile Station 19 is connected to Access Point 18
 

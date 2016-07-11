@@ -592,18 +592,3 @@ vector<string> Parameters::get_param_str(unsigned field_width,
 
   return vec;
 }
-
-///////////////////////
-// input operator >> //
-///////////////////////
-istream& operator>> (istream& is, dot11_standard& st) {
-  string str;
-  is >> str;
-
-  if (str == "802.11a") st = dot11a;
-  else if (str == "802.11ac") st = dot11ac;
-  else if (str == "802.11ah") st = dot11ah;
-  else is.clear(ios::failbit);
-
-  return is;
-}
