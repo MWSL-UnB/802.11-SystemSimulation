@@ -30,6 +30,7 @@
 ostream& operator<< (ostream& os, const dot11_standard& st) {
   switch(st) {
     case dot11a : return os << "802.11a";
+    case dot11n : return os << "802.11n";
     case dot11ac: return os << "802.11ac";
     case dot11ah: return os << "802.11ah";
     default: return os << "unknown standard.";
@@ -44,6 +45,7 @@ istream& operator>> (istream& is, dot11_standard& st) {
   is >> str;
 
   if (str == "802.11a") st = dot11a;
+  else if (str == "802.11n") st = dot11n;
   else if (str == "802.11ac") st = dot11ac;
   else if (str == "802.11ah") st = dot11ah;
   else is.clear(ios::failbit);

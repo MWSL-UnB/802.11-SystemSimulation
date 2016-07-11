@@ -32,11 +32,25 @@ using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
 typedef enum{
 	dot11a,
+	dot11n,
 	dot11ac,
 	dot11ah
 }dot11_standard;
 
 ostream& operator<< (ostream& os, const dot11_standard& st);
 istream& operator>> (istream& is, dot11_standard& st);
+
+////////////////////////////////////////////////////////////////////////////////
+// class Standard                                                             //
+////////////////////////////////////////////////////////////////////////////////
+class Standard {
+protected:
+	dot11_standard currentStd;
+
+public:
+	Standard(dot11_standard st) {
+		currentStd = st;
+	}
+};
 
 #endif /* STANDARD_H_ */
