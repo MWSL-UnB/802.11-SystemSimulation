@@ -47,9 +47,9 @@ typedef enum{
 	dot11a,
 	dot11ac,
 	dot11ah
-}stand;
+}dot11_standard;
 
-istream& operator>> (istream& is, stand& tm);
+istream& operator>> (istream& is, dot11_standard& tm);
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -141,7 +141,7 @@ typedef param_vec_<unsigned long> param_vec_unsigned_long;
 typedef param_vec_<discrete_prob> param_vec_discrete_prob;
 typedef param_vec_<log_type> param_vec_log_type;
 typedef param_vec_<Position> param_vec_Position;
-typedef param_vec_<stand> param_vec_stand;
+typedef param_vec_<dot11_standard> param_vec_dot11_standard;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -181,7 +181,7 @@ class Parameters {
   
   ////////////////////////////////
   // standard
-  param_vec_stand dot11std;
+  param_vec_dot11_standard standard;
 
   ///////////////////////
   // system configuration

@@ -333,9 +333,9 @@ bool Parameters::assign (string s1,string s2) {
   	  which_param = &partResults;
   	  if (!partResults.read_vec(s2)) return false;
 
-  } else if (!s1.compare("dot11std")) {
-	  which_param = &dot11std;
-	  if (!dot11std.read_vec(s2)) return false;
+  } else if (!s1.compare("Standard")) {
+	  which_param = &standard;
+	  if (!standard.read_vec(s2)) return false;
 
   } else {
     return false;
@@ -413,7 +413,7 @@ void Parameters::default_config () {
 
   set_BA_agg.init("BA and Aggregation Flag",false);
 
-  dot11std.init("802.11 Standard",dot11a);
+  standard.init("802.11 Standard",dot11a);
 
 }
 
@@ -596,7 +596,7 @@ vector<string> Parameters::get_param_str(unsigned field_width,
 ///////////////////////
 // input operator >> //
 ///////////////////////
-istream& operator>> (istream& is, stand& st) {
+istream& operator>> (istream& is, dot11_standard& st) {
   string str;
   is >> str;
 

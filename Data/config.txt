@@ -15,7 +15,7 @@ partResults = 1 % if 1, then results file will contain partial results, for each
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Standard (802.11a, 802.11ac or 802.11ah)
 
-dot11std = 802.11ac
+Standard = 802.11ac
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % All following parameters accept comma-separated multiple values for several iterations
