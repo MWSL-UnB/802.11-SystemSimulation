@@ -23,7 +23,9 @@
 #ifndef STANDARD_H_
 #define STANDARD_H_ 1
 
-#include "Packet.h"
+#include <iostream>
+
+using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Standard to be simulated
@@ -34,6 +36,7 @@ typedef enum{
 	dot11ah
 }dot11_standard;
 
-istream& operator>> (istream& is, dot11_standard& tm);
+ostream& operator<< (ostream& os, const dot11_standard& st);
+istream& operator>> (istream& is, dot11_standard& st);
 
 #endif /* STANDARD_H_ */

@@ -288,6 +288,7 @@ public:
   double get_ppLegacy() {return ppLegacy.current();}
   bool get_set_BA_agg() {return set_BA_agg.current();}
   bool get_partResults() {return partResults.current();}
+  dot11_standard get_standard() {return standard.current();}
 
 
   Position get_APPosition(unsigned which_ap);

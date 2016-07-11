@@ -606,6 +606,7 @@ void Simulation::wrap_up () {
 
 	if(sim_par.get_partResults()) {
 		out.setf(ios::right | ios::fixed);
+		out << sim_par.get_standard() << endl;
 		out << "Term Position  dist. throughput transfer_t tx_time packets"
 				<< " kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power" << endl;
 		out << "        m        m      Mbps         ms      ms           "

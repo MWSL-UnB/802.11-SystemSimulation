@@ -20,7 +20,21 @@
 * THE SOFTWARE.
 */
 
+#include <iostream>
+
 #include "Standard.h"
+
+////////////////////////
+// output operator<<  //
+////////////////////////
+ostream& operator<< (ostream& os, const dot11_standard& st) {
+  switch(st) {
+    case dot11a : return os << "802.11a";
+    case dot11ac: return os << "802.11ac";
+    case dot11ah: return os << "802.11ah";
+    default: return os << "unknown standard.";
+  }
+}
 
 ///////////////////////
 // input operator >> //
