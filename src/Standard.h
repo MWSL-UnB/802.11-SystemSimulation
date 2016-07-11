@@ -45,10 +45,10 @@ istream& operator>> (istream& is, dot11_standard& st);
 ////////////////////////////////////////////////////////////////////////////////
 class Standard {
 protected:
-	dot11_standard currentStd;
+	static dot11_standard currentStd;
 
 public:
-	Standard(dot11_standard st) {
+	void static set_standard(dot11_standard st) {
 		currentStd = st;
 	}
 };
