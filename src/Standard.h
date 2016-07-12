@@ -31,6 +31,7 @@ using namespace std;
 // Standard to be simulated
 ////////////////////////////////////////////////////////////////////////////////
 typedef enum{
+	dot11, //dummy
 	dot11a,
 	dot11n,
 	dot11ac,
