@@ -24,6 +24,19 @@
 
 #include "Standard.h"
 
+// Static member variables need to be defined outside the class
+dot11_standard Standard::currentStd = dot11a;
+
+////////////////////////////////
+// Standard setter and getter //
+////////////////////////////////
+void Standard::set_standard(dot11_standard st) {
+	currentStd = st;
+}
+dot11_standard Standard::get_standard() {
+	return currentStd;
+}
+
 ////////////////////////
 // output operator<<  //
 ////////////////////////

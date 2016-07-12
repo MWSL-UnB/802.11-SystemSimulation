@@ -44,13 +44,12 @@ istream& operator>> (istream& is, dot11_standard& st);
 // class Standard                                                             //
 ////////////////////////////////////////////////////////////////////////////////
 class Standard {
-protected:
+private:
 	static dot11_standard currentStd;
 
 public:
-	void static set_standard(dot11_standard st) {
-		currentStd = st;
-	}
+	static void set_standard(dot11_standard st);
+	static dot11_standard get_standard();
 };
 
 #endif /* STANDARD_H_ */
