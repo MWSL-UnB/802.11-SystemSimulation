@@ -25,6 +25,8 @@
 
 #include <iostream>
 
+#include "Packet.h"
+
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,10 +49,12 @@ istream& operator>> (istream& is, dot11_standard& st);
 class Standard {
 private:
 	static dot11_standard currentStd;
+	static transmission_mode maxMCS;
 
 public:
 	static void set_standard(dot11_standard st);
 	static dot11_standard get_standard();
+	static transmission_mode get_maxMCS();
 };
 
 #endif /* STANDARD_H_ */

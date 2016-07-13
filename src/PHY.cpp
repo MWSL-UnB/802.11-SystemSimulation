@@ -24,9 +24,9 @@
 #include "Channel.h"
 #include "PHY.h"
 #include "Profiler.h"
+#include "Standard.h"
 
 #include <math.h>
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
@@ -245,7 +245,7 @@ transmission_mode PHY::opt_mode(Terminal* t1, unsigned pack_len,
                                 double per_target, double power) {
 BEGIN_PROF("PHY::opt_mode")
 
-  transmission_mode mode = MCS8;
+  transmission_mode mode = Standard::get_maxMCS();
   unsigned nbits = (DataMPDU(pack_len)).get_nbits();
   double SNR = power - ch->get_path_loss(t1->get_phy(), this)
                      - NoiseVariance_dBm;

@@ -28,6 +28,7 @@
 #include <vector>
 
 class Terminal;
+class Standard;
 
 ////////////////////////////////////////////////////////////////////////////////
 // enum transmission_mode                                                     //
@@ -63,7 +64,7 @@ inline transmission_mode& operator--(transmission_mode& tm) {
 }
 
 inline transmission_mode& operator++(transmission_mode& tm) {
-    return tm = (tm <= SUBOPT || tm == MCS0)? tm : transmission_mode(tm+1);
+    return tm = (tm <= SUBOPT || MCS9)? tm : transmission_mode(tm+1);
 }
 
 ostream& operator<< (ostream& os, const transmission_mode& tm);

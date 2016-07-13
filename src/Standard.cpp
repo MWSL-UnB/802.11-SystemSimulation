@@ -23,18 +23,32 @@
 #include <iostream>
 
 #include "Standard.h"
+#include "Packet.h"
 
 // Static member variables need to be defined outside the class
 dot11_standard Standard::currentStd = dot11;
+transmission_mode Standard::maxMCS = MCS;
 
-////////////////////////////////
-// Standard setter and getter //
-////////////////////////////////
+//////////////////////////////////
+// Standard setters and getters //
+//////////////////////////////////
 void Standard::set_standard(dot11_standard st) {
 	currentStd = st;
+
+	switch(st) {
+	case dot11a : maxMCS = MCS7; break;
+	case dot11n : maxMCS = MCS7; break;
+	case dot11ac: maxMCS = MCS9; break;
+	case dot11ah: maxMCS = MCS9; break;
+	default : maxMCS = MCS;
+	}
+
 }
 dot11_standard Standard::get_standard() {
 	return currentStd;
+}
+transmission_mode Standard::get_maxMCS(){
+	return maxMCS;
 }
 
 ////////////////////////

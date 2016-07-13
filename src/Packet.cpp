@@ -26,7 +26,7 @@
 #include <iostream>
 #include <iomanip>
 
-
+#include "Standard.h"
 #include "Terminal.h"
 
 //////////////////////

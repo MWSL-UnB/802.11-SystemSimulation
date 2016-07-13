@@ -23,6 +23,7 @@
 #include "link_adapt.h"
 #include "Terminal.h"
 #include "Profiler.h"
+#include "Standard.h"
 
 unsigned LA_max_success_counter_LOW = 10;
 unsigned LA_max_success_counter_HIGH = 3;
@@ -315,7 +316,7 @@ BEGIN_PROF("link_adapt::success")
     succeed_counter = 0;
     
     if (adapt == RATE || power_dBm - pstep_d < pmin) {
-      ++current_mode;
+      if(current_mode != Standard::get_maxMCS()) ++current_mode;
 
       if (logflag) *mylog << "    increase tx rate to " << current_mode << endl;
     } else {
