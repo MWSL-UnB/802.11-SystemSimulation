@@ -56,9 +56,6 @@ typedef enum {
 	blockACK
 } ACKpolicy;
 
-double tx_mode_to_double (transmission_mode tm);
-// conversion to double
-
 inline transmission_mode& operator--(transmission_mode& tm) {
     return tm = (tm <= MCS0)? tm : transmission_mode(tm-1);
 }

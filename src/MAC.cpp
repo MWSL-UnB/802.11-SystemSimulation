@@ -24,6 +24,7 @@
 #include "PHY.h"
 #include "Terminal.h"
 #include "Profiler.h"
+#include "Standard.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // IEEE 802.11a constant parameters                                           //
@@ -167,7 +168,7 @@ void MAC_private::ack_timed_out () {
 	rate_adapt_file_rt << setw(10) << double(t_aux) << ','
 			<< setw(6) << get_id() << ','
 			<< setw(6) << (msdu.get_target())->get_id() << ','
-			<< setw(6) << tx_mode_to_double(pck.get_mode()) << ','
+			<< setw(6) << Standard::tx_mode_to_double(pck.get_mode()) << ','
 			<< 0 << endl;
 #endif
 
@@ -354,7 +355,7 @@ void MAC_private::cts_timed_out () {
 	rate_adapt_file_rt << setw(10) << double(t_aux) << ','
 			<< setw(6) << get_id() << ','
 			<< setw(6) << (msdu.get_target())->get_id() << ','
-			<< setw(6) << tx_mode_to_double(pck.get_mode()) << ','
+			<< setw(6) << Standard::tx_mode_to_double(pck.get_mode()) << ','
 			<< -1 << endl;
 #endif
 
@@ -586,7 +587,7 @@ void MAC_private::receive_this(MPDU p) {
 		rate_adapt_file_rt << setw(10) << double(t_aux) << ','
 				<< setw(6) << get_id() << ','
 				<< setw(6) << (msdu.get_target())->get_id() << ','
-				<< setw(6) << tx_mode_to_double(pck.get_mode()) << ','
+				<< setw(6) << Standard::tx_mode_to_double(pck.get_mode()) << ','
 				<< 1 << endl;
 #endif
 
@@ -865,7 +866,7 @@ void MAC_private::send_data() {
 	NAV = ptr2sch->now() + pck.get_duration();
 
 	n_att_frags++;
-	tx_data_rate += tx_mode_to_double(pck.get_mode());
+	tx_data_rate += Standard::tx_mode_to_double(pck.get_mode());
 
 	myphy->phyTxStartReq(pck,true);
 

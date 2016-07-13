@@ -24,6 +24,7 @@
 
 #include "Standard.h"
 #include "Packet.h"
+#include "myexception.h"
 
 // Static member variables need to be defined outside the class
 dot11_standard Standard::currentStd = dot11;
@@ -49,6 +50,69 @@ dot11_standard Standard::get_standard() {
 }
 transmission_mode Standard::get_maxMCS(){
 	return maxMCS;
+}
+
+///////////////////////
+// tx_mode_to_double //
+///////////////////////
+double Standard::tx_mode_to_double (transmission_mode tm) {
+	switch(currentStd) {
+	case dot11a: {
+		switch(tm) {
+		case MCS0: return 6;
+		case MCS1: return 9;
+		case MCS2: return 12;
+		case MCS3: return 18;
+		case MCS4: return 24;
+		case MCS5: return 36;
+		case MCS6: return 48;
+		case MCS7: return 54;
+		default : throw (my_exception("MCS not supported by standard."));
+		}
+	}
+	case dot11n: {
+		switch(tm) {
+		case MCS0: return  6.5;
+		case MCS1: return 13.0;
+		case MCS2: return 19.5;
+		case MCS3: return 26.0;
+		case MCS4: return 39.0;
+		case MCS5: return 52.0;
+		case MCS6: return 58.5;
+		case MCS7: return 65.0;
+		default : throw (my_exception("MCS not supported by standard."));
+		}
+	}
+	case dot11ac: {
+		switch(tm) {
+		case MCS0: return  6.5;
+		case MCS1: return 13.0;
+		case MCS2: return 19.5;
+		case MCS3: return 26.0;
+		case MCS4: return 39.0;
+		case MCS5: return 52.0;
+		case MCS6: return 58.5;
+		case MCS7: return 65.0;
+		case MCS8: return 78.0;
+		default : throw (my_exception("MCS not supported by standard."));
+		}
+	}
+	case dot11ah: {
+		switch(tm) {
+		case MCS0: return 0.65;
+		case MCS1: return 1.30;
+		case MCS2: return 1.95;
+		case MCS3: return 2.60;
+		case MCS4: return 3.90;
+		case MCS5: return 5.20;
+		case MCS6: return 5.85;
+		case MCS7: return 6.50;
+		case MCS8: return 7.80;
+		default : throw (my_exception("MCS not supported by standard."));
+		}
+	}
+	default: throw (my_exception("Undefined Standard."));
+	}
 }
 
 ////////////////////////

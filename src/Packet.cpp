@@ -52,25 +52,6 @@ const unsigned coding_overhead = 6; // number of termination bits
 // enum transmission_mode                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////
-// tx_mode_to_double //
-///////////////////////
-double tx_mode_to_double (transmission_mode tm) {
-  switch(tm) {
-    case MCS0 : return  6.5;
-    case MCS1: return 13.0;
-    case MCS2: return 19.5;
-    case MCS3: return 26.0;
-    case MCS4: return 39.0;
-    case MCS5: return 52.0;
-    case MCS6: return 58.5;
-    case MCS7: return 65.0;
-    case MCS8: return 78.0;
-    case MCS9: return 0;
-    default : return    0;
-  }
-}
-
 ////////////////////////
 // output operator << //
 ////////////////////////
