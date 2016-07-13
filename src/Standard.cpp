@@ -59,6 +59,7 @@ double Standard::tx_mode_to_double (transmission_mode tm) {
 	switch(currentStd) {
 	case dot11a: {
 		switch(tm) {
+		case MCS : return 0;
 		case MCS0: return 6;
 		case MCS1: return 9;
 		case MCS2: return 12;
@@ -72,6 +73,7 @@ double Standard::tx_mode_to_double (transmission_mode tm) {
 	}
 	case dot11n: {
 		switch(tm) {
+		case MCS : return 0;
 		case MCS0: return  6.5;
 		case MCS1: return 13.0;
 		case MCS2: return 19.5;
@@ -85,7 +87,8 @@ double Standard::tx_mode_to_double (transmission_mode tm) {
 	}
 	case dot11ac: {
 		switch(tm) {
-		case MCS0: return  6.5;
+		case MCS : return 0;
+		case MCS0: return 6.5;
 		case MCS1: return 13.0;
 		case MCS2: return 19.5;
 		case MCS3: return 26.0;
@@ -99,6 +102,7 @@ double Standard::tx_mode_to_double (transmission_mode tm) {
 	}
 	case dot11ah: {
 		switch(tm) {
+		case MCS : return 0;
 		case MCS0: return 0.65;
 		case MCS1: return 1.30;
 		case MCS2: return 1.95;

@@ -60,18 +60,7 @@ ostream& operator<< (ostream& os, const transmission_mode& tm) {
   switch(tm) {
     case OPT: return os << "OPT";
     case SUBOPT: return os << "SUBOPT";
-    case MCS  : return os << setw(w) << 0    << " Mbps";
-    case MCS0 : return os << setw(w) << 6.5  << " Mbps";
-    case MCS1: return os << setw(w) << 13   << " Mbps";
-    case MCS2: return os << setw(w) << 19.5 << " Mbps";
-    case MCS3: return os << setw(w) << 26   << " Mbps";
-    case MCS4: return os << setw(w) << 39   << " Mbps";
-    case MCS5: return os << setw(w) << 52   << " Mbps";
-    case MCS6: return os << setw(w) << 58.5 << " Mbps";
-    case MCS7: return os << setw(w) << 65   << " Mbps";
-    case MCS8: return os << setw(w) << 78   << " Mbps";
-    case MCS9: return os << setw(w) << 0    << " Mbps";
-    default: return os << "unknown data rate.";
+    default: return os << setw(w) << Standard::tx_mode_to_double(tm) << " Mbps";
   }
 }
 
