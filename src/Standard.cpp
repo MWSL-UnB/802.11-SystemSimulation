@@ -38,8 +38,8 @@ void Standard::set_standard(dot11_standard st) {
 	switch(st) {
 	case dot11a : maxMCS = MCS7; break;
 	case dot11n : maxMCS = MCS7; break;
-	case dot11ac: maxMCS = MCS9; break;
-	case dot11ah: maxMCS = MCS9; break;
+	case dot11ac: maxMCS = MCS8; break;
+	case dot11ah: maxMCS = MCS8; break;
 	default : maxMCS = MCS;
 	}
 

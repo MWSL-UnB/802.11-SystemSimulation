@@ -524,6 +524,8 @@ void Simulation::run() {
 		randgent.seed(sim_par.get_Seed());
 
 		Standard::set_standard(sim_par.get_standard());
+		if(sim_par.get_TxMode() > Standard::get_maxMCS())
+			throw (my_exception("MCS not supported by standard."));
 
 		channel_struct ch_par(sim_par.get_LossExponent(),
 				sim_par.get_RefLoss(),
