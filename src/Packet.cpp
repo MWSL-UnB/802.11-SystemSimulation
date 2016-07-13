@@ -57,15 +57,16 @@ const unsigned coding_overhead = 6; // number of termination bits
 ///////////////////////
 double tx_mode_to_double (transmission_mode tm) {
   switch(tm) {
-    case M6 : return  6.5;
-    case M13: return 13.0;
-    case M19: return 19.5;
-    case M26: return 26.0;
-    case M39: return 39.0;
-    case M52: return 52.0;
-    case M58: return 58.5;
-    case M65: return 65.0;
-    case M78: return 78.0;
+    case MCS0 : return  6.5;
+    case MCS1: return 13.0;
+    case MCS2: return 19.5;
+    case MCS3: return 26.0;
+    case MCS4: return 39.0;
+    case MCS5: return 52.0;
+    case MCS6: return 58.5;
+    case MCS7: return 65.0;
+    case MCS8: return 78.0;
+    case MCS9: return 0;
     default : return    0;
   }
 }
@@ -78,16 +79,17 @@ ostream& operator<< (ostream& os, const transmission_mode& tm) {
   switch(tm) {
     case OPT: return os << "OPT";
     case SUBOPT: return os << "SUBOPT";
-    case M0 : return os << setw(w) << 0    << " Mbps";
-    case M6 : return os << setw(w) << 6.5  << " Mbps";
-    case M13: return os << setw(w) << 13   << " Mbps";
-    case M19: return os << setw(w) << 19.5 << " Mbps";
-    case M26: return os << setw(w) << 26   << " Mbps";
-    case M39: return os << setw(w) << 39   << " Mbps";
-    case M52: return os << setw(w) << 52   << " Mbps";
-    case M58: return os << setw(w) << 58.5 << " Mbps";
-    case M65: return os << setw(w) << 65   << " Mbps";
-    case M78: return os << setw(w) << 78   << " Mbps";
+    case MCS  : return os << setw(w) << 0    << " Mbps";
+    case MCS0 : return os << setw(w) << 6.5  << " Mbps";
+    case MCS1: return os << setw(w) << 13   << " Mbps";
+    case MCS2: return os << setw(w) << 19.5 << " Mbps";
+    case MCS3: return os << setw(w) << 26   << " Mbps";
+    case MCS4: return os << setw(w) << 39   << " Mbps";
+    case MCS5: return os << setw(w) << 52   << " Mbps";
+    case MCS6: return os << setw(w) << 58.5 << " Mbps";
+    case MCS7: return os << setw(w) << 65   << " Mbps";
+    case MCS8: return os << setw(w) << 78   << " Mbps";
+    case MCS9: return os << setw(w) << 0    << " Mbps";
     default: return os << "unknown data rate.";
   }
 }
@@ -101,15 +103,16 @@ istream& operator>> (istream& is, transmission_mode& tm) {
 
   if (str == "OPT") tm = OPT;
   else if (str == "SUBOPT") tm = SUBOPT;
-  else if (str == "M6") tm = M6;
-  else if (str == "M13") tm = M13;
-  else if (str == "M19") tm = M19;
-  else if (str == "M26") tm = M26;
-  else if (str == "M39") tm = M39;
-  else if (str == "M52") tm = M52;
-  else if (str == "M58") tm = M58;
-  else if (str == "M65") tm = M65;
-  else if (str == "M78") tm = M78;
+  else if (str == "MCS0") tm = MCS0;
+  else if (str == "MCS1") tm = MCS1;
+  else if (str == "MCS2") tm = MCS2;
+  else if (str == "MCS3") tm = MCS3;
+  else if (str == "MCS4") tm = MCS4;
+  else if (str == "MCS5") tm = MCS5;
+  else if (str == "MCS6") tm = MCS6;
+  else if (str == "MCS7") tm = MCS7;
+  else if (str == "MCS8") tm = MCS8;
+  else if (str == "MCS9") tm = MCS9;
   else is.clear(ios::failbit);
 
   return is;
@@ -127,16 +130,18 @@ timestamp calc_duration (unsigned nbits, transmission_mode mode, bool addPre) {
   unsigned bits_per_symbol;
 
   switch (mode) {
-    case M6  : bits_per_symbol =  26; break;
-    case M13 : bits_per_symbol =  52; break;
-    case M19 : bits_per_symbol =  78; break;
-    case M26 : bits_per_symbol = 104; break;
-    case M39 : bits_per_symbol = 156; break;
-    case M52 : bits_per_symbol = 208; break;
-    case M58 : bits_per_symbol = 234; break;
-    case M65 : bits_per_symbol = 260; break;
-    case M78 : bits_per_symbol = 312; break;
-    case M0  :
+    case MCS0  : bits_per_symbol =  26; break;
+    case MCS1 : bits_per_symbol =  52; break;
+    case MCS2 : bits_per_symbol =  78; break;
+    case MCS3 : bits_per_symbol = 104; break;
+    case MCS4 : bits_per_symbol = 156; break;
+    case MCS5 : bits_per_symbol = 208; break;
+    case MCS6 : bits_per_symbol = 234; break;
+    case MCS7 : bits_per_symbol = 260; break;
+    case MCS8 : bits_per_symbol = 312; break;
+    case MCS9 :
+    	return timestamp(0);
+    case MCS  :
       return timestamp(0);
     default  :
       throw(my_exception(GENERAL,

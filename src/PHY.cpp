@@ -110,7 +110,7 @@ BEGIN_PROF("PHY::calculate_ber")
 
   double ber;
 
-  unsigned index = mode - M6;
+  unsigned index = mode - MCS0;
 
   if (SNR < min_thresh[index]) {
     // if SNR is low, then consider BER = 0.5
@@ -245,13 +245,13 @@ transmission_mode PHY::opt_mode(Terminal* t1, unsigned pack_len,
                                 double per_target, double power) {
 BEGIN_PROF("PHY::opt_mode")
 
-  transmission_mode mode = M78;
+  transmission_mode mode = MCS8;
   unsigned nbits = (DataMPDU(pack_len)).get_nbits();
   double SNR = power - ch->get_path_loss(t1->get_phy(), this)
                      - NoiseVariance_dBm;
 
   for(;;) {
-    if (mode == M6) break;
+    if (mode == MCS0) break;
 
     double ber = calculate_ber(mode, SNR);
     double per = 1.0 - pow(1.0 - ber/double(burst_length), int(nbits));

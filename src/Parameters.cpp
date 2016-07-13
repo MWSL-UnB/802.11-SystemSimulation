@@ -387,7 +387,7 @@ void Parameters::default_config () {
   TxPowerMin_dBm.init("minimum transmit power",0,"dBm");
   TxPowerStepUp_dBm.init("transmit power step (up)",1,"dBm");
   TxPowerStepDown_dBm.init("transmit power step (down)",1,"dBm");
-  TxMode.init("transmit mode",M6);
+  TxMode.init("transmit mode",MCS0);
   AdaptMode.init("adaptation mode",RATE);
 
   TargetPER.init("target PER",.1);

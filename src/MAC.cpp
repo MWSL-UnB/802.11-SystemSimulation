@@ -33,8 +33,8 @@ const timestamp DIFS = timestamp(34.0e-6);
 const timestamp SIFS = timestamp(16.0e-6);
 
 // Duration of signaling packets
-const timestamp cts_duration = (MPDU(CTS, 0, 0, 0, M6)).get_duration();
-const timestamp rts_duration = (MPDU(RTS, 0, 0, 0, M6)).get_duration();
+const timestamp cts_duration = (MPDU(CTS, 0, 0, 0, MCS0)).get_duration();
+const timestamp rts_duration = (MPDU(RTS, 0, 0, 0, MCS0)).get_duration();
 
 // timeout intervals
 inline timestamp ACK_Timeout(transmission_mode m) {
@@ -823,7 +823,7 @@ void MAC_private::send_cts(Terminal *to) {
 
 	// always send CTS at 6Mbps
 	myphy->phyTxStartReq(MPDU(CTS, term, to, term->get_power(to, frag_thresh),
-			M6, NAV_RTS), true);
+			MCS0, NAV_RTS), true);
 
 	END_PROF("MAC::send_cts")
 }
@@ -1027,7 +1027,7 @@ void MAC_private::start_TXOP() {
 					<< TXOPend << "sec." << "\nPackets in queue = " << count << ". TXOP duration = "
 					<< TXOPend - now << " sec." << endl;
 
-			myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,M6,TXOPend),
+			myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,MCS0,TXOPend),
 					true);
 
 			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
@@ -1268,7 +1268,7 @@ void MAC_private::transmit() {
 				auxpck.get_duration() + ack_duration(which_mode) +
 				3*SIFS + 1;
 
-		myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,M6,newnav),
+		myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,MCS0,newnav),
 				true);
 
 		countdown_flag = false;

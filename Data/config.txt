@@ -87,8 +87,8 @@ NumberSinus = 20 % number of sinewaves to emulate Rayleigh fading.
 % PHY Parameters
 
 
-TxMode = M78%M6,M13,M19,M26,M39,M52,M58,M65,M78,OPT,SUBOPT
-          % M6,M13,M19,M26,M39,M52,M58,M65,M78: no link adaptation, always transmit at fixed rate with maximum power
+TxMode = MCS8%MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9,OPT,SUBOPT
+          % MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9: no link adaptation, always transmit at fixed rate with maximum power
           % OPT: genie-aided link adaptation
           % SUBOPT: transmitter-based link adaptation
 AdaptMode = RATE  % POWER: minimize power, always transmit at 6Mbps, except if lowest power reached
