@@ -122,6 +122,11 @@ protected:
   unsigned long n_att_frags;  // number of data fragments transmission attempts
   double        tx_data_rate; // mean transmitted data rate
 
+  // Duration of signaling packets
+  timestamp cts_duration;
+  timestamp rts_duration;
+  timestamp CTS_Timeout;
+
   void set_myAC(accCat AC);
 
   void ack_timed_out();

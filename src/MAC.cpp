@@ -33,10 +33,6 @@ const timestamp aSlotTime = timestamp(9.0e-6);
 const timestamp DIFS = timestamp(34.0e-6);
 const timestamp SIFS = timestamp(16.0e-6);
 
-// Duration of signaling packets
-const timestamp cts_duration = (MPDU(CTS, 0, 0, 0, MCS0)).get_duration();
-const timestamp rts_duration = (MPDU(RTS, 0, 0, 0, MCS0)).get_duration();
-
 // timeout intervals
 inline timestamp ACK_Timeout(transmission_mode m) {
 	return SIFS + ack_duration(m) + 5;
@@ -44,7 +40,6 @@ inline timestamp ACK_Timeout(transmission_mode m) {
 inline timestamp BA_Timeout(transmission_mode m) {
 	return SIFS + ba_duration(m) + 5;
 }
-const timestamp CTS_Timeout = SIFS + cts_duration + 5;
 
 ////////////////////////////////////////////////////////////////////////////////
 // class MAC                                                                  //
@@ -93,6 +88,10 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac){
 	tx_data_rate = 0;
 
 	countdown_flag = false;
+
+	cts_duration = (MPDU(CTS, 0, 0, 0, MCS0)).get_duration();
+	rts_duration = (MPDU(RTS, 0, 0, 0, MCS0)).get_duration();
+	CTS_Timeout = SIFS + cts_duration + 5;
 
 }
 
@@ -947,6 +946,11 @@ void MAC_private::start_TXOP() {
 	BEGIN_PROF("MAC::start_TXOP")
 
 		if(!TXOPflag && TXOPmax != 0){ // If not during TXOP and AC has a TXOP
+
+			if (logflag) *mylog << "\n!!!!!" << ptr2sch->now() << "sec., " << *term
+					<< " RTS duration = " << rts_duration << endl;
+			if (logflag) *mylog << "\n!!!!!" << ptr2sch->now() << "sec., " << *term
+					<< " CTS duration = " << cts_duration << endl;
 
 			TXOPflag = true;
 

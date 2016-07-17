@@ -70,22 +70,22 @@ conf_noTXOP = conf(3*maxPck+1:4*maxPck);
 dtPt = 3;
 
 fitted_BA = fit(pck,1e3*avgThr_BA,'smoothingspline');
-h1 = plot(fitted_BA,'b');
+h1 = plot(fitted_BA,'k-');
 set(h1,'LineWidth',2);
 hold on;
-plot(pck(1:dtPt:end),1e3*avgThr_BA(1:dtPt:end),'bo');
+% plot(pck(1:dtPt:end),1e3*avgThr_BA(1:dtPt:end),'ko');
 
 fitted_noBA = fit(pck,1e3*avgThr_noBA,'smoothingspline');
-h2 = plot(fitted_noBA,'r');
+h2 = plot(fitted_noBA,'b--');
 set(h2,'LineWidth',2);
 hold on;
-plot(pck(1:dtPt:end),1e3*avgThr_noBA(1:dtPt:end),'ro');
+% plot(pck(1:dtPt:end),1e3*avgThr_noBA(1:dtPt:end),'b+');
 
 fitted_noTXOP = fit(pck,1e3*avgThr_noTXOP,'smoothingspline');
-h3 = plot(fitted_noTXOP,'g');
+h3 = plot(fitted_noTXOP,'r-.');
 set(h3,'LineWidth',2);
 hold on;
-plot(pck(1:dtPt:end),1e3*avgThr_noTXOP(1:dtPt:end),'go');
+% plot(pck(1:dtPt:end),1e3*avgThr_noTXOP(1:dtPt:end),'r.','LineWidth',2);
 
 legend off;
 xlabel('Dados por pacote [Bytes]');

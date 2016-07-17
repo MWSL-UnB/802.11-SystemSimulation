@@ -50,13 +50,15 @@ class Standard {
 private:
 	static dot11_standard currentStd;
 	static transmission_mode maxMCS;
+	static double symbol_period;      //OFDM symbol period
 
 public:
 	static void set_standard(dot11_standard st);
 	static dot11_standard get_standard();
 	static transmission_mode get_maxMCS();
 
-	static double tx_mode_to_double (transmission_mode tm);
+	static double tx_mode_to_double(transmission_mode tm);
+	static unsigned txMode_bits_per_symbol(transmission_mode tm);
 };
 
 #endif /* STANDARD_H_ */

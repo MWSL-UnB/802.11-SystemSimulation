@@ -99,24 +99,12 @@ timestamp calc_duration (unsigned nbits, transmission_mode mode, bool addPre) {
 
   unsigned bits_per_symbol;
 
-  switch (mode) {
-    case MCS0  : bits_per_symbol =  26; break;
-    case MCS1 : bits_per_symbol =  52; break;
-    case MCS2 : bits_per_symbol =  78; break;
-    case MCS3 : bits_per_symbol = 104; break;
-    case MCS4 : bits_per_symbol = 156; break;
-    case MCS5 : bits_per_symbol = 208; break;
-    case MCS6 : bits_per_symbol = 234; break;
-    case MCS7 : bits_per_symbol = 260; break;
-    case MCS8 : bits_per_symbol = 312; break;
-    case MCS9 :
-    	return timestamp(0);
-    case MCS  :
-      return timestamp(0);
-    default  :
-      throw(my_exception(GENERAL,
-            "Transmission mode not supported in packet constructor"));
+  if(mode == MCS || mode > Standard::get_maxMCS()){
+	  cout << "In the if" << endl;
+	  cout << "Standard: " << Standard::get_standard() << endl;
+	  return timestamp(0);
   }
+  bits_per_symbol = Standard::txMode_bits_per_symbol(mode);
 
   // calculate number of OFDM symbols in payload
   // consider termination bits
