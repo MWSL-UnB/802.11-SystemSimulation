@@ -135,6 +135,8 @@ void MAC_private::set_myAC(accCat AC) {
 		break;
 	}
 
+	if(Standard::get_standard() == dot11ah) TXOPmax = 10*TXOPmax;
+
 	AIFS = SIFS + timestamp(AIFSN)*aSlotTime;
 	TXOPflag = false;
 	TXOPend = ptr2sch->now();

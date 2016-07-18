@@ -30,6 +30,12 @@
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////////////
+// Error model coefficient number
+////////////////////////////////////////////////////////////////////////////////
+const int n_coeff = 5;
+const int n_coeff_high = 2;
+
+////////////////////////////////////////////////////////////////////////////////
 // Standard to be simulated
 ////////////////////////////////////////////////////////////////////////////////
 typedef enum{
@@ -52,11 +58,31 @@ private:
 	static transmission_mode maxMCS;
 	static double symbol_period;      //OFDM symbol period
 
+	// Error model constants
+	static double min_thresh_a[8];
+	static double max_thresh_a[8];
+	static double coeff_a[8][5];
+	static double coeff_high_a[8][2];
+
+	static double min_thresh_n[8];
+	static double max_thresh_n[8];
+	static double coeff_n[8][5];
+	static double coeff_high_n[8][2];
+
+	static double min_thresh_ac_ah[10];
+	static double max_thresh_ac_ah[10];
+	static double coeff_ac_ah[10][5];
+	static double coeff_high_ac_ah[10][2];
+
 public:
 	static void set_standard(dot11_standard st);
 	static dot11_standard get_standard();
 	static transmission_mode get_maxMCS();
 	static double get_symbol_period();
+	static double get_min_thresh(int idx);
+	static double get_max_thresh(int idx);
+	static double get_coeff(int idx, int i);
+	static double get_coeff_high(int idx, int i);
 
 	static double tx_mode_to_double(transmission_mode tm);
 	static unsigned txMode_bits_per_symbol(transmission_mode tm);

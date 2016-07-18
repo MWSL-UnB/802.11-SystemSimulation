@@ -32,6 +32,65 @@ dot11_standard Standard::currentStd = dot11;
 transmission_mode Standard::maxMCS = MCS;
 double Standard::symbol_period = 4e-6;
 
+// Standard error model polynomials
+//802.11a
+double Standard::min_thresh_a[8] = {-2.5103, 0.75061,  0.5000,  3.7609,
+        5.5103, 9.2712 , 12.5206, 14.5321};
+double Standard::max_thresh_a[8] = { 1.9897,  5.2506,  5.0000,  8.2609,
+        10.5103, 14.7712, 18.5206, 20.0321};
+double Standard::coeff_a[8][5] = {
+        {  -2.2353000, -1.0721000,-0.1708900, 0.0243860, 0.0096656},
+        {  -0.3624500, -0.2937100,-0.0011057,-0.0408500, 0.0038022},
+        {  -0.4517200, -0.3560888, 0.0627930,-0.0651410, 0.0064799},
+        {  -0.3082200, -0.2063400, 0.1547100,-0.0389730, 0.0018157},
+        {   2.6965000, -1.9353000, 0.4736600,-0.0509360, 0.0016224},
+        {  34.8692000,-13.9070000, 2.0328000,-0.1283100, 0.0028499},
+        {  93.9622000,-26.7075000, 2.8106000,-0.1290100, 0.0021372},
+        {-120.1972000, 26.3772000,-2.1564000, 0.0787190,-0.0011189}};
+double Standard::coeff_high_a[8][2] = { {-2.3974,-1.1580}, { 2.8250,-1.4824},
+        { 2.1138,-1.3738}, { 7.7079,-1.5347},
+        { 9.2576,-1.3244}, {11.3789,-1.1004},
+        {14.6479,-1.0454}, {20.0742,-1.2278} };
+
+//802.11n
+double Standard::min_thresh_n[8] = {-2.5103, 0.75061,  0.5000,  3.7609,
+        5.5103, 9.2712 , 12.5206, 14.5321};
+double Standard::max_thresh_n[8] = { 1.9897,  5.2506,  5.0000,  8.2609,
+        10.5103, 14.7712, 18.5206, 20.0321};
+double Standard::coeff_n[8][5] = {
+        {  -2.2353000, -1.0721000,-0.1708900, 0.0243860, 0.0096656},
+        {  -0.3624500, -0.2937100,-0.0011057,-0.0408500, 0.0038022},
+        {  -0.4517200, -0.3560888, 0.0627930,-0.0651410, 0.0064799},
+        {  -0.3082200, -0.2063400, 0.1547100,-0.0389730, 0.0018157},
+        {   2.6965000, -1.9353000, 0.4736600,-0.0509360, 0.0016224},
+        {  34.8692000,-13.9070000, 2.0328000,-0.1283100, 0.0028499},
+        {  93.9622000,-26.7075000, 2.8106000,-0.1290100, 0.0021372},
+        {-120.1972000, 26.3772000,-2.1564000, 0.0787190,-0.0011189}};
+double Standard::coeff_high_n[8][2] = { {-2.3974,-1.1580}, { 2.8250,-1.4824},
+        { 2.1138,-1.3738}, { 7.7079,-1.5347},
+        { 9.2576,-1.3244}, {11.3789,-1.1004},
+        {14.6479,-1.0454}, {20.0742,-1.2278} };
+
+// 802.11ac and 802.11ah
+double Standard::min_thresh_ac_ah[10] = {-2.5103, 0.5000, 3.7609, 5.5103, 9.2712,
+		12.5206,14.5321,11.6188,15.4106, 0};
+double Standard::max_thresh_ac_ah[10] = { 1.9897,  5.0000,  8.2609, 10.5103, 14.7712,
+		18.5206, 20.0321, 21.5000, 22.5000, 0};
+double Standard::coeff_ac_ah[10][5] = {{  -2.2353000, -1.0721000,-0.1708900, 0.0243860, 0.0096656},
+		{  -0.4517200, -0.3560888, 0.0627930,-0.0651410, 0.0064799},
+		{  -0.3082200, -0.2063400, 0.1547100,-0.0389730, 0.0018157},
+		{   2.6965000, -1.9353000, 0.4736600,-0.0509360, 0.0016224},
+		{  34.8692000,-13.9070000, 2.0328000,-0.1283100, 0.0028499},
+		{  93.9622000,-26.7075000, 2.8106000,-0.1290100, 0.0021372},
+		{-120.1972000, 26.3772000,-2.1564000, 0.0787190,-0.0011189},
+		{ -42.9748720, 11.0385340,-1.0249930, 0.0411790,-0.0006080},
+		{ -159.279240, 33.9061380,-2.6679000, 0.0922430,-0.0011850},
+		{    0.000000, 0.000000,  0.000000,   0.000000,  0.000000}};
+double Standard::coeff_high_ac_ah[10][2] = {{-2.3974,-1.1580}, { 2.1138,-1.3738}, { 7.7079,-1.5347},
+		{ 9.2576,-1.3244}, {11.3789,-1.1004}, {14.6479,-1.0454},
+		{20.0742,-1.2278}, {21.2886,-1.2977}, {18.1224,-0.9725},
+		{0,0}};
+
 //////////////////////////////////
 // Standard setters and getters //
 //////////////////////////////////
@@ -48,8 +107,8 @@ void Standard::set_standard(dot11_standard st) {
 
 	if(st == dot11ah) symbol_period = 40e-6;
 	else symbol_period = 4e-6;
-
 }
+
 dot11_standard Standard::get_standard() {
 	return currentStd;
 }
@@ -58,6 +117,26 @@ transmission_mode Standard::get_maxMCS(){
 }
 double Standard::get_symbol_period(){
 	return symbol_period;
+}
+double Standard::get_min_thresh(int idx) {
+	if(currentStd == dot11a) return min_thresh_a[idx];
+	else if(currentStd == dot11n) return min_thresh_n[idx];
+	else return min_thresh_ac_ah[idx];
+}
+double Standard::get_max_thresh(int idx) {
+	if(currentStd == dot11a) return max_thresh_a[idx];
+	else if(currentStd == dot11n) return max_thresh_n[idx];
+	else return max_thresh_ac_ah[idx];
+}
+double Standard::get_coeff(int idx, int i) {
+	if(currentStd == dot11a) return coeff_a[idx][i];
+	else if(currentStd == dot11n) return coeff_n[idx][i];
+	else return coeff_ac_ah[idx][i];
+}
+double Standard::get_coeff_high(int idx, int i) {
+	if(currentStd == dot11a) return coeff_high_a[idx][i];
+	else if(currentStd == dot11n) return coeff_high_n[idx][i];
+	else return coeff_high_ac_ah[idx][i];
 }
 
 ///////////////////////
@@ -82,7 +161,7 @@ double Standard::tx_mode_to_double (transmission_mode tm) {
 	case dot11n: {
 		switch(tm) {
 		case MCS : return 0;
-		case MCS0: return  6.5;
+		case MCS0: return 6.5;
 		case MCS1: return 13.0;
 		case MCS2: return 19.5;
 		case MCS3: return 26.0;

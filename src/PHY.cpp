@@ -28,38 +28,8 @@
 
 #include <math.h>
 
-////////////////////////////////////////////////////////////////////////////////
-//                                                                            //
-// error-model constants                                                      //
-//                                                                            //
-////////////////////////////////////////////////////////////////////////////////
-const double burst_length = 3.3;
 // expected error-burst length after convolutional decoding
-
-
-const double min_thresh[9] = {-2.5103,  0.5000,  3.7609,
-                               5.5103, 9.2712 , 12.5206,
-							   14.5321, 11.6188, 15.4106};
-const double max_thresh[9] = { 1.9897,  5.0000,  8.2609,
-                              10.5103, 14.7712, 18.5206,
-							  20.0321, 21.5000, 22.5000};
-
-const int n_coeff = 5;
-const double coeff[9][5] = {
-             {  -2.2353000, -1.0721000,-0.1708900, 0.0243860, 0.0096656},
-             {  -0.4517200, -0.3560888, 0.0627930,-0.0651410, 0.0064799},
-             {  -0.3082200, -0.2063400, 0.1547100,-0.0389730, 0.0018157},
-             {   2.6965000, -1.9353000, 0.4736600,-0.0509360, 0.0016224},
-             {  34.8692000,-13.9070000, 2.0328000,-0.1283100, 0.0028499},
-             {  93.9622000,-26.7075000, 2.8106000,-0.1290100, 0.0021372},
-			 {-120.1972000, 26.3772000,-2.1564000, 0.0787190,-0.0011189},
-			 { -42.9748720, 11.0385340,-1.0249930, 0.0411790,-0.0006080},
-			 { -159.279240, 33.9061380,-2.6679000, 0.0922430,-0.0011850}};
-
-const int n_coeff_high = 2;
-const double coeff_high[9][2] = { {-2.3974,-1.1580}, { 2.1138,-1.3738}, { 7.7079,-1.5347},
-                                  { 9.2576,-1.3244}, {11.3789,-1.1004}, {14.6479,-1.0454},
-								  {20.0742,-1.2278}, {21.2886,-1.2977}, {18.1224,-0.9725}};
+const double burst_length = 3.3;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,17 +82,17 @@ BEGIN_PROF("PHY::calculate_ber")
 
   unsigned index = mode - MCS0;
 
-  if (SNR < min_thresh[index]) {
+  if (SNR < Standard::get_min_thresh(index)) {
     // if SNR is low, then consider BER = 0.5
     ber = .5;
 
-  } else if (SNR > max_thresh[index]) {
+  } else if (SNR > Standard::get_max_thresh(index)) {
     // if SNR is high then use polynomial of order 'n_coeff_high - 1'
     double berlog = 0;
 
     double auxpow = 1.0;
     for (int i = 0; i < n_coeff_high; i++) {
-      berlog += auxpow * coeff_high[index][i];
+      berlog += auxpow * Standard::get_coeff_high(index,i);
       auxpow = auxpow * SNR;
     }
     ber = pow(10.0,berlog);
@@ -133,7 +103,7 @@ BEGIN_PROF("PHY::calculate_ber")
 
     double auxpow = 1.0;
     for (int i = 0; i < n_coeff; i++) {
-      berlog += auxpow * coeff[index][i];
+      berlog += auxpow * Standard::get_coeff(index,i);
       auxpow = auxpow * SNR;
     }
     ber = pow(10.0,berlog);
