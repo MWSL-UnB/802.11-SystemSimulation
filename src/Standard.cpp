@@ -30,7 +30,7 @@
 // Static member variables need to be defined outside the class
 dot11_standard Standard::currentStd = dot11;
 transmission_mode Standard::maxMCS = MCS;
-double Standard::symbol_period = 40e-6;
+double Standard::symbol_period = 4e-6;
 
 //////////////////////////////////
 // Standard setters and getters //
@@ -55,6 +55,9 @@ dot11_standard Standard::get_standard() {
 }
 transmission_mode Standard::get_maxMCS(){
 	return maxMCS;
+}
+double Standard::get_symbol_period(){
+	return symbol_period;
 }
 
 ///////////////////////

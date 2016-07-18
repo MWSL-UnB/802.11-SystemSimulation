@@ -31,7 +31,7 @@
 
 //////////////////////
 // OFDM symbol period
-const double symbol_period = 4e-6;
+//const double symbol_period = 4e-6;
 
 /////////////////////////////////////////////////////////////////////
 // MAC overhead for different packet types (including FCS) in bytes
@@ -115,7 +115,7 @@ timestamp calc_duration (unsigned nbits, transmission_mode mode, bool addPre) {
   if(addPre) nsymbols += phy_overhead;
 
   // calculate time
-  return timestamp(double(nsymbols) * symbol_period);
+  return timestamp(double(nsymbols) * Standard::get_symbol_period());
 }
 
 ////////////////////////////////////////////////////////////////////////////////
