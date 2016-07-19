@@ -37,6 +37,7 @@
 #include "Terminal.h"
 #include "random.h"
 #include "log.h"
+#include "Standard.h"
 
 using namespace std;
 
@@ -130,6 +131,7 @@ typedef param_vec_<unsigned long> param_vec_unsigned_long;
 typedef param_vec_<discrete_prob> param_vec_discrete_prob;
 typedef param_vec_<log_type> param_vec_log_type;
 typedef param_vec_<Position> param_vec_Position;
+typedef param_vec_<dot11_standard> param_vec_dot11_standard;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -167,6 +169,10 @@ class Parameters {
   double Confidence; // for calculation of confidence interval
   timestamp TransientTime; // transient time to be ignored
   
+  ////////////////////////////////
+  // standard
+  param_vec_dot11_standard standard;
+
   ///////////////////////
   // system configuration
   param_vec_unsigned NumberAPs; // number of access points
@@ -282,6 +288,7 @@ public:
   double get_ppLegacy() {return ppLegacy.current();}
   bool get_set_BA_agg() {return set_BA_agg.current();}
   bool get_partResults() {return partResults.current();}
+  dot11_standard get_standard() {return standard.current();}
 
 
   Position get_APPosition(unsigned which_ap);

@@ -59,26 +59,26 @@ conf_noTXOP = conf(3*maxCell+1:4*maxCell);
 %% Plot
 
 fitted_BA = fit(cell,1e3*avgThr_BA,'smoothingspline','SmoothingParam',0.01);
-h1 = plot(fitted_BA,'b');
+h1 = plot(fitted_BA,'k-');
 set(h1,'LineWidth',2);
+% plot(cell,1e3*avgThr_BA,'k','LineWidth',2);
 hold on;
-%plot(cell,1e3*avgThr_BA,'bo');
 
 fitted_noBA = fit(cell,1e3*avgThr_noBA,'smoothingspline','SmoothingParam',0.01);
-h2 = plot(fitted_noBA,'r');
+h2 = plot(fitted_noBA,'b--');
 set(h2,'LineWidth',2);
+% plot(cell,1e3*avgThr_noBA,'b','LineWidth',2);
 hold on;
-%plot(cell,1e3*avgThr_noBA,'ro');
 
 fitted_noTXOP = fit(cell,1e3*avgThr_noTXOP,'smoothingspline','SmoothingParam',0.01);
-h3 = plot(fitted_noTXOP,'g');
+h3 = plot(fitted_noTXOP,'r-.');
 set(h3,'LineWidth',2);
+% plot(cell,1e3*avgThr_noTXOP,'r','LineWidth',2);
 hold on;
-%plot(cell,1e3*avgThr_noTXOP,'go');
 
 legend off;
 grid on;
-legend([h1 h2 h3],'Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP','Location','SouthWest')
+legend('Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP','Location','SouthWest')
 axis([5 250 0 550]);
 xlabel('Distância da estação ao ponto de acesso [m]');
 ylabel('Throughput médio [kbps]');

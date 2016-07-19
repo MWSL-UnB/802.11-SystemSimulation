@@ -32,6 +32,7 @@
 #include "Terminal.h"
 #include "log.h"
 #include "DataStatistics.h"
+#include "Standard.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // struct res_struct                                                          //

@@ -23,6 +23,7 @@
 #include "link_adapt.h"
 #include "Terminal.h"
 #include "Profiler.h"
+#include "Standard.h"
 
 unsigned LA_max_success_counter_LOW = 10;
 unsigned LA_max_success_counter_HIGH = 3;
@@ -95,7 +96,7 @@ link_adapt::link_adapt (Terminal* from, Terminal* to, adapt_struct param,
     fail_limit = param.la_fail_limit;
     use_rx_mode = param.use_rx_mode;
 
-    current_mode = M6;
+    current_mode = MCS0;
     succeed_counter = 0;
     fail_counter = 0;
   } else {
@@ -105,13 +106,14 @@ link_adapt::link_adapt (Terminal* from, Terminal* to, adapt_struct param,
 
 ////////////////////////////////////////////////////////////////////////////////
 // link_adapt_private::adapt_opt                                              //
+// unsigned pl is the packet length											  //
 ////////////////////////////////////////////////////////////////////////////////
 void link_adapt_private::adapt_opt(unsigned pl) {
  if (adapt == RATE) {
    current_mode = (target->get_phy())->opt_mode(source, pl, target_per,
                                                 power_dBm);
  } else {
-   current_mode = M6;
+   current_mode = MCS0;
    power_dBm = (target->get_phy())->opt_power(source, pl, target_per,
                                               current_mode, pmin, pmax,
                                               pstep_min);
@@ -179,7 +181,7 @@ BEGIN_PROF("link_adapt::failed")
     fail_counter = 0;
     succeed_counter = 0;
     
-    if (adapt == RATE || current_mode > M6) {
+    if (adapt == RATE || current_mode > MCS0) {
       --current_mode;
 
       if (logflag) *mylog << "    fail counter = maximum fail counter = "
@@ -235,7 +237,7 @@ BEGIN_PROF("link_adapt::rts_failed")
     fail_counter = 0;
     succeed_counter = 0;
     
-    if (current_mode > M6) {
+    if (current_mode > MCS0) {
       --current_mode;
 
       if (logflag) *mylog << "    fail counter = maximum fail counter = "
@@ -314,7 +316,7 @@ BEGIN_PROF("link_adapt::success")
     succeed_counter = 0;
     
     if (adapt == RATE || power_dBm - pstep_d < pmin) {
-      ++current_mode;
+      if(current_mode != Standard::get_maxMCS()) ++current_mode;
 
       if (logflag) *mylog << "    increase tx rate to " << current_mode << endl;
     } else {

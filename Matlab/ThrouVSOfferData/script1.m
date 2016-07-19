@@ -70,11 +70,11 @@ m_perStaNT = m_thrNT./2;
 
 %% Plot
 
-plot(offeDataBA,m_perStaBA,'b-o','LineWidth',2);
+plot(offeDataBA,m_perStaBA,'k-o','LineWidth',2);
 hold on;
-plot(offeData,m_perSta,'r--*','LineWidth',2);
+plot(offeData,m_perSta,'b--*','LineWidth',2);
 hold on;
-plot(offeDataNT,m_perStaNT,'g-.+','LineWidth',2);
+plot(offeDataNT,m_perStaNT,'r-.+','LineWidth',2);
 hold off;
 grid on;
 xlabel('Taxa de dados oferecida a MAC [Mbps]');

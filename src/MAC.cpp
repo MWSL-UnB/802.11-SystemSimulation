@@ -24,6 +24,7 @@
 #include "PHY.h"
 #include "Terminal.h"
 #include "Profiler.h"
+#include "Standard.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // IEEE 802.11a constant parameters                                           //
@@ -32,10 +33,6 @@ const timestamp aSlotTime = timestamp(9.0e-6);
 const timestamp DIFS = timestamp(34.0e-6);
 const timestamp SIFS = timestamp(16.0e-6);
 
-// Duration of signaling packets
-const timestamp cts_duration = (MPDU(CTS, 0, 0, 0, M6)).get_duration();
-const timestamp rts_duration = (MPDU(RTS, 0, 0, 0, M6)).get_duration();
-
 // timeout intervals
 inline timestamp ACK_Timeout(transmission_mode m) {
 	return SIFS + ack_duration(m) + 5;
@@ -43,7 +40,6 @@ inline timestamp ACK_Timeout(transmission_mode m) {
 inline timestamp BA_Timeout(transmission_mode m) {
 	return SIFS + ba_duration(m) + 5;
 }
-const timestamp CTS_Timeout = SIFS + cts_duration + 5;
 
 ////////////////////////////////////////////////////////////////////////////////
 // class MAC                                                                  //
@@ -93,6 +89,10 @@ MAC::MAC(Terminal* t, Scheduler* s, random *r, log_file* l, mac_struct mac){
 
 	countdown_flag = false;
 
+	cts_duration = (MPDU(CTS, 0, 0, 0, MCS0)).get_duration();
+	rts_duration = (MPDU(RTS, 0, 0, 0, MCS0)).get_duration();
+	CTS_Timeout = SIFS + cts_duration + 5;
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -135,6 +135,8 @@ void MAC_private::set_myAC(accCat AC) {
 		break;
 	}
 
+	if(Standard::get_standard() == dot11ah) TXOPmax = 10*TXOPmax;
+
 	AIFS = SIFS + timestamp(AIFSN)*aSlotTime;
 	TXOPflag = false;
 	TXOPend = ptr2sch->now();
@@ -167,7 +169,7 @@ void MAC_private::ack_timed_out () {
 	rate_adapt_file_rt << setw(10) << double(t_aux) << ','
 			<< setw(6) << get_id() << ','
 			<< setw(6) << (msdu.get_target())->get_id() << ','
-			<< setw(6) << tx_mode_to_double(pck.get_mode()) << ','
+			<< setw(6) << Standard::tx_mode_to_double(pck.get_mode()) << ','
 			<< 0 << endl;
 #endif
 
@@ -354,7 +356,7 @@ void MAC_private::cts_timed_out () {
 	rate_adapt_file_rt << setw(10) << double(t_aux) << ','
 			<< setw(6) << get_id() << ','
 			<< setw(6) << (msdu.get_target())->get_id() << ','
-			<< setw(6) << tx_mode_to_double(pck.get_mode()) << ','
+			<< setw(6) << Standard::tx_mode_to_double(pck.get_mode()) << ','
 			<< -1 << endl;
 #endif
 
@@ -586,7 +588,7 @@ void MAC_private::receive_this(MPDU p) {
 		rate_adapt_file_rt << setw(10) << double(t_aux) << ','
 				<< setw(6) << get_id() << ','
 				<< setw(6) << (msdu.get_target())->get_id() << ','
-				<< setw(6) << tx_mode_to_double(pck.get_mode()) << ','
+				<< setw(6) << Standard::tx_mode_to_double(pck.get_mode()) << ','
 				<< 1 << endl;
 #endif
 
@@ -823,7 +825,7 @@ void MAC_private::send_cts(Terminal *to) {
 
 	// always send CTS at 6Mbps
 	myphy->phyTxStartReq(MPDU(CTS, term, to, term->get_power(to, frag_thresh),
-			M6, NAV_RTS), true);
+			MCS0, NAV_RTS), true);
 
 	END_PROF("MAC::send_cts")
 }
@@ -865,7 +867,7 @@ void MAC_private::send_data() {
 	NAV = ptr2sch->now() + pck.get_duration();
 
 	n_att_frags++;
-	tx_data_rate += tx_mode_to_double(pck.get_mode());
+	tx_data_rate += Standard::tx_mode_to_double(pck.get_mode());
 
 	myphy->phyTxStartReq(pck,true);
 
@@ -947,6 +949,11 @@ void MAC_private::start_TXOP() {
 
 		if(!TXOPflag && TXOPmax != 0){ // If not during TXOP and AC has a TXOP
 
+			if (logflag) *mylog << "\n!!!!!" << ptr2sch->now() << "sec., " << *term
+					<< " RTS duration = " << rts_duration << endl;
+			if (logflag) *mylog << "\n!!!!!" << ptr2sch->now() << "sec., " << *term
+					<< " CTS duration = " << cts_duration << endl;
+
 			TXOPflag = true;
 
 			myphy->cancel_notify_busy_channel();
@@ -1027,7 +1034,7 @@ void MAC_private::start_TXOP() {
 					<< TXOPend << "sec." << "\nPackets in queue = " << count << ". TXOP duration = "
 					<< TXOPend - now << " sec." << endl;
 
-			myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,M6,TXOPend),
+			myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,MCS0,TXOPend),
 					true);
 
 			if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term
@@ -1268,7 +1275,7 @@ void MAC_private::transmit() {
 				auxpck.get_duration() + ack_duration(which_mode) +
 				3*SIFS + 1;
 
-		myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,M6,newnav),
+		myphy->phyTxStartReq(MPDU(RTS,term,msdu.get_target(),power_dBm,MCS0,newnav),
 				true);
 
 		countdown_flag = false;

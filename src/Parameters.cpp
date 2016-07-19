@@ -333,6 +333,10 @@ bool Parameters::assign (string s1,string s2) {
   	  which_param = &partResults;
   	  if (!partResults.read_vec(s2)) return false;
 
+  } else if (!s1.compare("Standard")) {
+	  which_param = &standard;
+	  if (!standard.read_vec(s2)) return false;
+
   } else {
     return false;
   }
@@ -383,7 +387,7 @@ void Parameters::default_config () {
   TxPowerMin_dBm.init("minimum transmit power",0,"dBm");
   TxPowerStepUp_dBm.init("transmit power step (up)",1,"dBm");
   TxPowerStepDown_dBm.init("transmit power step (down)",1,"dBm");
-  TxMode.init("transmit mode",M6);
+  TxMode.init("transmit mode",MCS0);
   AdaptMode.init("adaptation mode",RATE);
 
   TargetPER.init("target PER",.1);
@@ -408,6 +412,8 @@ void Parameters::default_config () {
   ppLegacy.init("proportion of legacies",NumberStas.current());
 
   set_BA_agg.init("BA and Aggregation Flag",false);
+
+  standard.init("802.11 Standard",dot11a);
 
 }
 
@@ -586,4 +592,3 @@ vector<string> Parameters::get_param_str(unsigned field_width,
 
   return vec;
 }
-

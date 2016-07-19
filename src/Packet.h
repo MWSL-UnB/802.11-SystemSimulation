@@ -28,6 +28,7 @@
 #include <vector>
 
 class Terminal;
+class Standard;
 
 ////////////////////////////////////////////////////////////////////////////////
 // enum transmission_mode                                                     //
@@ -36,16 +37,17 @@ class Terminal;
 ////////////////////////////////////////////////////////////////////////////////
 typedef enum {OPT,    // optimal genie-aided adaptative-rate scheme
 	SUBOPT, // suboptimal transmitter-based scheme
-	M0,     // dummy
-	M6,     // fixed rate, 6.5Mbps
-	M13,    //           , 13Mbps
-	M19,    //           , 19.5Mbps
-	M26,    //           , 26Mbps
-	M39,    //           , 39Mbps
-	M52,    //           , 52Mbps
-	M58,    //           , 58Mbps
-	M65,    //           , 65Mbps
-	M78     //           , 78Mbps
+	MCS,     // dummy
+	MCS0,	// MCSs
+	MCS1,
+	MCS2,
+	MCS3,
+	MCS4,
+	MCS5,
+	MCS6,
+	MCS7,
+	MCS8,
+	MCS9
 } transmission_mode;
 
 typedef enum {
@@ -54,15 +56,12 @@ typedef enum {
 	blockACK
 } ACKpolicy;
 
-double tx_mode_to_double (transmission_mode tm);
-// conversion to double
-
 inline transmission_mode& operator--(transmission_mode& tm) {
-    return tm = (tm <= M6)? tm : transmission_mode(tm-1);
+    return tm = (tm <= MCS0)? tm : transmission_mode(tm-1);
 }
 
 inline transmission_mode& operator++(transmission_mode& tm) {
-    return tm = (tm <= SUBOPT || tm == M78)? tm : transmission_mode(tm+1);
+    return tm = (tm <= SUBOPT || MCS9)? tm : transmission_mode(tm+1);
 }
 
 ostream& operator<< (ostream& os, const transmission_mode& tm);
@@ -151,7 +150,7 @@ public:
        Terminal* from = 0,        // source terminal
        Terminal* to = 0,          // target terminal
        double p = 0,              // transmit power in dBm
-       transmission_mode r = M0,  // transmission mode
+       transmission_mode r = MCS,  // transmission mode
        timestamp nav = timestamp(0)          // NAV
        );
 
@@ -189,7 +188,7 @@ public:
             Terminal* from = 0,
             Terminal* to = 0,
             double p = 0,
-            transmission_mode r = M6,
+            transmission_mode r = MCS0,
             timestamp nav = timestamp(0),
             unsigned priority = 0,
             unsigned frag = 1,
@@ -204,7 +203,7 @@ public:
             unsigned frag = 1,
             unsigned nfrags = 1,                     
             double p = 0,
-            transmission_mode r = M6,
+            transmission_mode r = MCS0,
             timestamp nav = timestamp(0),
 			ACKpolicy apol = normalACK,
 			bool addP = true

@@ -1,48 +1,683 @@
 
 
 Iteration 1
-    
+    802.11 Standard = 802.11a , seed = 1 
 
+802.11a
 Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
    0   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
-   1   ( 10;  0) 10.0     2.072        3.34    0.32     259     259  0.0000   0.0000     1.5     78.00      1.4
+   1   ( 10;  0) 10.0    41.931      154.45    0.18    5242    5242  0.0000   0.3582   911.2     54.00      9.2
 
- Total throughput = 2.07189 Mbps
- Average transfer time = 0.00334097s
- Average transmission time = 0.000318707s
+ Total throughput = 41.9308 Mbps
+ Average transfer time = 0.154448s
+ Average transmission time = 0.000179196s
  Packet loss rate = 0
- Overflow rate = 0
+ Overflow rate = 0.358227
+
+
+Iteration 2
+    802.11 Standard = 802.11a , seed = 2 
+
+802.11a
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+   2   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+   3   ( 10;  0) 10.0    43.408      157.95    0.18    5426    5426  0.0000   0.3429   940.8     54.00      9.2
+
+ Total throughput = 43.4077 Mbps
+ Average transfer time = 0.157951s
+ Average transmission time = 0.000179208s
+ Packet loss rate = 0
+ Overflow rate = 0.34294
+
+
+Iteration 3
+    802.11 Standard = 802.11a , seed = 3 
+
+802.11a
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+   4   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+   5   ( 10;  0) 10.0    44.982      149.31    0.18    5623    5623  0.0000   0.3011   922.0     54.00      9.2
+
+ Total throughput = 44.9818 Mbps
+ Average transfer time = 0.149312s
+ Average transmission time = 0.000179186s
+ Packet loss rate = 0
+ Overflow rate = 0.301057
+
+
+Iteration 4
+    802.11 Standard = 802.11a , seed = 4 
+
+802.11a
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+   6   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+   7   ( 10;  0) 10.0    41.507      170.76    0.18    5189    5189  0.0000   0.3684   966.9     54.00      9.2
+
+ Total throughput = 41.5071 Mbps
+ Average transfer time = 0.170765s
+ Average transmission time = 0.000179232s
+ Packet loss rate = 0
+ Overflow rate = 0.368351
+
+
+Iteration 5
+    802.11 Standard = 802.11a , seed = 5 
+
+802.11a
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+   8   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+   9   ( 10;  0) 10.0    46.099      147.76    0.18    5763    5763  0.0000   0.2810   929.9     54.00      9.2
+
+ Total throughput = 46.0986 Mbps
+ Average transfer time = 0.147761s
+ Average transmission time = 0.000179033s
+ Packet loss rate = 0
+ Overflow rate = 0.280973
+
+
+Iteration 6
+    802.11 Standard = 802.11a , seed = 6 
+
+802.11a
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  10   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  11   ( 10;  0) 10.0    45.120      148.41    0.18    5640    5640  0.0000   0.3073   918.4     54.00      9.2
+
+ Total throughput = 45.1198 Mbps
+ Average transfer time = 0.148411s
+ Average transmission time = 0.000179129s
+ Packet loss rate = 0
+ Overflow rate = 0.307296
+
+
+Iteration 7
+    802.11 Standard = 802.11a , seed = 7 
+
+802.11a
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  12   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  13   ( 10;  0) 10.0    43.413      161.14    0.18    5427    5427  0.0000   0.3487   954.6     54.00      9.2
+
+ Total throughput = 43.4134 Mbps
+ Average transfer time = 0.161142s
+ Average transmission time = 0.000179296s
+ Packet loss rate = 0
+ Overflow rate = 0.348734
+
+
+Iteration 8
+    802.11 Standard = 802.11a , seed = 8 
+
+802.11a
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  14   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  15   ( 10;  0) 10.0    45.262      148.30    0.18    5658    5658  0.0000   0.2982   924.1     54.00      9.2
+
+ Total throughput = 45.2618 Mbps
+ Average transfer time = 0.1483s
+ Average transmission time = 0.000179506s
+ Packet loss rate = 0
+ Overflow rate = 0.298189
+
+
+Iteration 9
+    802.11 Standard = 802.11a , seed = 9 
+
+802.11a
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  16   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  17   ( 10;  0) 10.0    44.356      151.98    0.18    5545    5545  0.0000   0.3267   925.9     54.00      9.2
+
+ Total throughput = 44.3558 Mbps
+ Average transfer time = 0.151977s
+ Average transmission time = 0.000179202s
+ Packet loss rate = 0
+ Overflow rate = 0.326736
+
+
+Iteration 10
+    802.11 Standard = 802.11a , seed = 10 
+
+802.11a
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  18   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  19   ( 10;  0) 10.0    42.238      160.73    0.18    5280    5280  0.0000   0.3494   949.1     54.00      9.2
+
+ Total throughput = 42.2381 Mbps
+ Average transfer time = 0.160734s
+ Average transmission time = 0.000179306s
+ Packet loss rate = 0
+ Overflow rate = 0.349433
+
+
+Iteration 11
+    802.11 Standard = 802.11n , seed = 1 
+
+802.11n
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  20   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  21   ( 10;  0) 10.0    48.309      118.73    0.15    6039    6039  0.0000   0.2459   816.2     65.00      9.2
+
+ Total throughput = 48.3088 Mbps
+ Average transfer time = 0.118727s
+ Average transmission time = 0.000150326s
+ Packet loss rate = 0
+ Overflow rate = 0.245879
+
+
+Iteration 12
+    802.11 Standard = 802.11n , seed = 2 
+
+802.11n
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  22   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  23   ( 10;  0) 10.0    50.534      128.99    0.15    6317    6317  0.0000   0.2263   887.7     65.00      9.2
+
+ Total throughput = 50.5336 Mbps
+ Average transfer time = 0.12899s
+ Average transmission time = 0.000150431s
+ Packet loss rate = 0
+ Overflow rate = 0.226332
+
+
+Iteration 13
+    802.11 Standard = 802.11n , seed = 3 
+
+802.11n
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  24   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  25   ( 10;  0) 10.0    53.175      113.25    0.15    6647    6647  0.0000   0.1728   835.5     65.00      9.2
+
+ Total throughput = 53.1747 Mbps
+ Average transfer time = 0.113253s
+ Average transmission time = 0.000150462s
+ Packet loss rate = 0
+ Overflow rate = 0.172847
+
+
+Iteration 14
+    802.11 Standard = 802.11n , seed = 4 
+
+802.11n
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  26   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  27   ( 10;  0) 10.0    47.911      150.19    0.15    5989    5989  0.0000   0.2732   966.4     65.00      9.2
+
+ Total throughput = 47.9109 Mbps
+ Average transfer time = 0.150191s
+ Average transmission time = 0.000150255s
+ Packet loss rate = 0
+ Overflow rate = 0.27318
+
+
+Iteration 15
+    802.11 Standard = 802.11n , seed = 5 
+
+802.11n
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  28   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  29   ( 10;  0) 10.0    55.198      110.95    0.15    6900    6900  0.0000   0.1187   832.2     65.00      9.2
+
+ Total throughput = 55.1985 Mbps
+ Average transfer time = 0.110955s
+ Average transmission time = 0.000150329s
+ Packet loss rate = 0
+ Overflow rate = 0.118661
+
+
+Iteration 16
+    802.11 Standard = 802.11n , seed = 6 
+
+802.11n
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  30   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  31   ( 10;  0) 10.0    53.304      115.89    0.15    6663    6663  0.0000   0.1776   840.9     65.00      9.2
+
+ Total throughput = 53.3039 Mbps
+ Average transfer time = 0.115893s
+ Average transmission time = 0.000150475s
+ Packet loss rate = 0
+ Overflow rate = 0.17761
+
+
+Iteration 17
+    802.11 Standard = 802.11n , seed = 7 
+
+802.11n
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  32   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  33   ( 10;  0) 10.0    50.878      134.54    0.15    6360    6360  0.0000   0.2223   922.2     65.00      9.2
+
+ Total throughput = 50.8782 Mbps
+ Average transfer time = 0.134544s
+ Average transmission time = 0.000150023s
+ Packet loss rate = 0
+ Overflow rate = 0.222304
+
+
+Iteration 18
+    802.11 Standard = 802.11n , seed = 8 
+
+802.11n
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  34   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  35   ( 10;  0) 10.0    54.790      118.83    0.15    6849    6849  0.0000   0.1494   879.7     65.00      9.2
+
+ Total throughput = 54.7895 Mbps
+ Average transfer time = 0.118834s
+ Average transmission time = 0.000150395s
+ Packet loss rate = 0
+ Overflow rate = 0.149404
+
+
+Iteration 19
+    802.11 Standard = 802.11n , seed = 9 
+
+802.11n
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  36   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  37   ( 10;  0) 10.0    50.031      130.05    0.15    6254    6254  0.0000   0.2308   883.0     65.00      9.2
+
+ Total throughput = 50.0314 Mbps
+ Average transfer time = 0.130045s
+ Average transmission time = 0.000150472s
+ Packet loss rate = 0
+ Overflow rate = 0.23075
+
+
+Iteration 20
+    802.11 Standard = 802.11n , seed = 10 
+
+802.11n
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  38   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  39   ( 10;  0) 10.0    47.748      139.65    0.15    5969    5969  0.0000   0.2678   924.4     65.00      9.2
+
+ Total throughput = 47.7483 Mbps
+ Average transfer time = 0.139652s
+ Average transmission time = 0.000150259s
+ Packet loss rate = 0
+ Overflow rate = 0.267787
+
+
+Iteration 21
+    802.11 Standard = 802.11ac , seed = 1 
+
+802.11ac
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  40   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  41   ( 10;  0) 10.0    48.309      118.73    0.15    6039    6039  0.0000   0.2459   816.2     65.00      9.2
+
+ Total throughput = 48.3088 Mbps
+ Average transfer time = 0.118727s
+ Average transmission time = 0.000150326s
+ Packet loss rate = 0
+ Overflow rate = 0.245879
+
+
+Iteration 22
+    802.11 Standard = 802.11ac , seed = 2 
+
+802.11ac
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  42   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  43   ( 10;  0) 10.0    50.534      128.99    0.15    6317    6317  0.0000   0.2263   887.7     65.00      9.2
+
+ Total throughput = 50.5336 Mbps
+ Average transfer time = 0.12899s
+ Average transmission time = 0.000150431s
+ Packet loss rate = 0
+ Overflow rate = 0.226332
+
+
+Iteration 23
+    802.11 Standard = 802.11ac , seed = 3 
+
+802.11ac
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  44   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  45   ( 10;  0) 10.0    53.175      113.25    0.15    6647    6647  0.0000   0.1728   835.5     65.00      9.2
+
+ Total throughput = 53.1747 Mbps
+ Average transfer time = 0.113253s
+ Average transmission time = 0.000150462s
+ Packet loss rate = 0
+ Overflow rate = 0.172847
+
+
+Iteration 24
+    802.11 Standard = 802.11ac , seed = 4 
+
+802.11ac
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  46   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  47   ( 10;  0) 10.0    47.911      150.19    0.15    5989    5989  0.0000   0.2732   966.4     65.00      9.2
+
+ Total throughput = 47.9109 Mbps
+ Average transfer time = 0.150191s
+ Average transmission time = 0.000150255s
+ Packet loss rate = 0
+ Overflow rate = 0.27318
+
+
+Iteration 25
+    802.11 Standard = 802.11ac , seed = 5 
+
+802.11ac
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  48   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  49   ( 10;  0) 10.0    55.198      110.95    0.15    6900    6900  0.0000   0.1187   832.2     65.00      9.2
+
+ Total throughput = 55.1985 Mbps
+ Average transfer time = 0.110955s
+ Average transmission time = 0.000150329s
+ Packet loss rate = 0
+ Overflow rate = 0.118661
+
+
+Iteration 26
+    802.11 Standard = 802.11ac , seed = 6 
+
+802.11ac
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  50   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  51   ( 10;  0) 10.0    53.304      115.89    0.15    6663    6663  0.0000   0.1776   840.9     65.00      9.2
+
+ Total throughput = 53.3039 Mbps
+ Average transfer time = 0.115893s
+ Average transmission time = 0.000150475s
+ Packet loss rate = 0
+ Overflow rate = 0.17761
+
+
+Iteration 27
+    802.11 Standard = 802.11ac , seed = 7 
+
+802.11ac
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  52   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  53   ( 10;  0) 10.0    50.878      134.54    0.15    6360    6360  0.0000   0.2223   922.2     65.00      9.2
+
+ Total throughput = 50.8782 Mbps
+ Average transfer time = 0.134544s
+ Average transmission time = 0.000150023s
+ Packet loss rate = 0
+ Overflow rate = 0.222304
+
+
+Iteration 28
+    802.11 Standard = 802.11ac , seed = 8 
+
+802.11ac
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  54   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  55   ( 10;  0) 10.0    54.790      118.83    0.15    6849    6849  0.0000   0.1494   879.7     65.00      9.2
+
+ Total throughput = 54.7895 Mbps
+ Average transfer time = 0.118834s
+ Average transmission time = 0.000150395s
+ Packet loss rate = 0
+ Overflow rate = 0.149404
+
+
+Iteration 29
+    802.11 Standard = 802.11ac , seed = 9 
+
+802.11ac
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  56   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  57   ( 10;  0) 10.0    50.031      130.05    0.15    6254    6254  0.0000   0.2308   883.0     65.00      9.2
+
+ Total throughput = 50.0314 Mbps
+ Average transfer time = 0.130045s
+ Average transmission time = 0.000150472s
+ Packet loss rate = 0
+ Overflow rate = 0.23075
+
+
+Iteration 30
+    802.11 Standard = 802.11ac , seed = 10 
+
+802.11ac
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  58   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  59   ( 10;  0) 10.0    47.748      139.65    0.15    5969    5969  0.0000   0.2678   924.4     65.00      9.2
+
+ Total throughput = 47.7483 Mbps
+ Average transfer time = 0.139652s
+ Average transmission time = 0.000150259s
+ Packet loss rate = 0
+ Overflow rate = 0.267787
+
+
+Iteration 31
+    802.11 Standard = 802.11ah , seed = 1 
+
+802.11ah
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  60   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  61   ( 10;  0) 10.0     4.975      523.61    1.35     622     622  0.0000   0.9274   998.7      6.50      9.7
+
+ Total throughput = 4.97452 Mbps
+ Average transfer time = 0.523607s
+ Average transmission time = 0.00134764s
+ Packet loss rate = 0
+ Overflow rate = 0.927362
+
+
+Iteration 32
+    802.11 Standard = 802.11ah , seed = 2 
+
+802.11ah
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  62   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  63   ( 10;  0) 10.0     4.848      560.70    1.35     606     606  0.0000   0.9303   999.7      6.50      9.7
+
+ Total throughput = 4.84756 Mbps
+ Average transfer time = 0.560702s
+ Average transmission time = 0.00134645s
+ Packet loss rate = 0
+ Overflow rate = 0.930305
+
+
+Iteration 33
+    802.11 Standard = 802.11ah , seed = 3 
+
+802.11ah
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  64   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  65   ( 10;  0) 10.0     5.310      519.21    1.35     664     664  0.0000   0.9228   997.9      6.50      9.7
+
+ Total throughput = 5.3104 Mbps
+ Average transfer time = 0.51921s
+ Average transmission time = 0.00134559s
+ Packet loss rate = 0
+ Overflow rate = 0.922773
+
+
+Iteration 34
+    802.11 Standard = 802.11ah , seed = 4 
+
+802.11ah
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  66   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  67   ( 10;  0) 10.0     4.583      591.14    1.34     573     573  0.0000   0.9347  1001.3      6.50      9.7
+
+ Total throughput = 4.58296 Mbps
+ Average transfer time = 0.591137s
+ Average transmission time = 0.00134332s
+ Packet loss rate = 0
+ Overflow rate = 0.934701
+
+
+Iteration 35
+    802.11 Standard = 802.11ah , seed = 5 
+
+802.11ah
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  68   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  69   ( 10;  0) 10.0     5.704      538.93    1.35     713     713  0.0000   0.9161   997.4      6.50      9.7
+
+ Total throughput = 5.70398 Mbps
+ Average transfer time = 0.538926s
+ Average transmission time = 0.00134942s
+ Packet loss rate = 0
+ Overflow rate = 0.916137
+
+
+Iteration 36
+    802.11 Standard = 802.11ah , seed = 6 
+
+802.11ah
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  70   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  71   ( 10;  0) 10.0     5.360      545.84    1.35     670     670  0.0000   0.9227   999.1      6.50      9.7
+
+ Total throughput = 5.35996 Mbps
+ Average transfer time = 0.545842s
+ Average transmission time = 0.00134955s
+ Packet loss rate = 0
+ Overflow rate = 0.922677
+
+
+Iteration 37
+    802.11 Standard = 802.11ah , seed = 7 
+
+802.11ah
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  72   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  73   ( 10;  0) 10.0     5.000      567.07    1.35     625     625  0.0000   0.9276   999.6      6.50      9.7
+
+ Total throughput = 5 Mbps
+ Average transfer time = 0.567069s
+ Average transmission time = 0.00134551s
+ Packet loss rate = 0
+ Overflow rate = 0.927612
+
+
+Iteration 38
+    802.11 Standard = 802.11ah , seed = 8 
+
+802.11ah
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  74   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  75   ( 10;  0) 10.0     5.479      535.54    1.35     685     685  0.0000   0.9197   999.2      6.50      9.7
+
+ Total throughput = 5.47939 Mbps
+ Average transfer time = 0.535538s
+ Average transmission time = 0.00134865s
+ Packet loss rate = 0
+ Overflow rate = 0.919676
+
+
+Iteration 39
+    802.11 Standard = 802.11ah , seed = 9 
+
+802.11ah
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  76   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  77   ( 10;  0) 10.0     4.903      570.63    1.34     613     613  0.0000   0.9291   999.5      6.50      9.7
+
+ Total throughput = 4.90327 Mbps
+ Average transfer time = 0.570629s
+ Average transmission time = 0.00134422s
+ Packet loss rate = 0
+ Overflow rate = 0.929051
+
+
+Iteration 40
+    802.11 Standard = 802.11ah , seed = 10 
+
+802.11ah
+Term Position  dist. throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+  78   (  0;  0)  0.0     0.000        1.#J    1.#J       0       0  1.#INF   1.#INF     1.$     -1.#J      0.2
+  79   ( 10;  0) 10.0     4.567      561.89    1.35     571     571  0.0000   0.9333   999.1      6.50      9.7
+
+ Total throughput = 4.5672 Mbps
+ Average transfer time = 0.561891s
+ Average transmission time = 0.00134635s
+ Packet loss rate = 0
+ Overflow rate = 0.933287
 
 
 %%%% Final results %%%%
 
 
+802.11 Standard=   802.11a    802.11n   802.11ac   802.11ah 
 
 
 Throughput (Mbps)
-mean           =      2.072 
+mean           =     43.831     51.188     51.188      5.073 
+conf. interval =      3.565      6.318      6.318      0.857 
 
 Transfer time (ms)
-mean           =      3.341 
+mean           =    155.080    126.108    126.108    551.455 
+conf. interval =     17.033     28.862     28.862     51.350 
 
 Standard deviation of transfer time (ms)
-mean           =     10.856 
+mean           =     42.565     40.630     40.630    258.459 
+conf. interval =     15.862     23.642     23.642     26.498 
 
 Transmission time (ms)
-mean           =      0.319 
+mean           =      0.179      0.150      0.150      1.347 
+conf. interval =      0.000      0.000      0.000      0.005 
 
 Standard deviation of transmission time (ms)
-mean           =      0.090 
+mean           =      0.060      0.054      0.054      0.260 
+conf. interval =      0.001      0.001      0.001      0.011 
 
 Packet loss rate
-mean           =      0.000 
+mean           =      0.000      0.000      0.000      0.000 
+conf. interval =      0.000      0.000      0.000      0.000 
 
 Queue overflow rate
-mean           =      0.000 
+mean           =      0.328      0.208      0.208      0.926 
+conf. interval =      0.067      0.117      0.117      0.013 
 
 Average queue length
-mean           =      1.474 
+mean           =    934.286    878.809    878.809    999.140 
+conf. interval =     40.372    109.654    109.654      2.360 
 
 Average transmission power (mW)
-mean           =      0.832 
+mean           =      4.720      4.715      4.715      4.972 
+conf. interval =      0.016      0.010      0.010      0.006 
