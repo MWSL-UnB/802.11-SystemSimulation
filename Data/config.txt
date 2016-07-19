@@ -15,7 +15,7 @@ partResults = 1 % if 1, then results file will contain partial results, for each
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Standard (802.11a, 802.11n, 802.11ac or 802.11ah)
 
-Standard = 802.11ac
+Standard = 802.11a, 802.11n, 802.11ac, 802.11ah
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % All following parameters accept comma-separated multiple values for several iterations
@@ -87,7 +87,7 @@ NumberSinus = 20 % number of sinewaves to emulate Rayleigh fading.
 % PHY Parameters
 
 
-TxMode = MCS8%MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9,OPT,SUBOPT
+TxMode = MCS7%MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9,OPT,SUBOPT
           % MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9: no link adaptation, always transmit at fixed rate with maximum power
           % OPT: genie-aided link adaptation
           % SUBOPT: transmitter-based link adaptation
