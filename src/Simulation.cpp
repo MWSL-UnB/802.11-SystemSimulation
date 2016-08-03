@@ -612,7 +612,7 @@ void Simulation::wrap_up () {
 	if(sim_par.get_partResults()) {
 		out.setf(ios::right | ios::fixed);
 		out << Standard::get_standard() << endl;
-		out << "Term Position  dist. throughput transfer_t tx_time packets"
+		out << "Term Position   dist.  AC     throughput transfer_t tx_time packets"
 				<< " kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power" << endl;
 		out << "        m        m      Mbps         ms      ms           "
 				<< "                                      Mbps        mW" << endl;
@@ -638,6 +638,7 @@ void Simulation::wrap_up () {
 			out << (*it)->get_pos();
 			out.precision(1);
 			out << setw(5) << ((*it)->get_pos()).distance();
+			out <<  "  " << (*it)->get_term_ACs();
 			out.precision(3);
 			out << "  " << setw(8) << tp;
 			out.precision(2);

@@ -70,6 +70,9 @@ public:
   virtual accCat get_connection_AC(Terminal* t) = 0;
   // returns access category of a connection
 
+  virtual string get_term_ACs() = 0;
+  // returns string with ACs of all connections
+
   unsigned get_id() const {return id;}
   // returns unique terminal identification number
 
@@ -166,7 +169,7 @@ class MobileStation : public Terminal {
   void connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCat AC);
   // creates connection to terminal '*t'
   // using link adaptation parameters 'ad' and traffic parameters 'ts'
-  
+
 public:
   MobileStation(Position p, Scheduler* s, Channel* c, random* r, log_file* l,
 		  mac_struct mac, PHY_struct phy, timestamp tr)
@@ -174,6 +177,7 @@ public:
   ~MobileStation();
   
   accCat get_connection_AC(Terminal* t);
+  string get_term_ACs();
 
   /////////////////////////////////////////////////////////////
   // definition of virtual functions from base class Terminal
@@ -215,6 +219,7 @@ public:
   ~AccessPoint();
 
   accCat get_connection_AC(Terminal* t);
+  string get_term_ACs();
 
   /////////////////////////////////////////////////////////////
   // definition of virtual functions from base class Terminal

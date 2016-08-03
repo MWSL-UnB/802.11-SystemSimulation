@@ -204,7 +204,6 @@ void Terminal::macUnitdataStatusInd(MSDU p, timestamp ack_delay) {
   n_tx_bytes += p.get_nbytes();
   n_tx_packets++;
 
-
   timestamp tr_delay_aux = ptr2sch->now() - p.get_time_created() - ack_delay;
   transfer_delay += tr_delay_aux;
   transfer_delay_E2 += double(tr_delay_aux) * double(tr_delay_aux);
@@ -289,6 +288,17 @@ void MobileStation::connect(Terminal* t, adapt_struct ad, traffic_struct ts, acc
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// MobileStation::get_term_ACs                                                //
+//                                                                            //
+// returns string with ACs of all connections                                 //
+////////////////////////////////////////////////////////////////////////////////
+string MobileStation::get_term_ACs() {
+	string s = "";
+	s += connected.second;
+	return s;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // MobileStation::get_connections                                             //
 //                                                                            //
 // returns string with terminals connected to this one                        //
@@ -348,6 +358,24 @@ void AccessPoint::connect(Terminal* t, adapt_struct ad, traffic_struct ts, accCa
 
   Traffic* tr = new Traffic(ptr2sch, randgen, mylog, this, t, ts);
   connection[t] = make_tuple(link_adapt(this,t,ad, mylog), tr, AC);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// AccessPoint::get_term_ACs                                                  //
+//                                                                            //
+// returns string with ACs of all connections                                 //
+////////////////////////////////////////////////////////////////////////////////
+string AccessPoint::get_term_ACs() {
+	map<Terminal*, tuple<link_adapt, Traffic*, accCat> >::const_iterator it =
+			connection.begin();
+	string s = "";
+	s += get<2>(it++->second);
+
+	for (; it != connection.end(); ++it) {
+		s += " ";
+		s += get<2>(it->second);
+	}
+	return s;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

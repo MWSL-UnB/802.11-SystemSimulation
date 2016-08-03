@@ -1396,3 +1396,19 @@ ostream& operator<<(ostream& os, const accCat& AC) {
 	   return os << "UNDEFINED AC";
    }
 }
+string operator+= (string& s, const accCat& AC) {
+	switch(AC){
+	   case AC_BK:
+		   return s += "AC_BK";
+	   case AC_BE:
+	   	   return s += "AC_BE";
+	   case AC_VI:
+	   	   return s += "AC_VI";
+	   case AC_VO:
+	   	   return s += "AC_VO";
+	   case legacy:
+	   	   return s += "legacy";
+	   default:
+		   return s += "UNDEFINED AC";
+	   }
+}
