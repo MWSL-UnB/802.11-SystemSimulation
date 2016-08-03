@@ -23,7 +23,7 @@
 #ifndef _mypaths_h
 #define _mypaths_h 1
 
-#define W_DIR "C:\\Users\\Calil\\Documents\\Dev C++ Workspace\\WiFi System\\802.11ac-SystemSimulation\\"
+#define W_DIR "C:\\Users\\Calil\\Documents\\Dev C++ Workspace\\WiFi System\\802.11-SystemSimulation\\"
 //#define W_DIR "C:\\Users\\Aluno\\Documents\\Calil\\WiFi System 3\\SystemSimulation\\"
 //#define W_DIR "C:\\Users\\User\\Documents\\Calil\\WiFi System\\SystemSimulation\\"
 #define DEFAULT_DIR "Data"
