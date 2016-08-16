@@ -39,7 +39,7 @@ const unsigned data_packet_overhead = 28;
 const unsigned ack_packet_overhead  = 14;
 const unsigned rts_packet_overhead  = 20;
 const unsigned cts_packet_overhead  = 14;
-const unsigned ba_packet_overhead  = 20;
+const unsigned ba_packet_overhead  = 32;
 const unsigned mpdu_delimiter_overhead = 4;
 
 /////////////////////////////
