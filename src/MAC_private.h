@@ -43,6 +43,7 @@ typedef enum{
 accCat const allACs[5] = {AC_BK, AC_BE, AC_VI, AC_VO, legacy};
 
 ostream& operator << (ostream& os, const accCat& AC);
+string operator+= (string& s, const accCat& AC);
 // Overload of output operator for accCat types
 
 typedef enum {
