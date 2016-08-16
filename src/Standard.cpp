@@ -111,7 +111,7 @@ double Standard::coeff_high_ac_ah[10][2] = {{-2.3974,-1.1580}, { 2.1138,-1.3738}
 //////////////////////////////////
 // Standard setters and getters //
 //////////////////////////////////
-void Standard::set_standard(dot11_standard st) {
+void Standard::set_standard(dot11_standard st, bool sg) {
 	currentStd = st;
 
 	switch(st) {
@@ -124,6 +124,8 @@ void Standard::set_standard(dot11_standard st) {
 
 	if(st == dot11ah) symbol_period = 40e-6;
 	else symbol_period = 4e-6;
+
+	if(sg) symbol_period =- 0.4e-6;
 }
 
 dot11_standard Standard::get_standard() {

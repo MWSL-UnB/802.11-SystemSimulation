@@ -523,7 +523,7 @@ void Simulation::run() {
 
 		randgent.seed(sim_par.get_Seed());
 
-		Standard::set_standard(sim_par.get_standard());
+		Standard::set_standard(sim_par.get_standard(),false);
 		if(sim_par.get_TxMode() > Standard::get_maxMCS())
 			throw (my_exception("MCS not supported by standard."));
 
