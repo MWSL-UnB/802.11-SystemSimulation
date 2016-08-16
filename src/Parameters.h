@@ -172,6 +172,7 @@ class Parameters {
   ////////////////////////////////
   // standard
   param_vec_dot11_standard standard;
+  param_vec_bool shortGI;
 
   ///////////////////////
   // system configuration
@@ -289,7 +290,7 @@ public:
   bool get_set_BA_agg() {return set_BA_agg.current();}
   bool get_partResults() {return partResults.current();}
   dot11_standard get_standard() {return standard.current();}
-
+  bool get_shortGI() {return shortGI.current();}
 
   Position get_APPosition(unsigned which_ap);
   // returns position of AP number 'which_ap'
