@@ -57,7 +57,6 @@ private:
 	static dot11_standard currentStd;
 	static transmission_mode maxMCS;
 	static double symbol_period;      //OFDM symbol period
-	static bool short_guard;
 
 	// Error model constants
 	static double min_thresh_a[8];
@@ -76,7 +75,7 @@ private:
 	static double coeff_high_ac_ah[10][2];
 
 public:
-	static void set_standard(dot11_standard st, bool sg);
+	static void set_standard(dot11_standard st);
 	static dot11_standard get_standard();
 	static transmission_mode get_maxMCS();
 	static double get_symbol_period();
