@@ -291,7 +291,7 @@ public:
   bool get_set_BA_agg() {return set_BA_agg.current();}
   bool get_partResults() {return partResults.current();}
   dot11_standard get_standard() {return standard.current();}
-
+  channel_bandwidth get_bandwidth() {return Bandwidth.current();}
 
   Position get_APPosition(unsigned which_ap);
   // returns position of AP number 'which_ap'

@@ -31,7 +31,8 @@
 dot11_standard Standard::currentStd = dot11;
 transmission_mode Standard::maxMCS = MCS;
 double Standard::symbol_period = 4e-6;
-channel_bandwidth maxBand = MHz;
+channel_bandwidth Standard::maxBand = MHz;
+channel_bandwidth Standard::band = MHz;
 
 // Standard error model polynomials
 //802.11a
@@ -112,15 +113,35 @@ double Standard::coeff_high_ac_ah[10][2] = {{-2.3974,-1.1580}, { 2.1138,-1.3738}
 //////////////////////////////////
 // Standard setters and getters //
 //////////////////////////////////
-void Standard::set_standard(dot11_standard st) {
+void Standard::set_standard(dot11_standard st, channel_bandwidth bw) {
 	currentStd = st;
+	band = bw;
 
 	switch(st) {
-	case dot11a : maxMCS = MCS7; break;
-	case dot11n : maxMCS = MCS7; break;
-	case dot11ac: maxMCS = MCS8; break;
-	case dot11ah: maxMCS = MCS8; break;
-	default : maxMCS = MCS;
+	case dot11a : {
+		maxMCS = MCS7;
+		maxBand = MHz20;
+		break;
+	}
+	case dot11n : {
+		maxMCS = MCS7;
+		maxBand = MHz40;
+		break;
+	}
+	case dot11ac: {
+		maxMCS = MCS8;
+		maxBand = MHz160;
+		break;
+	}
+	case dot11ah: {
+		maxMCS = MCS8;
+		maxBand = MHz160;
+		break;
+	}
+	default : {
+		maxMCS = MCS;
+		maxBand = MHz20;
+	}
 	}
 
 	if(st == dot11ah) symbol_period = 40e-6;
