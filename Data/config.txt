@@ -117,7 +117,7 @@ UseRxMode = 0		% if UseRxMode = 1, then employ same rate (if higher) as
 CCASensitivity_dBm = -98.0 % carrier sensing sensitivity
                            % packets with receive power below this level are ignored
                            
-shortGI = 0;	% when 1, short Guard Interval of 400 ns will be used
+shortGI = 1;	% when 1, short Guard Interval of 400 ns will be used instead of 800 ns
 
 %%%%%%%%%%%%%%%%%%%%%
 % Traffic parameters
