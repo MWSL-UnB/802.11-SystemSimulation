@@ -31,6 +31,7 @@
 dot11_standard Standard::currentStd = dot11;
 transmission_mode Standard::maxMCS = MCS;
 double Standard::symbol_period = 4e-6;
+channel_bandwidth maxBand = MHz;
 
 // Standard error model polynomials
 //802.11a

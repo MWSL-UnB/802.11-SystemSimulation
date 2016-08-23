@@ -46,6 +46,14 @@ typedef enum{
 	dot11ah
 }dot11_standard;
 
+typedef enum {
+	MHz, //dummy
+	MHz20,
+	MHz40,
+	MHz80,
+	MHz160
+}channel_bandwidth;
+
 ostream& operator<< (ostream& os, const dot11_standard& st);
 istream& operator>> (istream& is, dot11_standard& st);
 
@@ -54,9 +62,11 @@ istream& operator>> (istream& is, dot11_standard& st);
 ////////////////////////////////////////////////////////////////////////////////
 class Standard {
 private:
+	// Standard prameters
 	static dot11_standard currentStd;
 	static transmission_mode maxMCS;
 	static double symbol_period;      //OFDM symbol period
+	static channel_bandwidth maxBand;
 
 	// Error model constants
 	static double min_thresh_a[8];
