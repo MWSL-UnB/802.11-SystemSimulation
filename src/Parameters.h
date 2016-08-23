@@ -132,6 +132,7 @@ typedef param_vec_<discrete_prob> param_vec_discrete_prob;
 typedef param_vec_<log_type> param_vec_log_type;
 typedef param_vec_<Position> param_vec_Position;
 typedef param_vec_<dot11_standard> param_vec_dot11_standard;
+typedef param_vec_<channel_bandwidth> param_vec_bandwidth;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -188,6 +189,7 @@ class Parameters {
   param_vec_double TxPowerStepDown_dBm;
   param_vec_double CCASensitivity_dBm;
   param_vec_double TargetPER;
+  param_vec_bandwidth Bandwidth;
 
   ///////////////////////////////
   // Link Adaptation parameters
