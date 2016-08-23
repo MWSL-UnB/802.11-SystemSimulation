@@ -57,6 +57,9 @@ typedef enum {
 ostream& operator<< (ostream& os, const dot11_standard& st);
 istream& operator>> (istream& is, dot11_standard& st);
 
+ostream& operator<< (ostream& os, const channel_bandwidth& st);
+istream& operator>> (istream& is, channel_bandwidth& st);
+
 ////////////////////////////////////////////////////////////////////////////////
 // class Standard                                                             //
 ////////////////////////////////////////////////////////////////////////////////

@@ -318,3 +318,33 @@ istream& operator>> (istream& is, dot11_standard& st) {
   return is;
 }
 
+////////////////////////
+// output operator<<  //
+////////////////////////
+ostream& operator<< (ostream& os, const channel_bandwidth& bw) {
+  switch(bw) {
+    case MHz : return os << "MHz";
+    case MHz20 : return os << "20 MHz";
+    case MHz40 : return os << "40 MHz";
+    case MHz80 : return os << "80 MHz";
+    case MHz160: return os << "160 MHz";
+    default: return os << "unknown bandwidth.";
+  }
+}
+
+///////////////////////
+// input operator >> //
+///////////////////////
+istream& operator>> (istream& is, channel_bandwidth& bw) {
+  string str;
+  is >> str;
+
+  if (str == "20MHz") bw = MHz20;
+  else if (str == "40MHz") bw = MHz40;
+  else if (str == "80MHz") bw = MHz80;
+  else if (str == "160MHz") bw = MHz160;
+  else is.clear(ios::failbit);
+
+  return is;
+}
+
