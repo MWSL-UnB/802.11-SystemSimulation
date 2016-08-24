@@ -72,6 +72,16 @@ private:
 	static channel_bandwidth maxBand;
 	static channel_bandwidth band;
 
+	// Data rates
+	static double rates_a[8];
+	static double rates_n[8][2];
+	static double rates_ac_ah[10][4];
+
+	// Bits per OFDM symbol
+	static unsigned bits_per_symb_a[8];
+	static unsigned bits_per_symb_n[8][2];
+	static unsigned bits_per_symb_ac_ah[10][4];
+
 	// Error model constants
 	static double min_thresh_a[8];
 	static double max_thresh_a[8];
