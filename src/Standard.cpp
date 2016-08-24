@@ -177,6 +177,12 @@ double Standard::get_coeff_high(int idx, int i) {
 	else if(currentStd == dot11n) return coeff_high_n[idx][i];
 	else return coeff_high_ac_ah[idx][i];
 }
+channel_bandwidth Standard::get_band() {
+	return band;
+}
+channel_bandwidth Standard::get_maxBand() {
+	return maxBand;
+}
 
 ///////////////////////
 // tx_mode_to_double //

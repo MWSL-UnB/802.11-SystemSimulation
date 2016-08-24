@@ -97,6 +97,8 @@ public:
 	static double get_max_thresh(int idx);
 	static double get_coeff(int idx, int i);
 	static double get_coeff_high(int idx, int i);
+	static channel_bandwidth get_band();
+	static channel_bandwidth get_maxBand();
 
 	static double tx_mode_to_double(transmission_mode tm);
 	static unsigned txMode_bits_per_symbol(transmission_mode tm);
