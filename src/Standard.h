@@ -70,12 +70,17 @@ private:
 	static transmission_mode maxMCS;
 	static double symbol_period;      //OFDM symbol period
 	static channel_bandwidth maxBand;
+
+	// Flags and holders
 	static channel_bandwidth band;
+	static bool shortGI;
 
 	// Data rates
 	static double rates_a[8];
-	static double rates_n[8][2];
-	static double rates_ac_ah[10][4];
+	static double rates_n[2][8][2];
+	static double rates_ac_ah[2][10][4];
+	// The first dimension corresponds to guard interval, the second to the MCS and the third
+	// to the bandwidth
 
 	// Bits per OFDM symbol
 	static unsigned bits_per_symb_a[8];

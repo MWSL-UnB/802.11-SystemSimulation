@@ -33,27 +33,50 @@ transmission_mode Standard::maxMCS = MCS;
 double Standard::symbol_period = 4e-6;
 channel_bandwidth Standard::maxBand = MHz;
 channel_bandwidth Standard::band = MHz;
+bool Standard::shortGI = false;
 
 //Data rates
-double Standard::rates_a[8]    		=  {    6,    9,   12,   18,   24,   36,   48,   52};
-double Standard::rates_n[8][2]      = {{ 6.5,13.5},
-									   {   13,   27},
-									   { 19.5, 40.5},
-									   {   26,   54},
-									   {   39,   81},
-									   {   52,  108},
-									   { 58.5,121.5},
-									   {   65,  135}};
-double Standard::rates_ac_ah[10][4] = {{  6.5, 13.5, 29.3, 58.5},
-									   {   13,   27, 58.5,  117},
-									   { 19.5, 40.5, 87.8,175.5},
-									   {   26,   54,  117,  234},
-									   {   39,   81,175.5,  351},
-									   {   52,  108,  234,  468},
-									   { 58.5,121.5,263.3,526.5},
-									   {   65,  135,292.5,  585},
-									   {   78,  162,  351,  702},
-									   {    0,  180,  390,  780}};
+double Standard::rates_a[8]       =  {    6,    9,   12,   18,   24,   36,   48,   52};
+double Standard::rates_n[2][8][2] = {{{ 6.5, 13.5},
+									 {   13,   27},
+									 { 19.5, 40.5},
+									 {   26,   54},
+									 {   39,   81},
+									 {   52,  108},
+									 { 58.5,121.5},
+									 {   65,  135}},
+
+									 {{ 7.2,   15},
+									 { 14.4,   30},
+									 { 21.7,   45},
+									 { 28.9,   60},
+									 { 43.3,   90},
+									 { 57.8,  120},
+									 {   65,  135},
+									 { 72.2,  150}}};
+
+double Standard::rates_ac_ah[2][10][4] = {{{  6.5, 13.5, 29.3, 58.5},
+									       {   13,   27, 58.5,  117},
+										   { 19.5, 40.5, 87.8,175.5},
+									       {   26,   54,  117,  234},
+										   {   39,   81,175.5,  351},
+										   {   52,  108,  234,  468},
+										   { 58.5,121.5,263.3,526.5},
+										   {   65,  135,292.5,  585},
+										   {   78,  162,  351,  702},
+										   {    0,  180,  390,  780}},
+
+										  {{  7.2,   15, 32.5,   65},
+										   { 14.4,   30,   65,  130},
+										   { 21.7,   45, 97.5,  195},
+										   { 28.9,   60,  130,  260},
+										   { 43.3,   90,  195,  390},
+										   { 57.8,  120,  260,  520},
+										   {   65,  135,292.5,  858},
+										   { 72.2,  150,  325,  650},
+										   { 86.7,  180,  390,  780},
+										   {    0,  200,433.3,866.7}}};
+
 
 // Bits per OFDM symbol
 unsigned Standard::bits_per_symb_a[8]    	  =  {  24,  36,  48,  72,  96, 144, 192, 216};
@@ -175,7 +198,8 @@ void Standard::set_standard(dot11_standard st, channel_bandwidth bw, bool sgi) {
 	if(st == dot11ah) symbol_period = 40e-6;
 	else symbol_period = 4e-6;
 
-	if(sgi) symbol_period =- 0.4e-6;
+	shortGI = sgi;
+	if(shortGI) symbol_period =- 0.4e-6;
 }
 
 dot11_standard Standard::get_standard() {
@@ -221,12 +245,14 @@ double Standard::tx_mode_to_double (transmission_mode tm) {
 
 	unsigned mode = tm - MCS0;
 	unsigned bndW = band - MHz20;
+	unsigned sgi = 0;
+	if(shortGI) sgi = 1;
 
 	switch(currentStd) {
 	case dot11a:  return rates_a[mode];
-	case dot11n:  return rates_n[mode][bndW];
-	case dot11ac: return rates_ac_ah[mode][bndW];
-	case dot11ah: return rates_ac_ah[mode][bndW];
+	case dot11n:  return rates_n[sgi][mode][bndW];
+	case dot11ac: return rates_ac_ah[sgi][mode][bndW];
+	case dot11ah: return rates_ac_ah[sgi][mode][bndW];
 	default: throw (my_exception("Undefined Standard."));
 	}
 	return 0;
