@@ -3,3 +3,11 @@
 Iteration 1
 	
 
+Access Point 0 created at position (0;0)
+
+Mobile Station 1 created at position (10;0) with distance 10 m to Access Point 0
+Mobile station AC: AC_VI. Access Point AC: AC_VI.
+
+Access Point 0 is connected to Mobile Station 1
+Mobile Station 1 is connected to Access Point 0
+

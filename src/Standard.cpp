@@ -260,61 +260,15 @@ double Standard::tx_mode_to_double (transmission_mode tm) {
 // txMode_bits_per_symbol //
 ////////////////////////////
 unsigned Standard::txMode_bits_per_symbol(transmission_mode tm) {
+
+	unsigned mode = tm - MCS0;
+	unsigned bndW = band - MHz20;
+
 	switch(currentStd) {
-	case dot11a: {
-		switch (tm) {
-		case MCS0 : return 24;
-		case MCS1 : return 36;
-		case MCS2 : return 48;
-		case MCS3 : return 72;
-		case MCS4 : return 96;
-		case MCS5 : return 144;
-		case MCS6 : return 192;
-		case MCS7 : return 216;
-		default   : return 0;
-		} break;
-	}
-	case dot11n: {
-		switch (tm) {
-		case MCS0 : return 26;
-		case MCS1 : return 52;
-		case MCS2 : return 78;
-		case MCS3 : return 104;
-		case MCS4 : return 156;
-		case MCS5 : return 208;
-		case MCS6 : return 234;
-		case MCS7 : return 260;
-		default   : return 0;
-		} break;
-	}
-	case dot11ac: {
-		switch (tm) {
-		case MCS0 : return 26;
-		case MCS1 : return 52;
-		case MCS2 : return 78;
-		case MCS3 : return 104;
-		case MCS4 : return 156;
-		case MCS5 : return 208;
-		case MCS6 : return 234;
-		case MCS7 : return 260;
-		case MCS8 : return 312;
-		default   : return 0;
-		} break;
-	}
-	case dot11ah: {
-		switch (tm) {
-		case MCS0 : return 26;
-		case MCS1 : return 52;
-		case MCS2 : return 78;
-		case MCS3 : return 104;
-		case MCS4 : return 156;
-		case MCS5 : return 208;
-		case MCS6 : return 234;
-		case MCS7 : return 260;
-		case MCS8 : return 312;
-		default   : return 0;
-		} break;
-	}
+	case dot11a:  return bits_per_symb_a[mode];
+	case dot11n:  return bits_per_symb_n[mode][bndW];
+	case dot11ac: return bits_per_symb_ac_ah[mode][bndW];
+	case dot11ah: return bits_per_symb_ac_ah[mode][bndW];
 	default: throw (my_exception("Undefined Standard."));
 	}
 	return 0;
