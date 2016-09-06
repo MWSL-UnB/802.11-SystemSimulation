@@ -193,67 +193,18 @@ channel_bandwidth Standard::get_maxBand() {
 // tx_mode_to_double //
 ///////////////////////
 double Standard::tx_mode_to_double (transmission_mode tm) {
+
+	unsigned mode = tm - MCS0;
+	unsigned bndW = band - MHz20;
+
 	switch(currentStd) {
-	case dot11a: {
-		switch(tm) {
-		case MCS : return 0;
-		case MCS0: return 6;
-		case MCS1: return 9;
-		case MCS2: return 12;
-		case MCS3: return 18;
-		case MCS4: return 24;
-		case MCS5: return 36;
-		case MCS6: return 48;
-		case MCS7: return 54;
-		default : throw (my_exception("MCS not supported by standard."));
-		}
-	}
-	case dot11n: {
-		switch(tm) {
-		case MCS : return 0;
-		case MCS0: return 6.5;
-		case MCS1: return 13.0;
-		case MCS2: return 19.5;
-		case MCS3: return 26.0;
-		case MCS4: return 39.0;
-		case MCS5: return 52.0;
-		case MCS6: return 58.5;
-		case MCS7: return 65.0;
-		default : throw (my_exception("MCS not supported by standard."));
-		}
-	}
-	case dot11ac: {
-		switch(tm) {
-		case MCS : return 0;
-		case MCS0: return 6.5;
-		case MCS1: return 13.0;
-		case MCS2: return 19.5;
-		case MCS3: return 26.0;
-		case MCS4: return 39.0;
-		case MCS5: return 52.0;
-		case MCS6: return 58.5;
-		case MCS7: return 65.0;
-		case MCS8: return 78.0;
-		default : throw (my_exception("MCS not supported by standard."));
-		}
-	}
-	case dot11ah: {
-		switch(tm) {
-		case MCS : return 0;
-		case MCS0: return 0.65;
-		case MCS1: return 1.30;
-		case MCS2: return 1.95;
-		case MCS3: return 2.60;
-		case MCS4: return 3.90;
-		case MCS5: return 5.20;
-		case MCS6: return 5.85;
-		case MCS7: return 6.50;
-		case MCS8: return 7.80;
-		default : throw (my_exception("MCS not supported by standard."));
-		}
-	}
+	case dot11a:  return rates_a[mode];
+	case dot11n:  return rates_n[mode][bndW];
+	case dot11ac: return rates_ac_ah[mode][bndW];
+	case dot11ah: return rates_ac_ah[mode][bndW];
 	default: throw (my_exception("Undefined Standard."));
 	}
+	return 0;
 }
 
 ////////////////////////////

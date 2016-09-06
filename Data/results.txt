@@ -3,15 +3,15 @@
 Iteration 1
     
 
-802.11a
+802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
    0   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.2
-   1   ( 10;  0) 10.0  AC_VI     1.984        2.61    0.38     248     248  0.0000   0.0000     1.5     54.00      1.1
+   1   ( 10;  0) 10.0  AC_VI     2.008        4.88    0.22     251     251  0.0000   0.0000     1.7    234.00      1.0
 
- Total throughput = 1.98389 Mbps
- Average transfer time = 0.00260574s
- Average transmission time = 0.000376875s
+ Total throughput = 2.00795 Mbps
+ Average transfer time = 0.00488331s
+ Average transmission time = 0.000223s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -22,19 +22,19 @@ Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_
 
 
 Throughput (Mbps)
-mean           =      1.984 
+mean           =      2.008 
 
 Transfer time (ms)
-mean           =      2.606 
+mean           =      4.883 
 
 Standard deviation of transfer time (ms)
-mean           =      8.557 
+mean           =     14.421 
 
 Transmission time (ms)
-mean           =      0.377 
+mean           =      0.223 
 
 Standard deviation of transmission time (ms)
-mean           =      0.083 
+mean           =      0.086 
 
 Packet loss rate
 mean           =      0.000 
@@ -43,7 +43,7 @@ Queue overflow rate
 mean           =      0.000 
 
 Average queue length
-mean           =      1.530 
+mean           =      1.684 
 
 Average transmission power (mW)
-mean           =      0.627 
+mean           =      0.596 
