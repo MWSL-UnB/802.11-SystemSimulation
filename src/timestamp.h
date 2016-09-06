@@ -28,7 +28,7 @@
 
 using namespace std;
 
-const double TimeUnit = 0.4e-6; // time unit is 0.4 microsec
+const double TimeUnit = 0.4e-6; // time unit is 0.4 microseconds
 
 class timestamp {
   long_integer t;

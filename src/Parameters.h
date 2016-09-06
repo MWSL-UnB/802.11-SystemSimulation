@@ -190,6 +190,7 @@ class Parameters {
   param_vec_double CCASensitivity_dBm;
   param_vec_double TargetPER;
   param_vec_bandwidth Bandwidth;
+  param_vec_bool shortGI;
 
   ///////////////////////////////
   // Link Adaptation parameters
@@ -292,6 +293,7 @@ public:
   bool get_partResults() {return partResults.current();}
   dot11_standard get_standard() {return standard.current();}
   channel_bandwidth get_bandwidth() {return Bandwidth.current();}
+  bool get_shortGI() {return shortGI.current();}
 
   Position get_APPosition(unsigned which_ap);
   // returns position of AP number 'which_ap'

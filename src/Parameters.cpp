@@ -341,6 +341,10 @@ bool Parameters::assign (string s1,string s2) {
   	  which_param = &Bandwidth;
   	  if (!Bandwidth.read_vec(s2)) return false;
 
+  } else if (!s1.compare("shortGI")) {
+  	  which_param = &shortGI;
+  	  if (!shortGI.read_vec(s2)) return false;
+
   } else {
     return false;
   }

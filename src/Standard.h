@@ -99,7 +99,7 @@ private:
 	static double coeff_high_ac_ah[10][2];
 
 public:
-	static void set_standard(dot11_standard st, channel_bandwidth bw);
+	static void set_standard(dot11_standard st, channel_bandwidth bw, bool sgi);
 	static dot11_standard get_standard();
 	static transmission_mode get_maxMCS();
 	static double get_symbol_period();
