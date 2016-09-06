@@ -132,12 +132,12 @@ void Standard::set_standard(dot11_standard st, channel_bandwidth bw) {
 		break;
 	}
 	case dot11ac: {
-		maxMCS = MCS8;
+		maxMCS = MCS9;
 		maxBand = MHz160;
 		break;
 	}
 	case dot11ah: {
-		maxMCS = MCS8;
+		maxMCS = MCS9;
 		maxBand = MHz160;
 		break;
 	}
