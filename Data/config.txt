@@ -86,7 +86,7 @@ NumberSinus = 20 % number of sinewaves to emulate Rayleigh fading.
 %%%%%%%%%%%%%%%%%%
 % PHY Parameters
 
-Bandwidth = 20MHz %20MHz, 40MHz, 80MHz or 160MHz channels. Standard dependant
+Bandwidth = 40MHz %20MHz, 40MHz, 80MHz or 160MHz channels. Standard dependant
 TxMode = MCS7%MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9,OPT,SUBOPT
           % MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9: no link adaptation, always transmit at fixed rate with maximum power
           % OPT: genie-aided link adaptation

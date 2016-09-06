@@ -147,7 +147,7 @@ void Standard::set_standard(dot11_standard st, channel_bandwidth bw) {
 	}
 	}
 
-	//(my_exception("MCS not supported by standard."));
+	if(bw > maxBand)throw (my_exception("Bandwidth not supported by standard."));
 
 	if(st == dot11ah) symbol_period = 40e-6;
 	else symbol_period = 4e-6;
