@@ -34,6 +34,26 @@ double Standard::symbol_period = 4e-6;
 channel_bandwidth Standard::maxBand = MHz;
 channel_bandwidth Standard::band = MHz;
 
+//Data rates
+double Standard::rates_a[8]    		=  {    6,    9,   12,   18,   24,   36,   48,   52};
+double Standard::rates_n[8][2]      = {{  6.5,   13},{ 19.5,   26},{   39,   52},{ 58.5,   65},
+								  	   { 13.5,   27},{ 40.5,   54},{   81,  108},{121.5,  135}};
+double Standard::rates_ac_ah[10][4] = {{  6.5,   13, 19.5,   26},{   39,   52, 58.5,   65},
+									   {   78,    0, 13.5,   27},{ 40.5,   54,   81,  108},
+									   {121.5,  135,  162,  180},{ 29.3, 58.5, 87.8,  117},
+									   {175.5,  234,263.3,292.5},{  351,  390, 58.5,  117},
+									   {175.5,  234,  351,  468},{526.5,  585,  702,  780}};
+
+// Bits per OFDM symbol
+unsigned Standard::bits_per_symb_a[8]    	  =  {  24,  36,  48,  72,  96, 144, 192, 216};
+unsigned Standard::bits_per_symb_n[8][2] 	  = {{  26,  52},{  78, 104},{ 156, 208},{ 234, 260},
+											     {  54, 108},{ 162, 216},{ 324, 432},{ 486, 540}};
+unsigned Standard::bits_per_symb_ac_ah[10][4] = {{  26,  52,  78, 104},{ 156, 208, 234, 260},
+												 { 312,   0,  54, 108},{ 162, 216, 324, 432},
+												 { 486, 540, 648, 720},{ 117, 234, 351, 468},
+												 { 702, 936,1053,1170},{1404,1560, 234, 468},
+												 { 702, 936,1404,1872},{2106,2340,2808,3120}};
+
 // Standard error model polynomials
 //802.11a
 double Standard::min_thresh_a[8] = {-2.5103, 0.75061,  0.5000,  3.7609,
@@ -93,20 +113,6 @@ double Standard::coeff_high_ac_ah[10][2] = {{-2.3974,-1.1580}, { 2.1138,-1.3738}
 		{20.0742,-1.2278}, {21.2886,-1.2977}, {18.1224,-0.9725},
 		{0,0}};
 
-//Data rates
-double Standard::rates_a[8]    		=  {    6,    9,   12,   18,   24,   36,   48,   52};
-double Standard::rates_n[8][2]      = {{  6.5,   13, 19.5,   26,   39,   52, 58.5,   65},
-								  	   { 13.5,   27, 40.5,   54,   81,  108,121.5, 135}};
-double Standard::rates_ac_ah[10][4] = {{  6.5,   13, 19.5,   26,   39,   52, 58.5,   65,  78,   0},
-	  	   	   	   	   	   	   	   	   { 13.5,   27, 40.5,   54,   81,  108,121.5,  135, 162, 180},
-									   { 29.3, 58.5, 87.8,  117,175.5,  234,263.3,292.5, 351, 390},
-									   { 58.5,  117,175.5,  234,  351,  468,526.5,  585, 702, 780}};
-
-// Bits per OFDM symbol
-unsigned Standard::bits_per_symb_a[8]    =  {  24,  36,  48,  72,  96, 144, 192, 216};
-unsigned Standard::bits_per_symb_n[8][2] = {{  26,  52,  78, 104, 156, 208, 234, 260},
-											{  54, 108, 162, 216, 324, 432, 486, 540}};
-
 //////////////////////////////////
 // Standard setters and getters //
 //////////////////////////////////
@@ -140,6 +146,8 @@ void Standard::set_standard(dot11_standard st, channel_bandwidth bw) {
 		maxBand = MHz20;
 	}
 	}
+
+	//(my_exception("MCS not supported by standard."));
 
 	if(st == dot11ah) symbol_period = 40e-6;
 	else symbol_period = 4e-6;
