@@ -199,7 +199,7 @@ void Standard::set_standard(dot11_standard st, channel_bandwidth bw, bool sgi) {
 	else symbol_period = 4e-6;
 
 	shortGI = sgi;
-	if(shortGI) symbol_period =- 0.4e-6;
+	if(shortGI) symbol_period = symbol_period - 0.4e-6;
 }
 
 dot11_standard Standard::get_standard() {
