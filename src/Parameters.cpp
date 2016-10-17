@@ -337,6 +337,14 @@ bool Parameters::assign (string s1,string s2) {
 	  which_param = &standard;
 	  if (!standard.read_vec(s2)) return false;
 
+  } else if (!s1.compare("Bandwidth")) {
+  	  which_param = &Bandwidth;
+  	  if (!Bandwidth.read_vec(s2)) return false;
+
+  } else if (!s1.compare("shortGI")) {
+  	  which_param = &shortGI;
+  	  if (!shortGI.read_vec(s2)) return false;
+
   } else {
     return false;
   }
@@ -389,6 +397,7 @@ void Parameters::default_config () {
   TxPowerStepDown_dBm.init("transmit power step (down)",1,"dBm");
   TxMode.init("transmit mode",MCS0);
   AdaptMode.init("adaptation mode",RATE);
+  Bandwidth.init("bandwidth",MHz20);
 
   TargetPER.init("target PER",.1);
 

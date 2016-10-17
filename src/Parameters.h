@@ -132,6 +132,7 @@ typedef param_vec_<discrete_prob> param_vec_discrete_prob;
 typedef param_vec_<log_type> param_vec_log_type;
 typedef param_vec_<Position> param_vec_Position;
 typedef param_vec_<dot11_standard> param_vec_dot11_standard;
+typedef param_vec_<channel_bandwidth> param_vec_bandwidth;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -188,6 +189,8 @@ class Parameters {
   param_vec_double TxPowerStepDown_dBm;
   param_vec_double CCASensitivity_dBm;
   param_vec_double TargetPER;
+  param_vec_bandwidth Bandwidth;
+  param_vec_bool shortGI;
 
   ///////////////////////////////
   // Link Adaptation parameters
@@ -289,7 +292,8 @@ public:
   bool get_set_BA_agg() {return set_BA_agg.current();}
   bool get_partResults() {return partResults.current();}
   dot11_standard get_standard() {return standard.current();}
-
+  channel_bandwidth get_bandwidth() {return Bandwidth.current();}
+  bool get_shortGI() {return shortGI.current();}
 
   Position get_APPosition(unsigned which_ap);
   // returns position of AP number 'which_ap'

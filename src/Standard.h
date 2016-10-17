@@ -46,17 +46,46 @@ typedef enum{
 	dot11ah
 }dot11_standard;
 
+typedef enum {
+	MHz, //dummy
+	MHz20,
+	MHz40,
+	MHz80,
+	MHz160
+}channel_bandwidth;
+
 ostream& operator<< (ostream& os, const dot11_standard& st);
 istream& operator>> (istream& is, dot11_standard& st);
+
+ostream& operator<< (ostream& os, const channel_bandwidth& st);
+istream& operator>> (istream& is, channel_bandwidth& st);
 
 ////////////////////////////////////////////////////////////////////////////////
 // class Standard                                                             //
 ////////////////////////////////////////////////////////////////////////////////
 class Standard {
 private:
+	// Standard prameters
 	static dot11_standard currentStd;
 	static transmission_mode maxMCS;
 	static double symbol_period;      //OFDM symbol period
+	static channel_bandwidth maxBand;
+
+	// Flags and holders
+	static channel_bandwidth band;
+	static bool shortGI;
+
+	// Data rates
+	static double rates_a[8];
+	static double rates_n[2][8][2];
+	static double rates_ac_ah[2][10][4];
+	// The first dimension corresponds to guard interval, the second to the MCS and the third
+	// to the bandwidth
+
+	// Bits per OFDM symbol
+	static unsigned bits_per_symb_a[8];
+	static unsigned bits_per_symb_n[8][2];
+	static unsigned bits_per_symb_ac_ah[10][4];
 
 	// Error model constants
 	static double min_thresh_a[8];
@@ -75,7 +104,7 @@ private:
 	static double coeff_high_ac_ah[10][2];
 
 public:
-	static void set_standard(dot11_standard st);
+	static void set_standard(dot11_standard st, channel_bandwidth bw, bool sgi);
 	static dot11_standard get_standard();
 	static transmission_mode get_maxMCS();
 	static double get_symbol_period();
@@ -83,6 +112,8 @@ public:
 	static double get_max_thresh(int idx);
 	static double get_coeff(int idx, int i);
 	static double get_coeff_high(int idx, int i);
+	static channel_bandwidth get_band();
+	static channel_bandwidth get_maxBand();
 
 	static double tx_mode_to_double(transmission_mode tm);
 	static unsigned txMode_bits_per_symbol(transmission_mode tm);
