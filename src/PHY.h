@@ -113,7 +113,7 @@ public:
   void cancel_notify_free_channel();
   // MAC cancels notification request.
 
-  void receive(MPDU p, double path_loss, double interf = 0);
+  void receive(MPDU p, valarray<double> path_loss, double interf = 0);
   // a packet 'p' is received with path loss 'path_loss' dB and interference level
   // 'interf' mW. If packet is received correctly, forward it to MAC layer.
 

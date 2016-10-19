@@ -75,7 +75,7 @@ PHY::PHY(Terminal* t,
 // approximation of the function log10(BER) x SNR.                            //
 // Depending on the SNR, one of three different polynomials is used.          //
 ////////////////////////////////////////////////////////////////////////////////
-double PHY_private::calculate_ber(transmission_mode mode, double SNR) const {
+double PHY_private::calculate_per(transmission_mode mode, double SNR) const {
 BEGIN_PROF("PHY::calculate_ber")
 
   double ber;
@@ -244,8 +244,7 @@ BEGIN_PROF("PHY::opt_mode")
   for(;;) {
     if (mode == MCS0) break;
 
-    double ber = calculate_ber(mode, SNR);
-    double per = 1.0 - pow(1.0 - ber/double(burst_length), int(nbits));
+    double per = calculate_per(mode, SNR);
 
     if (per <= per_target) break;
     else --mode;
@@ -277,8 +276,7 @@ BEGIN_PROF("PHY::opt_power")
   
     if (power >= pmax) break;
 
-    double ber = calculate_ber(mode, SNR);
-    double per = 1.0 - pow(1.0 - ber/double(burst_length), int(nbits));
+    double per = calculate_per(mode, SNR);
 
     if (per <= per_target) break;
     else power += pstep;
@@ -296,10 +294,13 @@ END_PROF("PHY::opt_mode")
 // level 'interf' mW. If packet is received correctly, forward it to MAC      //
 // layer.                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void PHY::receive(MPDU pck, double path_loss, double interf) {
+void PHY::receive(MPDU pck, valarray<double> path_loss, double interf) {
 BEGIN_PROF("PHY::receive")
 
-  double rx_pow = pck.get_power() - path_loss;
+  double Np = (double)path_loss.size();
+  valarray<double> rx_sub = pck.get_power()/Np - path_loss;
+
+  double rx_pow = rx_sub.sum();
 
   if (rx_pow < CCASensitivity_dBm) {
 
@@ -330,27 +331,23 @@ BEGIN_PROF("PHY::receive")
                                              pow(10.0,NoiseVariance_dBm/10.0))
                                       : NoiseVariance_dBm;
 
-    double SNIR = rx_pow - NoiseInterfVar;
+    valarray<double> SNIRps = rx_sub - NoiseInterfVar;
 
-    // Calculate SNReff here
+    double SNIReff = calculate_SNReff(SNIRps,1);
 
     // INSTEAD OF CALCULATING BER, SNR WILL BE MAPPED DIRECTLY TO PER
-    double bit_error_prob = calculate_ber(pck.get_mode(), SNIR);
-
-
-    double pack_error_prob = 1 - pow((1-bit_error_prob/burst_length),
-                                     int(pck.get_nbits()));
+    double pack_error_prob = calculate_per(pck.get_mode(), SNIReff);
 
     if (rand_gen->uniform() > pack_error_prob) {
 
       if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term 
-                          << " (PHY) : SNIR = " << SNIR << ", PER = " 
+                          << " (PHY) : SNIReff = " << SNIReff << ", PER = "
                           << pack_error_prob << ", " << pck << " received " 
                           << endl;
 
       mymac->phyRxEndInd(pck);
     } else if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term 
-                               << " (PHY) : SNIR = " << SNIR  << "dB, PER = " 
+                               << " (PHY) : SNIReff = " << SNIReff  << "dB, PER = "
                                << pack_error_prob << ", " << pck 
                                << " not received " << endl;
   }

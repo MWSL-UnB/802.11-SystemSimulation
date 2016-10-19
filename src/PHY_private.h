@@ -65,10 +65,10 @@ protected:
   // timestamps determining when transceiver is busy, to avoid simultaneous
   // transmission and/or reception of different packets by same transceiver.
 
-  double calculate_ber(transmission_mode mode, double SNR) const;
-  // returns bit error rate for a given transmission rate and signal-to-noise
-  // ratio 'SNR' dB. The bit error rate is calculated based on a polynomial
-  // approximation of the function log10(BER) x SNR.
+  double calculate_per(transmission_mode mode, double SNR) const;
+  // returns packet error rate for a given transmission rate and signal-to-noise
+  // ratio 'SNR' dB. The packet error rate is calculated based on a polynomial
+  // approximation of the function log10(PER) x SNR.
 
   double calculate_SNReff(valarray<double> SNRps, double beta) const;
   // returns Effective SNR SNReff of subcarriers SNRs SNRps, calculated using
