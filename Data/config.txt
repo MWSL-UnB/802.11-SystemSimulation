@@ -10,7 +10,8 @@ Confidence = .95 % for calculation of confidence interval (if more than one seed
 Log = SETUP,MAC  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or SCHEDULER)
              % unlike the other parameters the simulation will not iterate over this parameter
              % , the log output will be a combination of the desired elements for all iterations
-partResults = 1 % if 1, then results file will contain partial results, for each iteration
+partResults = 1 % if 1, then results file will contain partial results, for each iteration. If 0, 
+			 % then only final results are presented
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % All following parameters accept comma-separated multiple values for several iterations
@@ -81,7 +82,13 @@ NoiseVariance_dBm = -95.0 % noise variance at receiverin dBm
 DopplerSpread_Hz = 5.0    % maximum Doppler spread in Hz
 NumberSinus = 20 % number of sinewaves to emulate Rayleigh fading.
                  % It should be >10 for good statistical properties.
-
+ChannelModel = A % Multipath channel model:
+				 % 	A: Flat channel
+				 % 	B: Residential
+				 % 	C: Residential/Small Office
+				 % 	D: Typical Office
+				 % 	E: Large Office
+			 	 % 	F: Large Space (Indoors/Outdoors)
 
 %%%%%%%%%%%%%%%%%%
 % PHY Parameters

@@ -531,7 +531,7 @@ void Simulation::run() {
 				sim_par.get_RefLoss(),
 				sim_par.get_DopplerSpread(),
 				sim_par.get_NumberSinus(),
-				A);
+				sim_par.get_channelModel());
 
 		ch = new Channel(&main_sch, &randgent, ch_par, &log);
 

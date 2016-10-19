@@ -345,6 +345,10 @@ bool Parameters::assign (string s1,string s2) {
   	  which_param = &shortGI;
   	  if (!shortGI.read_vec(s2)) return false;
 
+  } else if (!s1.compare("ChannelModel")) {
+    	  which_param = &ChannelModel;
+    	  if (!ChannelModel.read_vec(s2)) return false;
+
   } else {
     return false;
   }
@@ -389,6 +393,7 @@ void Parameters::default_config () {
   NoiseVariance_dBm.init("noise variance",-95.0,"dBm");
   DopplerSpread_Hz.init("Doppler spread",0,"Hz");
   NumberSinus.init("Number of sinusoidals",20);
+  ChannelModel.init("Channel Multipath Model",A);
 
   // PHY parameters
   TxPowerMax_dBm.init("maximum transmit power",0,"dBm");

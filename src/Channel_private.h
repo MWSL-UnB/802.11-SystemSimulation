@@ -47,6 +47,9 @@ typedef enum{
 	F
 } channel_model;
 
+ostream& operator<< (ostream& os, const channel_model& cm);
+istream& operator>> (istream& is, channel_model& cm);
+
 ////////////////////////////////////////////////////////////////////////////////
 // class term_pair                                                            //
 //                                                                            //

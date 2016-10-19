@@ -608,3 +608,35 @@ ostream& operator << (ostream& os, const Link& l) {
 ////////////////////////////////////////////////////////////////////////////////
 
 
+////////////////////////
+// output operator<<  //
+////////////////////////
+ostream& operator<< (ostream& os, const channel_model& cm) {
+  switch(cm) {
+    case A : return os << "A";
+    case B : return os << "B";
+    case C : return os << "C";
+    case D : return os << "D";
+    case E : return os << "E";
+    case F : return os << "F";
+    default: return os << "unknown Model.";
+  }
+}
+
+///////////////////////
+// input operator >> //
+///////////////////////
+istream& operator>> (istream& is, channel_model& cm) {
+  string str;
+  is >> str;
+
+  if (str == "A") cm = A;
+  else if (str == "B") cm = B;
+  else if (str == "C") cm = C;
+  else if (str == "D") cm = D;
+  else if (str == "E") cm = E;
+  else if (str == "F") cm = F;
+  else is.clear(ios::failbit);
+
+  return is;
+}

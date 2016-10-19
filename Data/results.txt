@@ -6,13 +6,13 @@ Iteration 1
 802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   0   (  0;  0)  0.0  AC_BE AC_BE     0.000         inf     inf       0       0     inf      inf     inf       nan      0.5
-   1   (  6; -7)  9.2  AC_BE    10.070        0.90    0.45    1259    1259  0.0000   0.0000     2.1     65.00      1.9
-   2   ( -4; -4)  5.4  AC_BE    10.030        0.92    0.44    1254    1254  0.0000   0.0000     2.2     65.00      1.8
+   0   (  0;  0)  0.0  AC_VI AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+   1   (  6; -7)  9.2  AC_VI    10.063        0.60    0.36    1258    1258  0.0000   0.0000     1.8     65.00      2.0
+   2   ( -4; -4)  5.4  AC_VI     9.935        0.57    0.37    1242    1242  0.0000   0.0000     1.7     65.00      2.0
 
- Total throughput = 20.1008 Mbps
- Average transfer time = 0.000909639s
- Average transmission time = 0.000446478s
+ Total throughput = 19.9987 Mbps
+ Average transfer time = 0.000582079s
+ Average transmission time = 0.000362927s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -23,13 +23,13 @@ Iteration 2
 802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   3   (  0;  0)  0.0  AC_BE AC_BE     0.000         inf     inf       0       0     inf      inf     inf       nan      0.5
-   4   ( -1; -5)  4.6  AC_BE     9.928        0.83    0.44    1241    1241  0.0000   0.0000     2.1     65.00      1.8
-   5   ( -5;  7)  8.7  AC_BE     9.832        0.91    0.45    1229    1229  0.0000   0.0000     2.2     65.00      1.8
+   3   (  0;  0)  0.0  AC_VI AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+   4   ( -1; -5)  4.6  AC_VI    10.312        0.54    0.36    1289    1289  0.0000   0.0000     1.6     65.00      2.0
+   5   ( -5;  7)  8.7  AC_VI     9.936        0.54    0.37    1242    1242  0.0000   0.0000     1.7     65.00      2.0
 
- Total throughput = 19.7594 Mbps
- Average transfer time = 0.00087071s
- Average transmission time = 0.000441593s
+ Total throughput = 20.2475 Mbps
+ Average transfer time = 0.000538593s
+ Average transmission time = 0.000367054s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -40,13 +40,13 @@ Iteration 3
 802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   6   (  0;  0)  0.0  AC_BE AC_BE     0.000         inf     inf       0       0     inf      inf     inf       nan      0.5
-   7   (  3;  8)  8.1  AC_BE     9.959        0.85    0.44    1245    1245  0.0000   0.0000     2.1     65.00      1.8
-   8   (  2;  5)  5.1  AC_BE    10.063        0.88    0.44    1258    1258  0.0000   0.0000     2.2     65.00      1.9
+   6   (  0;  0)  0.0  AC_VI AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+   7   (  3;  8)  8.1  AC_VI     9.872        0.54    0.37    1234    1234  0.0000   0.0000     1.7     65.00      2.0
+   8   (  2;  5)  5.1  AC_VI    10.040        0.54    0.36    1255    1255  0.0000   0.0000     1.7     65.00      2.0
 
- Total throughput = 20.0227 Mbps
- Average transfer time = 0.000862903s
- Average transmission time = 0.000440163s
+ Total throughput = 19.9119 Mbps
+ Average transfer time = 0.000542194s
+ Average transmission time = 0.00036529s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -57,13 +57,13 @@ Iteration 4
 802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   9   (  0;  0)  0.0  AC_BE AC_BE     0.000         inf     inf       0       0     inf      inf     inf       nan      0.5
-  10   ( -7; -1)  6.9  AC_BE    10.080        0.89    0.44    1260    1260  0.0000   0.0000     2.2     65.00      1.8
-  11   (  1;  7)  7.4  AC_BE    10.032        0.78    0.44    1254    1254  0.0000   0.0000     1.9     65.00      1.9
+   9   (  0;  0)  0.0  AC_VI AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+  10   ( -7; -1)  6.9  AC_VI    10.272        0.53    0.36    1284    1284  0.0000   0.0000     1.7     65.00      2.0
+  11   (  1;  7)  7.4  AC_VI     9.576        0.53    0.36    1197    1197  0.0000   0.0000     1.7     65.00      1.9
 
- Total throughput = 20.1111 Mbps
- Average transfer time = 0.000838048s
- Average transmission time = 0.000443389s
+ Total throughput = 19.8471 Mbps
+ Average transfer time = 0.000530381s
+ Average transmission time = 0.000360091s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -74,13 +74,13 @@ Iteration 5
 802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-  12   (  0;  0)  0.0  AC_BE AC_BE     0.000         inf     inf       0       0     inf      inf     inf       nan      0.5
-  13   ( -4; -7)  8.5  AC_BE     9.792        0.97    0.45    1224    1224  0.0000   0.0000     2.3     65.00      1.8
-  14   ( -4;  6)  7.5  AC_BE    10.120        0.82    0.44    1265    1265  0.0000   0.0000     2.0     65.00      1.9
+  12   (  0;  0)  0.0  AC_VI AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+  13   ( -4; -7)  8.5  AC_VI     9.992        0.54    0.36    1249    1249  0.0000   0.0000     1.7     65.00      2.0
+  14   ( -4;  6)  7.5  AC_VI    10.040        0.54    0.36    1255    1255  0.0000   0.0000     1.7     65.00      2.0
 
- Total throughput = 19.9119 Mbps
- Average transfer time = 0.000893484s
- Average transmission time = 0.000444589s
+ Total throughput = 20.0319 Mbps
+ Average transfer time = 0.000537678s
+ Average transmission time = 0.000363092s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -91,13 +91,13 @@ Iteration 6
 802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-  15   (  0;  0)  0.0  AC_BE AC_BE     0.000         inf     inf       0       0     inf      inf     inf       nan      0.6
-  16   ( -0;  1)  1.4  AC_BE     9.887        0.93    0.45    1236    1236  0.0000   0.0000     2.2     65.00      1.8
-  17   ( -9;  4)  9.5  AC_BE    10.575        0.86    0.43    1322    1322  0.0000   0.0000     2.2     65.00      1.9
+  15   (  0;  0)  0.0  AC_VI AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+  16   ( -0;  1)  1.4  AC_VI    10.248        0.53    0.36    1281    1281  0.0000   0.0000     1.7     65.00      2.0
+  17   ( -9;  4)  9.5  AC_VI    10.152        0.56    0.36    1269    1269  0.0000   0.0000     1.7     65.00      2.0
 
- Total throughput = 20.4623 Mbps
- Average transfer time = 0.000893332s
- Average transmission time = 0.000438447s
+ Total throughput = 20.3999 Mbps
+ Average transfer time = 0.000543518s
+ Average transmission time = 0.000361637s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -108,13 +108,13 @@ Iteration 7
 802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-  18   (  0;  0)  0.0  AC_BE AC_BE     0.000         inf     inf       0       0     inf      inf     inf       nan      0.5
-  19   ( -2; -9)  9.6  AC_BE    10.064        0.93    0.44    1258    1258  0.0000   0.0000     2.3     65.00      1.8
-  20   (  3; -8)  8.2  AC_BE     9.952        0.85    0.44    1244    1244  0.0000   0.0000     2.1     65.00      1.8
+  18   (  0;  0)  0.0  AC_VI AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+  19   ( -2; -9)  9.6  AC_VI     9.552        0.54    0.36    1194    1194  0.0000   0.0000     1.7     65.00      1.9
+  20   (  3; -8)  8.2  AC_VI    10.272        0.53    0.36    1284    1284  0.0000   0.0000     1.7     65.00      2.0
 
- Total throughput = 20.0157 Mbps
- Average transfer time = 0.000889438s
- Average transmission time = 0.00044126s
+ Total throughput = 19.8234 Mbps
+ Average transfer time = 0.000532347s
+ Average transmission time = 0.000360417s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -125,13 +125,13 @@ Iteration 8
 802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-  21   (  0;  0)  0.0  AC_BE AC_BE     0.000         inf     inf       0       0     inf      inf     inf       nan      0.6
-  22   (  7; -1)  7.1  AC_BE    10.319        0.83    0.44    1290    1290  0.0000   0.0000     2.1     65.00      1.9
-  23   (  1;  9)  8.6  AC_BE    10.183        0.94    0.45    1273    1273  0.0000   0.0000     2.2     65.00      1.9
+  21   (  0;  0)  0.0  AC_VI AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+  22   (  7; -1)  7.1  AC_VI     9.847        0.55    0.37    1231    1231  0.0000   0.0000     1.7     65.00      2.0
+  23   (  1;  9)  8.6  AC_VI    10.359        0.54    0.37    1295    1295  0.0000   0.0000     1.7     65.00      2.0
 
- Total throughput = 20.5022 Mbps
- Average transfer time = 0.000886109s
- Average transmission time = 0.000442152s
+ Total throughput = 20.2068 Mbps
+ Average transfer time = 0.000545425s
+ Average transmission time = 0.000369086s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -142,13 +142,13 @@ Iteration 9
 802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-  24   (  0;  0)  0.0  AC_BE AC_BE     0.000         inf     inf       0       0     inf      inf     inf       nan      0.5
-  25   ( -3;  6)  6.8  AC_BE     9.912        0.89    0.45    1239    1239  0.0000   0.0000     2.2     65.00      1.8
-  26   (  3;  4)  5.2  AC_BE    10.192        0.93    0.44    1274    1274  0.0000   0.0000     2.2     65.00      1.9
+  24   (  0;  0)  0.0  AC_VI AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+  25   ( -3;  6)  6.8  AC_VI    10.407        0.54    0.36    1301    1301  0.0000   0.0000     1.7     65.00      2.1
+  26   (  3;  4)  5.2  AC_VI    10.239        0.55    0.36    1280    1280  0.0000   0.0000     1.7     65.00      2.0
 
- Total throughput = 20.104 Mbps
- Average transfer time = 0.000905897s
- Average transmission time = 0.00044438s
+ Total throughput = 20.6469 Mbps
+ Average transfer time = 0.000542891s
+ Average transmission time = 0.000361307s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -159,13 +159,13 @@ Iteration 10
 802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-  27   (  0;  0)  0.0  AC_BE AC_BE     0.000         inf     inf       0       0     inf      inf     inf       nan      0.5
-  28   ( -8; -1)  8.1  AC_BE     9.800        0.78    0.44    1225    1225  0.0000   0.0000     2.0     65.00      1.8
-  29   ( -2; -2)  2.9  AC_BE     9.952        0.88    0.44    1244    1244  0.0000   0.0000     2.1     65.00      1.8
+  27   (  0;  0)  0.0  AC_VI AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+  28   ( -8; -1)  8.1  AC_VI     9.903        0.53    0.36    1238    1238  0.0000   0.0000     1.7     65.00      2.0
+  29   ( -2; -2)  2.9  AC_VI     9.655        0.53    0.37    1207    1207  0.0000   0.0000     1.6     65.00      1.9
 
- Total throughput = 19.7519 Mbps
- Average transfer time = 0.000829433s
- Average transmission time = 0.00043818s
+ Total throughput = 19.5574 Mbps
+ Average transfer time = 0.00053338s
+ Average transmission time = 0.000366105s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -176,24 +176,24 @@ Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_
 
 
 Throughput (Mbps)
-mean           =     20.074 
-conf. interval =      0.570 
+mean           =     20.067 
+conf. interval =      0.714 
 
 Transfer time (ms)
-mean           =      0.878 
-conf. interval =      0.062 
+mean           =      0.543 
+conf. interval =      0.033 
 
 Standard deviation of transfer time (ms)
-mean           =      0.665 
-conf. interval =      0.124 
+mean           =      0.277 
+conf. interval =      0.177 
 
 Transmission time (ms)
-mean           =      0.442 
-conf. interval =      0.006 
+mean           =      0.364 
+conf. interval =      0.007 
 
 Standard deviation of transmission time (ms)
-mean           =      0.213 
-conf. interval =      0.037 
+mean           =      0.236 
+conf. interval =      0.027 
 
 Packet loss rate
 mean           =      0.000 
@@ -204,9 +204,9 @@ mean           =      0.000
 conf. interval =      0.000 
 
 Average queue length
-mean           =      2.142 
-conf. interval =      0.119 
+mean           =      1.684 
+conf. interval =      0.055 
 
 Average transmission power (mW)
-mean           =      1.414 
-conf. interval =      0.044 
+mean           =      1.614 
+conf. interval =      0.047 
