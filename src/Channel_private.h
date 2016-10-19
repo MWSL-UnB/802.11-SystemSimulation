@@ -38,6 +38,15 @@
 
 class PHY;
 
+typedef enum{
+	A,
+	B,
+	C,
+	D,
+	E,
+	F
+} channel_model;
+
 ////////////////////////////////////////////////////////////////////////////////
 // class term_pair                                                            //
 //                                                                            //
@@ -166,6 +175,7 @@ protected:
   double RefLoss_dB;
   double DopplerSpread_Hz;
   unsigned NumberSinus;
+  channel_model cModel;
 
   vector<PHY*> term_list; // list of all active terminals
   vector<Link> links;     // list of all active links

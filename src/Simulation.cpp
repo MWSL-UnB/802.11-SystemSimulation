@@ -530,7 +530,8 @@ void Simulation::run() {
 		channel_struct ch_par(sim_par.get_LossExponent(),
 				sim_par.get_RefLoss(),
 				sim_par.get_DopplerSpread(),
-				sim_par.get_NumberSinus());
+				sim_par.get_NumberSinus(),
+				A);
 
 		ch = new Channel(&main_sch, &randgent, ch_par, &log);
 

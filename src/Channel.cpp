@@ -187,6 +187,7 @@ Channel::Channel(Scheduler *s, random *r, channel_struct p, log_file *l){
   RefLoss_dB = p.ref_loss;
   DopplerSpread_Hz = p.doppler_spread;
   NumberSinus = p.number_sines;
+  cModel = p.model;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

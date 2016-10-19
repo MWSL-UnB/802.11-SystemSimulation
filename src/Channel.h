@@ -37,10 +37,11 @@ struct channel_struct {
   double ref_loss;       // reference path loss at 1m distance in dB
   double doppler_spread; // maximum Doppler spread in Hz
   unsigned number_sines; // number of sinewaves for Jakes' model
+  channel_model model;	 // channel propagation model
 
-  channel_struct(double le, double rl, double ds, unsigned ns)
+  channel_struct(double le, double rl, double ds, unsigned ns, channel_model cmod)
             : loss_exponent(le), ref_loss(rl), doppler_spread(ds),
-              number_sines(ns) {}
+              number_sines(ns), model(cmod) {}
 };
 
 ////////////////////////////////////////////////////////////////////////////////

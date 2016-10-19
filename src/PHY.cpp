@@ -310,6 +310,10 @@ BEGIN_PROF("PHY::receive")
                                       : NoiseVariance_dBm;
 
     double SNIR = rx_pow - NoiseInterfVar;
+
+    // Calculate SNReff here
+
+    // INSTEAD OF CALCULATING BER, SNR WILL BE MAPPED DIRECTLY TO PER
     double bit_error_prob = calculate_ber(pck.get_mode(), SNIR);
 
 
