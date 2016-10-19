@@ -125,10 +125,10 @@ double PHY_private::calculate_SNReff(valarray<double> SNRps, double beta) const 
 	size_t Np = SNRps.size();
 
 	valarray<double> auxVal = exp(-SNRps/beta);
-	double sm = auxVal.sum();
-	sm = sm/(double)Np;
 
-	double SNReff = -beta*log(sm);
+	double SNReff = auxVal.sum();
+	SNReff = SNReff/(double)Np;
+	SNReff = -beta*log(SNReff);
 
 	END_PROF("PHY::calculate_SNReff")
 	return SNReff;
