@@ -114,6 +114,27 @@ return ber;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// PHY_private::calculate_SNReff                                              //
+//                                                                            //
+// returns effective SNR for given subcarriers SNRs (SNRps), calculated using //
+// the exponential method and beta parameter given.							  //
+////////////////////////////////////////////////////////////////////////////////
+double PHY_private::calculate_SNReff(valarray<double> SNRps, double beta) const {
+	BEGIN_PROF("PHY::calculate_SNReff")
+
+	size_t Np = SNRps.size();
+
+	valarray<double> auxVal = exp(-SNRps/beta);
+	double sm = auxVal.sum();
+	sm = sm/(double)Np;
+
+	double SNReff = -beta*log(sm);
+
+	END_PROF("PHY::calculate_SNReff")
+	return SNReff;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // PHY::cancel_notify_busy_channel                                            //
 //                                                                            //
 // MAC cancels busy-channel notification request.                             //
