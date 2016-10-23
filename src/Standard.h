@@ -26,6 +26,7 @@
 #include <iostream>
 
 #include "Packet.h"
+#include "Channel.h"
 
 using namespace std;
 
@@ -75,13 +76,15 @@ private:
 	// Flags and holders
 	static channel_bandwidth band;
 	static bool shortGI;
+	static channel_model mod;
+
+	// The first dimension corresponds the channel model, the second to the guard interval,
+	// the third to the MCS and the fourth to the bandwidth
 
 	// Data rates
 	static double rates_a[8];
 	static double rates_n[2][8][2];
 	static double rates_ac_ah[2][10][4];
-	// The first dimension corresponds to guard interval, the second to the MCS and the third
-	// to the bandwidth
 
 	// Bits per OFDM symbol
 	static unsigned bits_per_symb_a[8];
@@ -89,6 +92,10 @@ private:
 	static unsigned bits_per_symb_ac_ah[10][4];
 
 	// Error model constants
+	static double beta_a[6][8];
+	static double beta_n[6][2][8][2];
+	static double beta_ac_ah[6][2][10][4];
+
 	static double min_thresh_a[8];
 	static double max_thresh_a[8];
 	static double coeff_a[8][5];
@@ -105,7 +112,7 @@ private:
 	static double coeff_high_ac_ah[10][2];
 
 public:
-	static void set_standard(dot11_standard st, channel_bandwidth bw, bool sgi);
+	static void set_standard(dot11_standard st, channel_bandwidth bw, bool sgi, channel_model md);
 	static dot11_standard get_standard();
 	static transmission_mode get_maxMCS();
 	static double get_symbol_period();
@@ -116,6 +123,7 @@ public:
 	static channel_bandwidth get_band();
 	static channel_bandwidth get_maxBand();
 	static unsigned get_numSubcarriers();
+	static double get_beta(transmission_mode tm);
 
 	static double tx_mode_to_double(transmission_mode tm);
 	static unsigned txMode_bits_per_symbol(transmission_mode tm);

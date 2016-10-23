@@ -341,7 +341,7 @@ BEGIN_PROF("PHY::receive")
 
     valarray<double> SNIRps = rx_sub - NoiseInterfVar;
 
-    double SNIReff = calculate_SNReff(SNIRps,1);
+    double SNIReff = calculate_SNReff(SNIRps,Standard::get_beta(pck.get_mode()));
 
     double bit_error_prob = calculate_ber(pck.get_mode(), SNIReff);
 
