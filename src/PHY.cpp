@@ -75,7 +75,7 @@ PHY::PHY(Terminal* t,
 // approximation of the function log10(BER) x SNR.                            //
 // Depending on the SNR, one of three different polynomials is used.          //
 ////////////////////////////////////////////////////////////////////////////////
-double PHY_private::calculate_per(transmission_mode mode, double SNR) const {
+double PHY_private::calculate_ber(transmission_mode mode, double SNR) const {
 BEGIN_PROF("PHY::calculate_ber")
 
   double ber;
@@ -122,16 +122,19 @@ return ber;
 double PHY_private::calculate_SNReff(valarray<double> SNRps, double beta) const {
 	BEGIN_PROF("PHY::calculate_SNReff")
 
-	size_t Np = SNRps.size();
+	unsigned Np = Standard::get_numSubcarriers();
 
-	valarray<double> auxVal = exp(-SNRps/beta);
+	valarray<double> auxVal(10,Np);
+	valarray<double> auxVal2 = SNRps/10.0;
+	auxVal = pow(auxVal,auxVal2);
+	auxVal = exp(-auxVal/beta);
 
 	double SNReff = auxVal.sum();
 	SNReff = SNReff/(double)Np;
 	SNReff = -beta*log(SNReff);
 
 	END_PROF("PHY::calculate_SNReff")
-	return SNReff;
+	return 10*log10(SNReff);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -244,7 +247,8 @@ BEGIN_PROF("PHY::opt_mode")
   for(;;) {
     if (mode == MCS0) break;
 
-    double per = calculate_per(mode, SNR);
+    double ber = calculate_ber(mode, SNR);
+    double per = 1.0 - pow(1.0 - ber/double(burst_length), int(nbits));
 
     if (per <= per_target) break;
     else --mode;
@@ -276,7 +280,8 @@ BEGIN_PROF("PHY::opt_power")
   
     if (power >= pmax) break;
 
-    double per = calculate_per(mode, SNR);
+    double ber = calculate_ber(mode, SNR);
+    double per = 1.0 - pow(1.0 - ber/double(burst_length), int(nbits));
 
     if (per <= per_target) break;
     else power += pstep;
@@ -297,10 +302,13 @@ END_PROF("PHY::opt_mode")
 void PHY::receive(MPDU pck, valarray<double> path_loss, double interf) {
 BEGIN_PROF("PHY::receive")
 
-  double Np = (double)path_loss.size();
-  valarray<double> rx_sub = pck.get_power()/Np - path_loss;
+  double Np = (double)Standard::get_numSubcarriers();
+  valarray<double> rx_sub = (pck.get_power() - 10*log10(Np)) - path_loss;
 
-  double rx_pow = rx_sub.sum();
+  valarray<double> auxVal(10,Np);
+  valarray<double> auxVal2 = rx_sub/10.0;
+  auxVal = pow(auxVal,auxVal2);
+  double rx_pow = 10*log10(auxVal.sum());
 
   if (rx_pow < CCASensitivity_dBm) {
 
@@ -335,8 +343,10 @@ BEGIN_PROF("PHY::receive")
 
     double SNIReff = calculate_SNReff(SNIRps,1);
 
-    // INSTEAD OF CALCULATING BER, SNR WILL BE MAPPED DIRECTLY TO PER
-    double pack_error_prob = calculate_per(pck.get_mode(), SNIReff);
+    double bit_error_prob = calculate_ber(pck.get_mode(), SNIReff);
+
+    double pack_error_prob = 1 - pow((1-bit_error_prob/burst_length),
+                                     int(pck.get_nbits()));
 
     if (rand_gen->uniform() > pack_error_prob) {
 

@@ -34,6 +34,7 @@
 #include "myexception.h"
 #include "PHY.h"
 #include "Terminal.h"
+#include "Standard.h"
 
 
 //////////////////////////////////////////////////////////////////////////////// 
@@ -431,8 +432,8 @@ BEGIN_PROF("Channel::stop_send_all")
   PHY* target = (pack.get_target())->get_phy();
 
   // send to target terminal
-  target->receive(pack, path_loss[term_pair(source,target)],
-                               it->interf_max);
+  valarray<double> pLoss(path_loss[term_pair(source,target)],Standard::get_numSubcarriers());
+  target->receive(pack, pLoss,it->interf_max);
 
   air_pack.erase(it);
 
@@ -442,7 +443,8 @@ BEGIN_PROF("Channel::stop_send_all")
        term_it != term_list.end(); ++term_it) {
     if (*term_it != target && *term_it != source) {
 
-      (*term_it)->receive(pack, path_loss[term_pair(source,*term_it)]);
+      valarray<double> pLoss(path_loss[term_pair(source,*term_it)],Standard::get_numSubcarriers());
+      (*term_it)->receive(pack, pLoss);
     }
   }
 
@@ -480,8 +482,8 @@ BEGIN_PROF("Channel::stop_send_one")
   PHY* source = (pack.get_source())->get_phy();
   PHY* target = (pack.get_target())->get_phy();
 
-  target->receive(pack, path_loss[term_pair(source,target)],
-                               it->interf_max);
+  valarray<double> pLoss(path_loss[term_pair(source,target)],Standard::get_numSubcarriers());
+  target->receive(pack, pLoss,it->interf_max);
 
   air_pack.erase(it);
   free_channel_message(pack);

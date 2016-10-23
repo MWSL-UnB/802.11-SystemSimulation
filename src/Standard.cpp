@@ -34,6 +34,7 @@ double Standard::symbol_period = 4e-6;
 channel_bandwidth Standard::maxBand = MHz;
 channel_bandwidth Standard::band = MHz;
 bool Standard::shortGI = false;
+unsigned Standard::numSubcarriers = 52;
 
 //Data rates
 double Standard::rates_a[8]       =  {    6,    9,   12,   18,   24,   36,   48,   52};
@@ -195,6 +196,21 @@ void Standard::set_standard(dot11_standard st, channel_bandwidth bw, bool sgi) {
 
 	if(bw > maxBand)throw (my_exception("Bandwidth not supported by standard."));
 
+	switch(bw){
+	case MHz20:
+		numSubcarriers = 52;
+		break;
+	case MHz40:
+		numSubcarriers = 108;
+		break;
+	case MHz80:
+		numSubcarriers = 234;
+		break;
+	case MHz160:
+		numSubcarriers = 468;
+		break;
+	}
+
 	if(st == dot11ah) symbol_period = 40e-6;
 	else symbol_period = 4e-6;
 
@@ -236,6 +252,9 @@ channel_bandwidth Standard::get_band() {
 }
 channel_bandwidth Standard::get_maxBand() {
 	return maxBand;
+}
+unsigned Standard::get_numSubcarriers()	{
+	return numSubcarriers;
 }
 
 ///////////////////////

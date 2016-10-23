@@ -70,6 +70,7 @@ private:
 	static transmission_mode maxMCS;
 	static double symbol_period;      //OFDM symbol period
 	static channel_bandwidth maxBand;
+	static unsigned numSubcarriers;		// Number of OFDM subcarriers
 
 	// Flags and holders
 	static channel_bandwidth band;
@@ -114,6 +115,7 @@ public:
 	static double get_coeff_high(int idx, int i);
 	static channel_bandwidth get_band();
 	static channel_bandwidth get_maxBand();
+	static unsigned get_numSubcarriers();
 
 	static double tx_mode_to_double(transmission_mode tm);
 	static unsigned txMode_bits_per_symbol(transmission_mode tm);
