@@ -96,20 +96,25 @@ private:
 	static double beta_n[6][2][8][2];
 	static double beta_ac_ah[6][2][10][4];
 
-	static double min_thresh_a[8];
-	static double max_thresh_a[8];
-	static double coeff_a[8][5];
-	static double coeff_high_a[8][2];
+	static double min_thresh_a[6][8];
+	static double max_thresh_a[6][8];
+	static double coeff_a[6][8][5];
+	static double coeff_high_a[6][8][2];
 
-	static double min_thresh_n[8];
-	static double max_thresh_n[8];
-	static double coeff_n[8][5];
-	static double coeff_high_n[8][2];
+	static double min_thresh_n[6][2][2][8];
+	static double max_thresh_n[6][2][2][8];
+	static double coeff_n[6][2][2][8][5];
+	static double coeff_high_n[6][2][2][8][2];
 
-	static double min_thresh_ac_ah[10];
-	static double max_thresh_ac_ah[10];
-	static double coeff_ac_ah[10][5];
-	static double coeff_high_ac_ah[10][2];
+	static double min_thresh_ac_ah[6][2][4][10];
+	static double max_thresh_ac_ah[6][2][4][10];
+	static double coeff_ac_ah[6][2][4][10][5];
+	static double coeff_high_ac_ah[6][2][4][10][2];
+
+	// Indexes
+	static unsigned chmodIdx;
+	static unsigned sgiIdx;
+	static unsigned bandIdx;
 
 public:
 	static void set_standard(dot11_standard st, channel_bandwidth bw, bool sgi, channel_model md);
