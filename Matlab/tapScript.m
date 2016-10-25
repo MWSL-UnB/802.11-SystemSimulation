@@ -52,7 +52,7 @@ for k = 1:6
     
     nTaps = length(power_dB);
     
-    fprintf(fid,'\nnTaps_%s = %d; \ntapsPow_%s = {',model,nTaps,model);
+    fprintf(fid,'\nunsigned nTaps_%s = %d; \ndouble tapsPow_%s[%d] = {',model,nTaps,model,nTaps);
     for j = 1:nTaps
         fprintf(fid,' %.6f',power_dB(j));
         if(j ~= nTaps)
@@ -61,7 +61,7 @@ for k = 1:6
     end
     fprintf(fid,'};\n');
     
-    fprintf(fid,'tapDelay_%s = {',model);
+    fprintf(fid,'double tapDelay_%s[%d] = {',model,nTaps);
     for j = 1:nTaps
         fprintf(fid,' %.6d',tau(j));
         if(j ~= nTaps)
