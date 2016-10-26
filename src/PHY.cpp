@@ -82,20 +82,12 @@ BEGIN_PROF("PHY::calculate_per")
 
   unsigned index = mode - MCS0;
 
-  if (logflag) *mylog << "\n!!!!!" << ptr2sch->now() << "sec., " << *term << ": "
-                      << "T1 = " << Standard::get_min_thresh(index) << " T2 = "
-					  << Standard::get_max_thresh(index) << endl;
-
   if (SNR < Standard::get_min_thresh(index)) {
     // if SNR is low, then consider BER = 0.5
-	  if (logflag) *mylog << "\n!!!!!" << ptr2sch->now() << "sec., " << *term << ": "
-			  << "considering per = 1." << endl;
     per = 1;
 
   } else if (SNR > Standard::get_max_thresh(index)) {
 
-	  if (logflag) *mylog << "\n!!!!!" << ptr2sch->now() << "sec., " << *term << ": "
-			  << "using oder 2 polynomial." << endl;
     // if SNR is high then use polynomial of order 'n_coeff_high - 1'
     double perlog = 0;
 
@@ -121,6 +113,7 @@ BEGIN_PROF("PHY::calculate_per")
     }
     per = pow(10.0,perlog);
   }
+  if(per > 1.0) per = 1.0; // Polynomial approximations might hand out a PER greated than one
 
 END_PROF("PHY::calculate_per")
 return per;
@@ -314,7 +307,7 @@ void PHY::receive(MPDU pck, valarray<double> path_loss, double interf) {
 BEGIN_PROF("PHY::receive")
 
   double Np = (double)Standard::get_numSubcarriers();
-  valarray<double> rx_sub = (pck.get_power() - 10*log10(Np)) - path_loss;
+  valarray<double> rx_sub = pck.get_power() - path_loss;
 
   valarray<double> auxVal(10,Np);
   valarray<double> auxVal2 = rx_sub/10.0;
