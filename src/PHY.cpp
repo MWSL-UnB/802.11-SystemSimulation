@@ -68,49 +68,49 @@ PHY::PHY(Terminal* t,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// PHY_private::calculate_ber                                                 //
+// PHY_private::calculate_per                                                 //
 //                                                                            //
-// returns bit error rate for a given transmission rate and sinal-to-noise    //
-// ratio 'SNR' dB. The bit error rate is calculated based on a polynomial     //
-// approximation of the function log10(BER) x SNR.                            //
+// returns packet error rate for a given transmission rate and sinal-to-noise //
+// ratio 'SNR' dB. The pack error rate is calculated based on a polynomial    //
+// approximation of the function log10(PER) x SNR.                            //
 // Depending on the SNR, one of three different polynomials is used.          //
 ////////////////////////////////////////////////////////////////////////////////
-double PHY_private::calculate_ber(transmission_mode mode, double SNR) const {
-BEGIN_PROF("PHY::calculate_ber")
+double PHY_private::calculate_per(transmission_mode mode, double SNR) const {
+BEGIN_PROF("PHY::calculate_per")
 
-  double ber;
+  double per;
 
   unsigned index = mode - MCS0;
 
   if (SNR < Standard::get_min_thresh(index)) {
     // if SNR is low, then consider BER = 0.5
-    ber = .5;
+    per = 1;
 
   } else if (SNR > Standard::get_max_thresh(index)) {
     // if SNR is high then use polynomial of order 'n_coeff_high - 1'
-    double berlog = 0;
+    double perlog = 0;
 
     double auxpow = 1.0;
     for (int i = 0; i < n_coeff_high; i++) {
-      berlog += auxpow * Standard::get_coeff_high(index,i);
+      perlog += auxpow * Standard::get_coeff_high(index,i);
       auxpow = auxpow * SNR;
     }
-    ber = pow(10.0,berlog);
+    per = pow(10.0,perlog);
 
   } else {
     // if SNR is medium then use polynomial of order 'n_coeff - 1'
-    double berlog = 0;
+    double perlog = 0;
 
     double auxpow = 1.0;
     for (int i = 0; i < n_coeff; i++) {
-      berlog += auxpow * Standard::get_coeff(index,i);
+      perlog += auxpow * Standard::get_coeff(index,i);
       auxpow = auxpow * SNR;
     }
-    ber = pow(10.0,berlog);
+    per = pow(10.0,perlog);
   }
 
-END_PROF("PHY::calculate_ber")
-return ber;
+END_PROF("PHY::calculate_per")
+return per;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -247,8 +247,7 @@ BEGIN_PROF("PHY::opt_mode")
   for(;;) {
     if (mode == MCS0) break;
 
-    double ber = calculate_ber(mode, SNR);
-    double per = 1.0 - pow(1.0 - ber/double(burst_length), int(nbits));
+    double per = calculate_per(mode, SNR);
 
     if (per <= per_target) break;
     else --mode;
@@ -280,8 +279,7 @@ BEGIN_PROF("PHY::opt_power")
   
     if (power >= pmax) break;
 
-    double ber = calculate_ber(mode, SNR);
-    double per = 1.0 - pow(1.0 - ber/double(burst_length), int(nbits));
+    double per = calculate_per(mode, SNR);
 
     if (per <= per_target) break;
     else power += pstep;
@@ -343,10 +341,7 @@ BEGIN_PROF("PHY::receive")
 
     double SNIReff = calculate_SNReff(SNIRps,Standard::get_beta(pck.get_mode()));
 
-    double bit_error_prob = calculate_ber(pck.get_mode(), SNIReff);
-
-    double pack_error_prob = 1 - pow((1-bit_error_prob/burst_length),
-                                     int(pck.get_nbits()));
+    double pack_error_prob = calculate_per(pck.get_mode(), SNIReff);
 
     if (rand_gen->uniform() > pack_error_prob) {
 
