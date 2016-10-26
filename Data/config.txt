@@ -96,7 +96,7 @@ ChannelModel = B % Multipath channel model:
 Bandwidth = 20MHz %20MHz, 40MHz, 80MHz or 160MHz channels. Standard dependant
 shortGI = 0 % if 1 then short GI of 400ns will be used
 
-TxMode = MCS0 %MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9,OPT,SUBOPT
+TxMode = MCS6 %MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9,OPT,SUBOPT
           % MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9: no link adaptation, always transmit at fixed rate with maximum power
           % OPT: genie-aided link adaptation
           % SUBOPT: transmitter-based link adaptation
@@ -137,7 +137,7 @@ PacketLength = 500 %,500(.3);1000(.2);1500(.3);2100(.2)
   % variable-length packets can be considered by giving several lengths with the corresponding
   % probabilities, e.g., 250(.4);1000(.3);2000(.3)
   
-DataRate = 4%2.5,5.0,7.5,10.0,12.5,15.0,17.5,20.0,22.5,25.0,27.5,30.0,32.5,35.0,37.5,40.0,42.5,45.0,47.5,50.0 % offered load in Mbps per link
+DataRate = 10%2.5,5.0,7.5,10.0,12.5,15.0,17.5,20.0,22.5,25.0,27.5,30.0,32.5,35.0,37.5,40.0,42.5,45.0,47.5,50.0 % offered load in Mbps per link
 DownlinkFactor = 0 % offered downstream load is DataRate * DownlinkFactor
 UplinkFactor = 1 % offered upstream load is DataRate * UplinkFactor
 ArrivalTime = EXP % arrival time distribution (EXP,CONSTANT)

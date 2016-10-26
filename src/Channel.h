@@ -122,5 +122,7 @@ public:
   double get_path_loss(PHY *t1, PHY *t2);
   // returns path loss in dB between two given PHYs
 
+  channel_model get_channel_model();
+
 };
 #endif

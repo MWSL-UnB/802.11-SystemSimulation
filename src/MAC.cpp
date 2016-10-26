@@ -949,11 +949,6 @@ void MAC_private::start_TXOP() {
 
 		if(!TXOPflag && TXOPmax != 0){ // If not during TXOP and AC has a TXOP
 
-			if (logflag) *mylog << "\n!!!!!" << ptr2sch->now() << "sec., " << *term
-					<< " RTS duration = " << rts_duration << endl;
-			if (logflag) *mylog << "\n!!!!!" << ptr2sch->now() << "sec., " << *term
-					<< " CTS duration = " << cts_duration << endl;
-
 			TXOPflag = true;
 
 			myphy->cancel_notify_busy_channel();

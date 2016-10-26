@@ -76,7 +76,6 @@ private:
 	// Flags and holders
 	static channel_bandwidth band;
 	static bool shortGI;
-	static channel_model mod;
 
 	// The first dimension corresponds the channel model, the second to the guard interval,
 	// the third to the MCS and the fourth to the bandwidth
@@ -96,28 +95,27 @@ private:
 	static double beta_n[6][2][8][2];
 	static double beta_ac_ah[6][2][10][4];
 
-	static double min_thresh_a[6][8];
-	static double max_thresh_a[6][8];
-	static double coeff_a[6][8][5];
-	static double coeff_high_a[6][8][2];
+	static double min_thresh_a[8];
+	static double max_thresh_a[8];
+	static double coeff_a[8][5];
+	static double coeff_high_a[8][2];
 
-	static double min_thresh_n[6][2][2][8];
-	static double max_thresh_n[6][2][2][8];
-	static double coeff_n[6][2][2][8][5];
-	static double coeff_high_n[6][2][2][8][2];
+	static double min_thresh_n[2][2][8];
+	static double max_thresh_n[2][2][8];
+	static double coeff_n[2][2][8][5];
+	static double coeff_high_n[2][2][8][2];
 
-	static double min_thresh_ac_ah[6][2][4][10];
-	static double max_thresh_ac_ah[6][2][4][10];
-	static double coeff_ac_ah[6][2][4][10][5];
-	static double coeff_high_ac_ah[6][2][4][10][2];
+	static double min_thresh_ac_ah[2][4][10];
+	static double max_thresh_ac_ah[2][4][10];
+	static double coeff_ac_ah[2][4][10][5];
+	static double coeff_high_ac_ah[2][4][10][2];
 
 	// Indexes
-	static unsigned chmodIdx;
 	static unsigned sgiIdx;
 	static unsigned bandIdx;
 
 public:
-	static void set_standard(dot11_standard st, channel_bandwidth bw, bool sgi, channel_model md);
+	static void set_standard(dot11_standard st, channel_bandwidth bw, bool sgi);
 	static dot11_standard get_standard();
 	static transmission_mode get_maxMCS();
 	static double get_symbol_period();
@@ -128,7 +126,7 @@ public:
 	static channel_bandwidth get_band();
 	static channel_bandwidth get_maxBand();
 	static unsigned get_numSubcarriers();
-	static double get_beta(transmission_mode tm);
+	static double get_beta(transmission_mode tm, channel_model cm);
 
 	static double tx_mode_to_double(transmission_mode tm);
 	static unsigned txMode_bits_per_symbol(transmission_mode tm);

@@ -304,6 +304,15 @@ BEGIN_PROF("Channel::get_path_loss")
 END_PROF("Channel::get_path_loss")
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Channel::get_channel_model                                                 //
+//                                                                            //
+// returns current channel model					                          //
+////////////////////////////////////////////////////////////////////////////////
+channel_model Channel::get_channel_model() {
+	return cModel;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Channel::new_link                                                          //
