@@ -78,7 +78,7 @@ Radius = 10 % cell radius in meters
 
 LossExponent = 3.0 % path loss exponent
 RefLoss_dB = 46.7  % reference path loss at 1 m (according to Friis equation, Rappaport, pp. 72)
-NoiseVariance_dBm = -95.0 % noise variance at receiverin dBm
+NoiseVariance_dBm = -95.0 % noise variance at receiver in dBm
 DopplerSpread_Hz = 5.0    % maximum Doppler spread in Hz
 NumberSinus = 20 % number of sinewaves to emulate Rayleigh fading.
                  % It should be >10 for good statistical properties.

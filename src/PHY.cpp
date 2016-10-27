@@ -307,7 +307,7 @@ void PHY::receive(MPDU pck, valarray<double> path_loss, double interf) {
 BEGIN_PROF("PHY::receive")
 
   double Np = (double)Standard::get_numSubcarriers();
-  valarray<double> rx_sub = pck.get_power() - path_loss;
+  valarray<double> rx_sub = pck.get_power() - path_loss; // Got to subtract the number of carriers
 
   valarray<double> auxVal(10,Np);
   valarray<double> auxVal2 = rx_sub/10.0;
