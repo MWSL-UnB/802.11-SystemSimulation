@@ -3,15 +3,15 @@
 Iteration 1
     seed = 1 
 
-802.11n
+802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   0   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      1.2
-   1   ( 10;  0) 10.0  AC_VI     9.936        1.79    0.23    2484    1242  0.0000   0.0000     5.1     58.50      3.4
+   0   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+   1   ( 10;  0) 10.0  AC_VI     9.716        1.23    0.16    2429    1214  0.0000   0.0000     3.2    526.50      1.5
 
- Total throughput = 9.93582 Mbps
- Average transfer time = 0.00178916s
- Average transmission time = 0.000230301s
+ Total throughput = 9.71581 Mbps
+ Average transfer time = 0.00122537s
+ Average transmission time = 0.000155131s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -19,15 +19,15 @@ Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_
 Iteration 2
     seed = 2 
 
-802.11n
+802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   2   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      1.2
-   3   ( 10;  0) 10.0  AC_VI    10.036        0.76    0.23    2509    1254  0.0000   0.0000     2.6     58.50      3.3
+   2   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+   3   ( 10;  0) 10.0  AC_VI     9.876        0.66    0.15    2469    1234  0.0000   0.0000     2.2    526.50      1.3
 
- Total throughput = 10.0357 Mbps
- Average transfer time = 0.000757752s
- Average transmission time = 0.000233315s
+ Total throughput = 9.87584 Mbps
+ Average transfer time = 0.000662848s
+ Average transmission time = 0.000154826s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -35,15 +35,15 @@ Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_
 Iteration 3
     seed = 3 
 
-802.11n
+802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   4   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      1.2
-   5   ( 10;  0) 10.0  AC_VI     9.945        0.56    0.23    2490    1245  0.0000   0.0000     2.3     58.50      3.2
+   4   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+   5   ( 10;  0) 10.0  AC_VI    10.028        0.33    0.16    2507    1253  0.0000   0.0000     1.7    526.50      1.3
 
- Total throughput = 9.94487 Mbps
- Average transfer time = 0.000559568s
- Average transmission time = 0.000234448s
+ Total throughput = 10.028 Mbps
+ Average transfer time = 0.00032865s
+ Average transmission time = 0.000159117s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -51,15 +51,15 @@ Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_
 Iteration 4
     seed = 4 
 
-802.11n
+802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   6   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      1.2
-   7   ( 10;  0) 10.0  AC_VI     9.858        1.38    0.23    2465    1232  0.0000   0.0000     3.7     58.50      3.5
+   6   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+   7   ( 10;  0) 10.0  AC_VI    10.223        1.08    0.15    2556    1278  0.0000   0.0000     2.9    526.50      1.5
 
- Total throughput = 9.858 Mbps
- Average transfer time = 0.00138068s
- Average transmission time = 0.00022727s
+ Total throughput = 10.2225 Mbps
+ Average transfer time = 0.00107954s
+ Average transmission time = 0.000151271s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -67,15 +67,15 @@ Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_
 Iteration 5
     seed = 5 
 
-802.11n
+802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-   8   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      1.2
-   9   ( 10;  0) 10.0  AC_VI     9.832        0.42    0.24    2458    1229  0.0000   0.0000     2.1     58.50      3.0
+   8   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+   9   ( 10;  0) 10.0  AC_VI     9.780        0.22    0.16    2445    1222  0.0000   0.0000     1.6    526.50      1.1
 
- Total throughput = 9.83188 Mbps
- Average transfer time = 0.000423588s
- Average transmission time = 0.000240179s
+ Total throughput = 9.77998 Mbps
+ Average transfer time = 0.000224774s
+ Average transmission time = 0.000159931s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -83,15 +83,15 @@ Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_
 Iteration 6
     seed = 6 
 
-802.11n
+802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-  10   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      1.2
-  11   ( 10;  0) 10.0  AC_VI    10.156        0.49    0.24    2539    1269  0.0000   0.0000     2.2     58.50      3.1
+  10   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+  11   ( 10;  0) 10.0  AC_VI     9.977        0.35    0.16    2495    1247  0.0000   0.0000     1.8    526.50      1.2
 
- Total throughput = 10.1558 Mbps
- Average transfer time = 0.000491272s
- Average transmission time = 0.000235766s
+ Total throughput = 9.97731 Mbps
+ Average transfer time = 0.000348623s
+ Average transmission time = 0.000158844s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -99,15 +99,15 @@ Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_
 Iteration 7
     seed = 7 
 
-802.11n
+802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-  12   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      1.2
-  13   ( 10;  0) 10.0  AC_VI    10.047        0.56    0.23    2513    1256  0.0000   0.0000     2.2     58.50      3.2
+  12   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+  13   ( 10;  0) 10.0  AC_VI    10.031        0.41    0.15    2508    1254  0.0000   0.0000     1.9    526.50      1.3
 
- Total throughput = 10.0474 Mbps
- Average transfer time = 0.000555735s
- Average transmission time = 0.000232457s
+ Total throughput = 10.0312 Mbps
+ Average transfer time = 0.000407427s
+ Average transmission time = 0.000154415s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -115,15 +115,15 @@ Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_
 Iteration 8
     seed = 8 
 
-802.11n
+802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-  14   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      1.2
-  15   ( 10;  0) 10.0  AC_VI    10.144        0.44    0.24    2536    1268  0.0000   0.0000     2.1     58.50      3.1
+  14   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+  15   ( 10;  0) 10.0  AC_VI    10.036        0.24    0.16    2509    1254  0.0000   0.0000     1.6    526.50      1.2
 
- Total throughput = 10.1439 Mbps
- Average transfer time = 0.000440667s
- Average transmission time = 0.000239469s
+ Total throughput = 10.0357 Mbps
+ Average transfer time = 0.000239729s
+ Average transmission time = 0.000161334s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -131,15 +131,15 @@ Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_
 Iteration 9
     seed = 9 
 
-802.11n
+802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-  16   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      1.2
-  17   ( 10;  0) 10.0  AC_VI     9.641        0.91    0.24    2412    1206  0.0000   0.0000     3.1     58.50      3.1
+  16   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+  17   ( 10;  0) 10.0  AC_VI    10.104        0.76    0.16    2526    1263  0.0000   0.0000     2.6    526.50      1.3
 
- Total throughput = 9.64131 Mbps
- Average transfer time = 0.00090869s
- Average transmission time = 0.000235623s
+ Total throughput = 10.1039 Mbps
+ Average transfer time = 0.000761035s
+ Average transmission time = 0.000156477s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -147,15 +147,15 @@ Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_
 Iteration 10
     seed = 10 
 
-802.11n
+802.11ac
 Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
         m        m      Mbps         ms      ms                                                 Mbps        mW
-  18   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      1.2
-  19   ( 10;  0) 10.0  AC_VI     9.669        0.75    0.24    2418    1209  0.0000   0.0000     2.5     58.50      3.2
+  18   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.9
+  19   ( 10;  0) 10.0  AC_VI    10.240        0.71    0.16    2560    1280  0.0000   0.0000     2.4    526.50      1.4
 
- Total throughput = 9.66881 Mbps
- Average transfer time = 0.000751386s
- Average transmission time = 0.000235593s
+ Total throughput = 10.2398 Mbps
+ Average transfer time = 0.00070877s
+ Average transmission time = 0.000155091s
  Packet loss rate = 0
  Overflow rate = 0
 
@@ -166,24 +166,24 @@ Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_
 
 
 Throughput (Mbps)
-mean           =      9.926 
-conf. interval =      0.405 
+mean           =     10.001 
+conf. interval =      0.389 
 
 Transfer time (ms)
-mean           =      0.806 
-conf. interval =      1.016 
+mean           =      0.599 
+conf. interval =      0.793 
 
 Standard deviation of transfer time (ms)
-mean           =      1.951 
-conf. interval =      4.132 
+mean           =      2.052 
+conf. interval =      3.842 
 
 Transmission time (ms)
-mean           =      0.234 
-conf. interval =      0.009 
+mean           =      0.157 
+conf. interval =      0.007 
 
 Standard deviation of transmission time (ms)
-mean           =      0.117 
-conf. interval =      0.002 
+mean           =      0.091 
+conf. interval =      0.003 
 
 Packet loss rate
 mean           =      0.000 
@@ -194,9 +194,9 @@ mean           =      0.000
 conf. interval =      0.000 
 
 Average queue length
-mean           =      2.793 
-conf. interval =      2.192 
+mean           =      2.182 
+conf. interval =      1.286 
 
 Average transmission power (mW)
-mean           =      2.207 
-conf. interval =      0.142 
+mean           =      1.103 
+conf. interval =      0.143 
