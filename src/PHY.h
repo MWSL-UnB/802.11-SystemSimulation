@@ -141,4 +141,10 @@ public:
   friend ostream& operator << (ostream& os, const PHY& p);
 };
 
+valarray<double> to_dB(valarray<double> linArray);
+double to_dB(double linArray);
+
+valarray<double> from_dB(valarray<double> linArray);
+double from_dB(double linArray);
+
 #endif

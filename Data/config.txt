@@ -40,7 +40,7 @@ ppAC_VO = 0
 ppLegacy = 0
 
 %% set_BA_agg: if 1 all stations will perform Block ACK and MPDU aggregation
-set_BA_agg = 1;
+set_BA_agg = 0;
 
 %%%%%%%%%%%%%%%%%%%%%%
 % Physical Parameters

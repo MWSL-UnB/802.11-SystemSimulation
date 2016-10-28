@@ -130,17 +130,15 @@ double PHY_private::calculate_SNReff(valarray<double> SNRps, double beta) const 
 
 	unsigned Np = Standard::get_numSubcarriers();
 
-	valarray<double> auxVal(10,Np);
-	valarray<double> auxVal2 = SNRps/10.0;
-	auxVal = pow(auxVal,auxVal2);
+	valarray<double> auxVal = from_dB(SNRps);
 	auxVal = exp(-auxVal/beta);
 
 	double SNReff = auxVal.sum();
 	SNReff = SNReff/(double)Np;
-	SNReff = -beta*log(SNReff);
+	SNReff = to_dB(-beta*log(SNReff));
 
 	END_PROF("PHY::calculate_SNReff")
-	return 10*log10(SNReff);
+	return SNReff;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -307,12 +305,10 @@ void PHY::receive(MPDU pck, valarray<double> path_loss, double interf) {
 BEGIN_PROF("PHY::receive")
 
   double Np = (double)Standard::get_numSubcarriers();
-  valarray<double> rx_sub = pck.get_power() - path_loss; // Got to subtract the number of carriers
+  valarray<double> rx_sub = (pck.get_power() - to_dB(Np)) - path_loss; // Got to subtract the number of carriers
 
-  valarray<double> auxVal(10,Np);
-  valarray<double> auxVal2 = rx_sub/10.0;
-  auxVal = pow(auxVal,auxVal2);
-  double rx_pow = 10*log10(auxVal.sum());
+  valarray<double> auxVal = from_dB(rx_sub);
+  double rx_pow = to_dB(auxVal.sum());
 
   if (rx_pow < CCASensitivity_dBm) {
 
@@ -343,7 +339,7 @@ BEGIN_PROF("PHY::receive")
                                              pow(10.0,NoiseVariance_dBm/10.0))
                                       : NoiseVariance_dBm;
 
-    valarray<double> SNIRps = rx_sub - NoiseInterfVar;
+    valarray<double> SNIRps = rx_sub - (NoiseInterfVar - to_dB(Np));
 
     double SNIReff = calculate_SNReff(SNIRps,Standard::get_beta(pck.get_mode(),ch->get_channel_model()));
 
@@ -397,4 +393,20 @@ ostream& operator << (ostream& os, const PHY& p) {
     return os << *(p.term);
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
+// Conversion from and to dB                                                  //
+////////////////////////////////////////////////////////////////////////////////
+valarray<double> to_dB(valarray<double> linArray) {
+	return 10*log10(linArray);
+}
+double to_dB(double linVal) {
+	return 10*log10(linVal);
+}
+valarray<double> from_dB(valarray<double> dbArray) {
+	  valarray<double> auxVal(10,dbArray.size());
+	  valarray<double> auxVal2 = dbArray/10.0;
+	  return pow(auxVal,auxVal2);
+}
+double from_dB(double dbVal) {
+	return pow(10.0,(dbVal/10.0));
+}
