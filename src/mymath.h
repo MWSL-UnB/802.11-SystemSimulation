@@ -25,7 +25,11 @@
 
 //#define M_SQRT2 1.41421356237310
 #define M_1_SQRT2 0.70710678118655
+#define PI	M_PI
+#define TWOPI	(2.0*PI)
+
 
 double bessel_j0 (double x);
+void four1(double data[], int nn, int isign);
 
 #endif

@@ -289,19 +289,7 @@ BEGIN_PROF("Channel::get_interf_dBm")
 // returns path loss in dB between two given PHYs                             //
 ////////////////////////////////////////////////////////////////////////////////
 double Channel::get_path_loss (PHY *t1, PHY *t2) {
-BEGIN_PROF("Channel::get_path_loss")
-  /////////////////////////////////////////////////////
-  // update channel fading before returning path loss
-  
-  if (DopplerSpread_Hz > 0) {
-    vector<Link>::iterator it = find_if(links.begin(), links.end(),
-                                        same_link(term_pair(t1,t2)));
-    if (it != links.end())
-      path_loss[term_pair(t1,t2)] = it->fade(ptr2sch->now());
-  }
-
   return path_loss[term_pair(t1,t2)];
-END_PROF("Channel::get_path_loss")
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -24,9 +24,6 @@
 
 #include <math.h>
 
-#define PI	M_PI
-#define TWOPI	(2.0*PI)
-
 ////////////////////////////////////////////////////
 // bessel_j0
 //
