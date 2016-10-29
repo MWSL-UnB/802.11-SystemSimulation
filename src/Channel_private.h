@@ -113,7 +113,8 @@ class Link {
 
   double doppler_spread; // maximum Doppler spread in Hz
 
-  valarray<double> carrier_loss; // path loss for each subcarrier
+  valarray<double> taps_amps; // amplitude of taps without Doppler
+
   double path_loss;      // current average subcarrier path loss in dB
   double path_loss_mean; // average path loss (without fading) in dB 
 
@@ -128,7 +129,8 @@ public:
        double path_loss, // mean path loss in dB
        double fd,        // maximum Doppler spread in Hz
        random* r,        // pointer to random number generator
-       unsigned ns       // number of sinewaves in Jakes' model
+       unsigned ns,      // number of sinewaves in Jakes' model
+	   channel_model cm  // multipath channel model
        );
 
   double fade(timestamp t); // returns the link gain amplitude at time 't' in dB
@@ -136,7 +138,9 @@ public:
   bool belong(term_pair t) const {return t == terms;}
   // returns true if this link corresponds to 't', false otherwise
 
-  valarray<double> get_carrier_loss() const {return carrier_loss;};
+  valarray<double> deff_taps(unsigned nTaps, double tapDelay[], double tapsPow[]);
+
+  //valarray<double> get_carrier_loss() const {return carrier_loss;};
 
   friend ostream& operator << (ostream& os, const Link& l);
   // output operator

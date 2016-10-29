@@ -324,7 +324,7 @@ void Channel::new_link(PHY* pt1, PHY* pt2) {
     if (it->belong(tp)) return;
   }
   
-  Link newlink(tp, path_loss[tp], DopplerSpread_Hz, rand_gen, NumberSinus);
+  Link newlink(tp, path_loss[tp], DopplerSpread_Hz, rand_gen, NumberSinus, cModel);
   links.push_back(newlink);
   path_loss[tp] = newlink.fade(ptr2sch->now());
 
@@ -532,10 +532,29 @@ END_PROF("Channel::stop_send_one")
 ////////////////////////////////////////////////////////////////////////////////
 // Link constructor                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns)
+Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_model cm)
           : terms(t), n_osc(ns), path_loss_mean(pl) {
 
-  carrier_loss = valarray<double>(0.0,Standard::get_numSubcarriers());
+	switch(cm) {
+	case A:
+		taps_amps = deff_taps(nTaps_A,tapDelay_A,tapsPow_A);
+		break;
+	case B:
+		taps_amps = deff_taps(nTaps_B,tapDelay_B,tapsPow_B);
+		break;
+	case C:
+		taps_amps = deff_taps(nTaps_C,tapDelay_C,tapsPow_C);
+		break;
+	case D:
+		taps_amps = deff_taps(nTaps_D,tapDelay_D,tapsPow_D);
+		break;
+	case E:
+		taps_amps = deff_taps(nTaps_E,tapDelay_E,tapsPow_E);
+		break;
+	case F:
+		taps_amps = deff_taps(nTaps_F,tapDelay_F,tapsPow_F);
+		break;
+	}
 
   doppler_spread = 2*M_PI*fd;
 
@@ -620,6 +639,22 @@ BEGIN_PROF("Link::fade")
 
 END_PROF("Link::fade")
   return path_loss;
+}
+
+valarray<double> Link::deff_taps(unsigned nTaps, double tapDelay[], double tapsPow[]){
+
+	double samp_time = 1/(Standard::get_band()*1e9);
+
+	int max_samp = ceil(tapDelay[nTaps - 1]/samp_time);
+
+	for(int k = 0; k <= max_samp; k++) {
+		int j = 0;
+		while(tapDelay[j] < k*samp_time){
+
+			j++;
+		};
+	}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
