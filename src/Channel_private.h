@@ -110,11 +110,11 @@ class Link {
   double sinalpha;
 
   unsigned n_osc; // number of sine waves
+
   unsigned nTaps; // number of path taps
+  valarray<double> taps_amps; // amplitude of taps
 
   double doppler_spread; // maximum Doppler spread in Hz
-
-  valarray<double> taps_amps; // amplitude of taps without Doppler
 
   double path_loss;      // current average subcarrier path loss in dB
   double path_loss_mean; // average path loss (without fading) in dB 

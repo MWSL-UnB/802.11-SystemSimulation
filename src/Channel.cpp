@@ -37,29 +37,23 @@
 #include "Standard.h"
 
 // Channel model parameters
-unsigned nTaps_A = 1;
-double tapsPow_A[1] = { 0.000000};
-double tapDelay_A[1] = { 000000};
+valarray<double> tapsPow_A{ 0.000000};
+valarray<double> tapDelay_A{ 000000};
 
-unsigned nTaps_B = 9;
-double tapsPow_B[9] = { 0.000000, -5.400000, -2.504133, -5.876886, -9.151515, -12.500000, -15.600000, -18.700000, -21.800000};
-double tapDelay_B[9] = { 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 4.000000e-08, 5.000000e-08, 6.000000e-08, 7.000000e-08, 8.000000e-08};
+valarray<double> tapsPow_B{ 0.000000, -5.400000, -2.504133, -5.876886, -9.151515, -12.500000, -15.600000, -18.700000, -21.800000};
+valarray<double> tapDelay_B{ 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 4.000000e-08, 5.000000e-08, 6.000000e-08, 7.000000e-08, 8.000000e-08};
 
-unsigned nTaps_C = 14;
-double tapsPow_C[14] = { 0.000000, -2.100000, -4.300000, -6.500000, -8.600000, -10.800000, -4.361080, -6.561080, -8.661080, -10.861080, -13.700000, -15.800000, -18.000000, -20.200000};
-double tapDelay_C[14] = { 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 4.000000e-08, 5.000000e-08, 6.000000e-08, 7.000000e-08, 8.000000e-08, 9.000000e-08, 1.100000e-07, 1.400000e-07, 1.700000e-07, 2.000000e-07};
+valarray<double> tapsPow_C{ 0.000000, -2.100000, -4.300000, -6.500000, -8.600000, -10.800000, -4.361080, -6.561080, -8.661080, -10.861080, -13.700000, -15.800000, -18.000000, -20.200000};
+valarray<double> tapDelay_C{ 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 4.000000e-08, 5.000000e-08, 6.000000e-08, 7.000000e-08, 8.000000e-08, 9.000000e-08, 1.100000e-07, 1.400000e-07, 1.700000e-07, 2.000000e-07};
 
-unsigned nTaps_D = 18;
-double tapsPow_D[18] = { 0.000000, -0.900000, -1.700000, -2.600000, -3.500000, -4.300000, -5.200000, -6.100000, -6.900000, -7.800000, -4.625981, -7.216430, -9.816430, -12.416430, -13.652351, -17.950897, -22.337110, -26.700000};
-double tapDelay_D[18] = { 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 4.000000e-08, 5.000000e-08, 6.000000e-08, 7.000000e-08, 8.000000e-08, 9.000000e-08, 1.100000e-07, 1.400000e-07, 1.700000e-07, 2.000000e-07, 2.400000e-07, 2.900000e-07, 3.400000e-07, 3.900000e-07};
+valarray<double> tapsPow_D{ 0.000000, -0.900000, -1.700000, -2.600000, -3.500000, -4.300000, -5.200000, -6.100000, -6.900000, -7.800000, -4.625981, -7.216430, -9.816430, -12.416430, -13.652351, -17.950897, -22.337110, -26.700000};
+valarray<double> tapDelay_D{ 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 4.000000e-08, 5.000000e-08, 6.000000e-08, 7.000000e-08, 8.000000e-08, 9.000000e-08, 1.100000e-07, 1.400000e-07, 1.700000e-07, 2.000000e-07, 2.400000e-07, 2.900000e-07, 3.400000e-07, 3.900000e-07};
 
-unsigned nTaps_E = 18;
-double tapsPow_E[18] = { -2.600000, -3.000000, -3.500000, -3.900000, 0.066829, -1.225981, -2.525981, -3.825981, -3.354724, -5.534855, -7.642636, -4.890378, -12.042636, -14.214719, -15.328471, -18.336614, -20.700000, -24.600000};
-double tapDelay_E[18] = { 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 5.000000e-08, 8.000000e-08, 1.100000e-07, 1.400000e-07, 1.800000e-07, 2.300000e-07, 2.800000e-07, 3.300000e-07, 3.800000e-07, 4.300000e-07, 4.900000e-07, 5.600000e-07, 6.400000e-07, 7.300000e-07};
+valarray<double> tapsPow_E{ -2.600000, -3.000000, -3.500000, -3.900000, 0.066829, -1.225981, -2.525981, -3.825981, -3.354724, -5.534855, -7.642636, -4.890378, -12.042636, -14.214719, -15.328471, -18.336614, -20.700000, -24.600000};
+valarray<double> tapDelay_E{ 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 5.000000e-08, 8.000000e-08, 1.100000e-07, 1.400000e-07, 1.800000e-07, 2.300000e-07, 2.800000e-07, 3.300000e-07, 3.800000e-07, 4.300000e-07, 4.900000e-07, 5.600000e-07, 6.400000e-07, 7.300000e-07};
 
-unsigned nTaps_F = 18;
-double tapsPow_F[18] = { -3.300000, -3.600000, -3.900000, -4.200000, 0.032150, -0.862241, -1.633171, -2.533171, -1.453111, -2.941635, -4.316104, -5.863526, -5.242057, -7.863674, -9.353570, -13.164859, -16.300000, -21.200000};
-double tapDelay_F[18] = { 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 5.000000e-08, 8.000000e-08, 1.100000e-07, 1.400000e-07, 1.800000e-07, 2.300000e-07, 2.800000e-07, 3.300000e-07, 4.000000e-07, 4.900000e-07, 6.000000e-07, 7.300000e-07, 8.800000e-07, 1.050000e-06};
+valarray<double> tapsPow_F{ -3.300000, -3.600000, -3.900000, -4.200000, 0.032150, -0.862241, -1.633171, -2.533171, -1.453111, -2.941635, -4.316104, -5.863526, -5.242057, -7.863674, -9.353570, -13.164859, -16.300000, -21.200000};
+valarray<double> tapDelay_F{ 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 5.000000e-08, 8.000000e-08, 1.100000e-07, 1.400000e-07, 1.800000e-07, 2.300000e-07, 2.800000e-07, 3.300000e-07, 4.000000e-07, 4.900000e-07, 6.000000e-07, 7.300000e-07, 8.800000e-07, 1.050000e-06};
 
 //////////////////////////////////////////////////////////////////////////////// 
 ////////////////////////////////////////////////////////////////////////////////
@@ -536,40 +530,58 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
           : terms(t), n_osc(ns), path_loss_mean(pl) {
 
 	switch(cm) {
-	case A: nTaps = nTaps_A; break;
-	case B: nTaps = nTaps_B; break;
-	case C: nTaps = nTaps_C; break;
-	case D: nTaps = nTaps_D; break;
-	case E: nTaps = nTaps_E; break;
-	case F: nTaps = nTaps_F; break;
+	case A:
+		nTaps = tapsPow_A.size();
+		taps_amps = from_dB(tapsPow_A);
+		break;
+	case B:
+		nTaps = tapsPow_B.size();
+		taps_amps = from_dB(tapsPow_B);
+		break;
+	case C:
+		nTaps = tapsPow_C.size();
+		taps_amps = from_dB(tapsPow_C);
+		break;
+	case D:
+		nTaps = tapsPow_D.size();
+		taps_amps = from_dB(tapsPow_D);
+		break;
+	case E:
+		nTaps = tapsPow_E.size();
+		taps_amps = from_dB(tapsPow_E);
+		break;
+	case F:
+		nTaps = tapsPow_F.size();
+		taps_amps = from_dB(tapsPow_F);
+		break;
 	}
 
-  doppler_spread = 2*M_PI*fd;
+	doppler_spread = 2*M_PI*fd;
 
-  time_last = timestamp(0);
-  time_diff_min = -1;
+	time_last = timestamp(0);
+	time_diff_min = -1;
 
-  theta.resize(n_osc);
+	theta.resize(n_osc);
 
-  valarray<double> beta(M_PI/n_osc,n_osc);
-  for (unsigned index = 0; index < n_osc; ++index) {
-    beta[index] *= index+1.0;
-    theta[index] = r->uniform(0,2*M_PI);
-  }
-  double alpha = r->uniform(0,2*M_PI);
+	valarray<double> beta(M_PI/n_osc,n_osc);
+	for (unsigned index = 0; index < n_osc; ++index) {
+		beta[index] *= index+1.0;
+		theta[index] = r->uniform(0,2*M_PI);
+	}
+	double alpha = r->uniform(0,2*M_PI);
 
-  cosalpha = cos(alpha);
-  sinalpha = sin(alpha);
+	cosalpha = cos(alpha);
+	sinalpha = sin(alpha);
 
-  omega.resize(n_osc);
-  omega = doppler_spread * cos(beta * double(n_osc) / double(2*n_osc+1));
+	omega.resize(n_osc);
+	omega = doppler_spread * cos(beta * double(n_osc) / double(2*n_osc+1));
 
-  cosbeta.resize(n_osc);
-  sinbeta.resize(n_osc);
-  cosbeta = cos(beta);
-  sinbeta = sin(beta);
+	cosbeta.resize(n_osc);
+	sinbeta.resize(n_osc);
+	cosbeta = cos(beta);
+	sinbeta = sin(beta);
 
-  path_loss = fade_calc(timestamp(0));
+	path_loss = fade_calc(timestamp(0));
 
 }
 
