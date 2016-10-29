@@ -536,24 +536,12 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
           : terms(t), n_osc(ns), path_loss_mean(pl) {
 
 	switch(cm) {
-	case A:
-		taps_amps = deff_taps(nTaps_A,tapDelay_A,tapsPow_A);
-		break;
-	case B:
-		taps_amps = deff_taps(nTaps_B,tapDelay_B,tapsPow_B);
-		break;
-	case C:
-		taps_amps = deff_taps(nTaps_C,tapDelay_C,tapsPow_C);
-		break;
-	case D:
-		taps_amps = deff_taps(nTaps_D,tapDelay_D,tapsPow_D);
-		break;
-	case E:
-		taps_amps = deff_taps(nTaps_E,tapDelay_E,tapsPow_E);
-		break;
-	case F:
-		taps_amps = deff_taps(nTaps_F,tapDelay_F,tapsPow_F);
-		break;
+	case A: nTaps = nTaps_A; break;
+	case B: nTaps = nTaps_B; break;
+	case C: nTaps = nTaps_C; break;
+	case D: nTaps = nTaps_D; break;
+	case E: nTaps = nTaps_E; break;
+	case F: nTaps = nTaps_F; break;
 	}
 
   doppler_spread = 2*M_PI*fd;
@@ -581,16 +569,7 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
   cosbeta = cos(beta);
   sinbeta = sin(beta);
 
-  // calculate fading
-  valarray<double> cosomegat = cos(theta);
-  valarray<double> aux1 = cosbeta * cosomegat;
-  valarray<double> aux2 = sinbeta * cosomegat;
-  complex<double> x(2*aux1.sum() + M_SQRT2*cosalpha,
-                    2*aux2.sum() + M_SQRT2*sinalpha);
-  x *= 1.0 / sqrt(n_osc + .5);
-  x = 1.0 / x;
-
-  path_loss = path_loss_mean + 20*log10(abs(x));
+  path_loss = fade_calc(timestamp(0));
 
 }
 
@@ -614,18 +593,7 @@ BEGIN_PROF("Link::fade")
     return path_loss;
   }
 
-  // calculate fading
-  double t_aux = double(t);
-
-  valarray<double> cosomegat = cos(omega*t_aux+theta);
-  valarray<double> aux1 = cosbeta * cosomegat;
-  valarray<double> aux2 = sinbeta * cosomegat;
-  complex<double> x(2*aux1.sum() + M_SQRT2*cosalpha*cos(doppler_spread*t_aux),
-                    2*aux2.sum() + M_SQRT2*sinalpha*cos(doppler_spread*t_aux));
-  x *= 1.0 / sqrt(n_osc + .5);
-  x = 1.0 / x;
-
-  path_loss = path_loss_mean + 20*log10(abs(x));
+  path_loss = fade_calc(t);
 
 
 #ifdef _SAVE_RATE_ADAPT
@@ -641,20 +609,24 @@ END_PROF("Link::fade")
   return path_loss;
 }
 
-valarray<double> Link::deff_taps(unsigned nTaps, double tapDelay[], double tapsPow[]){
+////////////////////////////////////////////////////////////////////////////////
+// Link::fade                                                                 //
+//                                                                            //
+// calculates channel fading using Jakes' method		                      //
+////////////////////////////////////////////////////////////////////////////////
+double Link::fade_calc(timestamp t) {
+	  // calculate fading
+	  double t_aux = double(t);
 
-	double samp_time = 1/(Standard::get_band()*1e9);
+	  valarray<double> cosomegat = cos(omega*t_aux+theta);
+	  valarray<double> aux1 = cosbeta * cosomegat;
+	  valarray<double> aux2 = sinbeta * cosomegat;
+	  complex<double> x(2*aux1.sum() + M_SQRT2*cosalpha*cos(doppler_spread*t_aux),
+	                    2*aux2.sum() + M_SQRT2*sinalpha*cos(doppler_spread*t_aux));
+	  x *= 1.0 / sqrt(n_osc + .5);
+	  x = 1.0 / x;
 
-	int max_samp = ceil(tapDelay[nTaps - 1]/samp_time);
-
-	for(int k = 0; k <= max_samp; k++) {
-		int j = 0;
-		while(tapDelay[j] < k*samp_time){
-
-			j++;
-		};
-	}
-
+	  return path_loss_mean + 20*log10(abs(x));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

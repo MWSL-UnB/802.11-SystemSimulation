@@ -110,6 +110,7 @@ class Link {
   double sinalpha;
 
   unsigned n_osc; // number of sine waves
+  unsigned nTaps; // number of path taps
 
   double doppler_spread; // maximum Doppler spread in Hz
 
@@ -134,11 +135,10 @@ public:
        );
 
   double fade(timestamp t); // returns the link gain amplitude at time 't' in dB
+  double fade_calc(timestamp t); // calculates link gain in dB at time 't' using Jakes' method
 
   bool belong(term_pair t) const {return t == terms;}
   // returns true if this link corresponds to 't', false otherwise
-
-  valarray<double> deff_taps(unsigned nTaps, double tapDelay[], double tapsPow[]);
 
   //valarray<double> get_carrier_loss() const {return carrier_loss;};
 
