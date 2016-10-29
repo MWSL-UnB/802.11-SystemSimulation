@@ -113,7 +113,8 @@ class Link {
 
   double doppler_spread; // maximum Doppler spread in Hz
 
-  double path_loss;      // current path loss in dB
+  valarray<double> carrier_loss; // path loss for each subcarrier
+  double path_loss;      // current average subcarrier path loss in dB
   double path_loss_mean; // average path loss (without fading) in dB 
 
   double time_diff_min; // link gain is not updated if last update 

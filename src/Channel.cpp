@@ -547,6 +547,8 @@ END_PROF("Channel::stop_send_one")
 Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns)
           : terms(t), n_osc(ns), path_loss_mean(pl) {
 
+  carrier_loss = valarray<double>(0.0,Standard::get_numSubcarriers());
+
   doppler_spread = 2*M_PI*fd;
 
   time_last = timestamp(0);
