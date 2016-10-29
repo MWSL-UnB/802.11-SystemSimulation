@@ -136,6 +136,8 @@ public:
   bool belong(term_pair t) const {return t == terms;}
   // returns true if this link corresponds to 't', false otherwise
 
+  valarray<double> get_carrier_loss() const {return carrier_loss;};
+
   friend ostream& operator << (ostream& os, const Link& l);
   // output operator
 };
