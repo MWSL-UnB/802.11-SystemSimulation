@@ -70,6 +70,7 @@ private:
 	static dot11_standard currentStd;
 	static transmission_mode maxMCS;
 	static double symbol_period;      //OFDM symbol period
+	static double rollof;
 	static channel_bandwidth maxBand;
 	static unsigned numSubcarriers;		// Number of OFDM subcarriers
 
@@ -124,6 +125,8 @@ public:
 	static double get_coeff(int idx, int i);
 	static double get_coeff_high(int idx, int i);
 	static channel_bandwidth get_band();
+	static double get_band_double();
+	static double get_rollof();
 	static channel_bandwidth get_maxBand();
 	static unsigned get_numSubcarriers();
 	static double get_beta(transmission_mode tm, channel_model cm);

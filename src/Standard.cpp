@@ -32,6 +32,7 @@
 dot11_standard Standard::currentStd = dot11;
 transmission_mode Standard::maxMCS = MCS;
 double Standard::symbol_period = 4e-6;
+double Standard::rollof = 0.1875;
 channel_bandwidth Standard::maxBand = MHz;
 channel_bandwidth Standard::band = MHz;
 bool Standard::shortGI = false;
@@ -555,6 +556,8 @@ void Standard::set_standard(dot11_standard st, channel_bandwidth bw, bool sgi) {
 	currentStd = st;
 	band = bw;
 
+	rollof = 0.1875;
+
 	switch(st) {
 	case dot11a : {
 		maxMCS = MCS7;
@@ -642,6 +645,18 @@ double Standard::get_coeff_high(int idx, int i) {
 }
 channel_bandwidth Standard::get_band() {
 	return band;
+}
+double Standard::get_band_double(){
+	switch(band) {
+	case MHz20: return 20e6;
+	case MHz40: return 40e6;
+	case MHz80: return 80e6;
+	case MHz160:return 160e6;
+	default: return 0;
+	}
+}
+double Standard::get_rollof() {
+	return rollof;
 }
 channel_bandwidth Standard::get_maxBand() {
 	return maxBand;

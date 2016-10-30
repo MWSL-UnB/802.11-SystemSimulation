@@ -23,6 +23,7 @@
 #include "mymath.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 ////////////////////////////////////////////////////
 // bessel_j0
@@ -127,4 +128,17 @@ void four1(double data[], int nn, int isign)
 	}
 	mmax = istep;
     }
+}
+
+double invraisedcos(double t, double W, double rollof) {
+	double y;
+	double phi = PI*W*t;
+
+	if(abs(phi) < 1.0e-8) y = 1;
+	else y = sin(phi)/phi;
+
+	y *= cos(rollof*phi)/(1 - 4*pow((rollof*W*t),2));
+
+	return y;
+
 }

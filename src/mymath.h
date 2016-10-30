@@ -28,8 +28,8 @@
 #define PI	M_PI
 #define TWOPI	(2.0*PI)
 
-
 double bessel_j0 (double x);
 void four1(double data[], int nn, int isign);
+double invraisedcos(double t, double W, double rollof);
 
 #endif

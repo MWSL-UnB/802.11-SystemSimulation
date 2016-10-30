@@ -89,12 +89,6 @@ class Jakes {
 	unsigned n_osc;
 	double xabs;
 
-
-	double time_diff_min; // link gain is not updated if last update
-	// happened less than 'time_diff_min' seconds ago
-
-	timestamp time_last; // time of latest link gain update
-
 public:
 
 	Jakes();
@@ -148,8 +142,15 @@ class Link {
   valarray<double> taps_amps; 	    // amplitude of taps without Rayleigh fading
   valarray<double> taps_amps_fade;  // amplitude of taps with Rayleigh fading
 
+  double doppler_spread;
+
   double path_loss;      // current average subcarrier path loss in dB
   double path_loss_mean; // average path loss (without fading) in dB 
+
+  double time_diff_min; // link gain is not updated if last update
+  // happened less than 'time_diff_min' seconds ago
+
+  timestamp time_last; // time of latest link gain update
 
 public:
   //Link() {}
@@ -162,6 +163,7 @@ public:
        );
 
   double fade(timestamp t); // returns the link gain amplitude at time 't' in dB
+  valarray<double> resample();
 
   bool belong(term_pair t) const {return t == terms;}
   // returns true if this link corresponds to 't', false otherwise

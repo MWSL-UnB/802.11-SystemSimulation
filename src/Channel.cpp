@@ -25,6 +25,7 @@
 #include <complex>
 #include <algorithm>
 #include <iostream>
+//#include <stdlib.h>
 
 #include "Channel.h"
 #include "timestamp.h"
@@ -133,14 +134,9 @@ Jakes::Jakes() {
 	cosalpha = 0.0;
 	sinalpha = 0.0;
 	n_osc = 0;
-	time_last = timestamp(0);
-	time_diff_min = -1;
 	xabs = 0.0;
 };
 Jakes::Jakes(double fd, unsigned no, random* r) {
-
-	time_last = timestamp(0);
-	time_diff_min = -1;
 
 	n_osc = no;
 
@@ -171,18 +167,6 @@ Jakes::Jakes(double fd, unsigned no, random* r) {
 };
 
 double Jakes::fade_calc(timestamp t) {
-
-	  double time_diff_new = double(t - time_last);
-
-	  if (time_diff_new <= time_diff_min) {
-	    return xabs;
-	  }
-
-	  // if correlation is too large, channel does not change
-	  if (bessel_j0(doppler_spread * time_diff_new) >= .9999) {
-	    time_diff_min = time_diff_new;
-	    return xabs;
-	  }
 
 	  // calculate fading
 	  double t_aux = double(t);
@@ -610,6 +594,10 @@ END_PROF("Channel::stop_send_one")
 Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_model cm)
 : terms(t), path_loss_mean(pl) {
 
+	time_last = timestamp(0);
+	time_diff_min = -1;
+	doppler_spread = 2*M_PI*fd;
+
 	switch(cm) {
 	case A:
 		nTaps = tapsPow_A.size();
@@ -652,7 +640,8 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 		taps_jks.push_back(auxJks);
 	}
 
-	path_loss = path_loss_mean + 2*to_dB(taps_jks[0].fade_calc(timestamp(0)));
+	// Multiply by 2 since x is an amplitude value (20log10 instead of 10log10)
+	path_loss = path_loss_mean + 2*to_dB(taps_jks[6].fade_calc(timestamp(0)));
 
 }
 
@@ -665,12 +654,24 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 double Link::fade(timestamp t) {
 BEGIN_PROF("Link::fade")
 
+  double time_diff_new = double(t - time_last);
+
+  if (time_diff_new <= time_diff_min) {
+	  return path_loss;
+  }
+
+			  // if correlation is too large, channel does not change
+  if (bessel_j0(doppler_spread * time_diff_new) >= .9999) {
+	time_diff_min = time_diff_new;
+	return path_loss;
+  }
+
   for(unsigned k = 0; k < nTaps; ++k){
 	  taps_amps_fade[k] = taps_amps[k]*taps_jks[k].fade_calc(timestamp(t));
   }
 
   // Multiply by 2 since x is an amplitude value (20log10 instead of 10log10)
-  path_loss = path_loss_mean + 2*to_dB(taps_jks[0].fade_calc(t));
+  path_loss = path_loss_mean + 2*to_dB(taps_jks[6].fade_calc(t));
 
 
 #ifdef _SAVE_RATE_ADAPT
@@ -684,6 +685,29 @@ BEGIN_PROF("Link::fade")
 
 END_PROF("Link::fade")
   return path_loss;
+}
+
+valarray<double> Link::resample() {
+
+	double W = Standard::get_band_double();
+	double sample_time = 1/W;
+	unsigned max_samp = (unsigned)ceil(taps_delays[nTaps - 1]/sample_time);
+
+	valarray<double> samples;
+	samples.resize(max_samp + 1,0.0);
+	double time = 0.0;
+	for(unsigned k = 0; k <= max_samp; ++k) {
+		time = k*sample_time;
+		double time_diff;
+		for(unsigned j = 0; j < nTaps; j++){
+			time_diff = time - taps_delays[j];
+			samples[k] += taps_amps_fade[j]*invraisedcos(time_diff,W,Standard::get_rollof());
+		}
+
+	}
+
+	return samples;
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
