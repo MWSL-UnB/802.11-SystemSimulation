@@ -25,7 +25,6 @@
 #include <complex>
 #include <algorithm>
 #include <iostream>
-//#include <stdlib.h>
 
 #include "Channel.h"
 #include "timestamp.h"
@@ -641,7 +640,7 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 	}
 
 	// Resample
-	samples = resample();
+	resample();
 
 	cout << "Taps amps: 		";
 	for(unsigned k = 0; k < nTaps; ++k){
@@ -693,7 +692,7 @@ BEGIN_PROF("Link::fade")
   }
 
   //Resample
-  samples = resample();
+  resample();
 
   // Multiply by 2 since x is an amplitude value (20log10 instead of 10log10)
   path_loss = path_loss_mean - 2*to_dB(taps_jks[0].fade_calc(t));
@@ -712,13 +711,12 @@ END_PROF("Link::fade")
   return path_loss;
 }
 
-valarray<double> Link::resample() {
+void Link::resample() {
 
 	double W = Standard::get_band_double();
 	double sample_time = 1/W;
 	unsigned max_samp = (unsigned)ceil(taps_delays[nTaps - 1]/sample_time);
 
-	valarray<double> samples;
 	samples.resize(max_samp + 1,0.0);
 	double time = 0.0;
 	for(unsigned k = 0; k <= max_samp; ++k) {
@@ -730,8 +728,6 @@ valarray<double> Link::resample() {
 		}
 
 	}
-
-	return samples;
 
 }
 

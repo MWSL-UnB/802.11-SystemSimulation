@@ -25,6 +25,8 @@
 #include <math.h>
 #include <stdlib.h>
 
+using namespace std;
+
 ////////////////////////////////////////////////////
 // bessel_j0
 //
@@ -84,11 +86,15 @@ double bessel_j0 (double x){
     Press, Teukolsky, Vetterling, Flannery
 */
 
-void four1(double data[], int nn, int isign)
+valarray<double> four1(valarray<double> indata, int nn, int isign)
 {
     int n, mmax, m, j, istep, i;
     double wtemp, wr, wpr, wpi, wi, theta;
     double tempr, tempi;
+    valarray<double> data;
+
+    data.resize(indata.size(),0.0);
+    data = indata;
 
     n = nn << 1;
     j = 1;
@@ -128,6 +134,8 @@ void four1(double data[], int nn, int isign)
 	}
 	mmax = istep;
     }
+
+    return data;
 }
 
 double invraisedcos(double t, double W, double rollof) {

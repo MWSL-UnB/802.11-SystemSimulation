@@ -164,7 +164,7 @@ public:
        );
 
   double fade(timestamp t); // returns the link gain amplitude at time 't' in dB
-  valarray<double> resample();
+  void resample();
 
   bool belong(term_pair t) const {return t == terms;}
   // returns true if this link corresponds to 't', false otherwise
