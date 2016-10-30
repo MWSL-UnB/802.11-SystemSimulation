@@ -731,6 +731,9 @@ valarray<double> Link::resample() {
 
 	}
 
+	unsigned NFFT = (int)pow(2.0, ceil(log((double)max_samp)/log(2.0)));
+	if(NFFT < Standard::get_numSubcarriers()) NFFT = Standard::get_numSubcarriers();
+
 	return samples;
 
 }
