@@ -144,7 +144,8 @@ class Link {
   vector<Jakes> taps_jks; // Jakes model class for path taps
 
   unsigned nTaps; // number of path taps
-  valarray<double> taps_amps; // amplitude of taps
+  valarray<double> taps_amps; // amplitude of taps without Rayleigh fading
+  valarray<double> taps_amps_fade; // amplitude of taps with Rayleigh fading
 
   double path_loss;      // current average subcarrier path loss in dB
   double path_loss_mean; // average path loss (without fading) in dB 

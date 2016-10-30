@@ -637,9 +637,12 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 		break;
 	}
 
+	taps_amps_fade.resize(nTaps,0.0);
+
 	taps_jks.clear();
 	for(unsigned k = 0; k < nTaps; ++k){
 		Jakes auxJks = Jakes(fd,ns,r);
+		taps_amps_fade[k] = taps_amps[k]*auxJks.fade_calc(timestamp(0));
 		taps_jks.push_back(auxJks);
 	}
 
@@ -655,6 +658,10 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 ////////////////////////////////////////////////////////////////////////////////
 double Link::fade(timestamp t) {
 BEGIN_PROF("Link::fade")
+
+  for(unsigned k = 0; k < nTaps; ++k){
+	  taps_amps_fade[k] = taps_amps[k]*taps_jks[k].fade_calc(timestamp(t));
+  }
 
   // Multiply by 2 since x is an amplitude value (20log10 instead of 10log10)
   path_loss = path_loss_mean + 2*to_dB(taps_jks[0].fade_calc(t));
