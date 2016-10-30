@@ -117,7 +117,88 @@ void recalc_interference::operator() (pack_struct& ps) {
       ps.interf_max = ps.interf;
     }
   }
-}
+};
+
+/*
+ * Jakes class
+ *
+ * Performs Jakes' method
+ */
+Jakes::Jakes() {
+	doppler_spread = 0.0;
+	cosbeta.resize(1,0.0);
+	sinbeta.resize(1,0.0);
+	omega.resize(1,0.0);
+	theta.resize(1,0.0);
+	cosalpha = 0.0;
+	sinalpha = 0.0;
+	n_osc = 0;
+	time_last = timestamp(0);
+	time_diff_min = -1;
+	xabs = 0.0;
+};
+Jakes::Jakes(double fd, unsigned no, random* r) {
+
+	time_last = timestamp(0);
+	time_diff_min = -1;
+
+	n_osc = no;
+
+	doppler_spread = 2*M_PI*fd;
+
+	theta.resize(n_osc);
+
+	valarray<double> beta(M_PI/n_osc,n_osc);
+	for (unsigned index = 0; index < n_osc; ++index) {
+		beta[index] *= index+1.0;
+		theta[index] = r->uniform(0,2*M_PI);
+	}
+	double alpha = r->uniform(0,2*M_PI);
+
+	cosalpha = cos(alpha);
+	sinalpha = sin(alpha);
+
+	omega.resize(n_osc);
+	omega = doppler_spread * cos(beta * double(n_osc) / double(2*n_osc+1));
+
+	cosbeta.resize(n_osc);
+	sinbeta.resize(n_osc);
+	cosbeta = cos(beta);
+	sinbeta = sin(beta);
+
+	xabs = 0.0;
+
+};
+
+double Jakes::fade_calc(timestamp t) {
+
+	  double time_diff_new = double(t - time_last);
+
+	  if (time_diff_new <= time_diff_min) {
+	    return xabs;
+	  }
+
+	  // if correlation is too large, channel does not change
+	  if (bessel_j0(doppler_spread * time_diff_new) >= .9999) {
+	    time_diff_min = time_diff_new;
+	    return xabs;
+	  }
+
+	  // calculate fading
+	  double t_aux = double(t);
+
+	  valarray<double> cosomegat = cos(omega*t_aux+theta);
+	  valarray<double> aux1 = cosbeta * cosomegat;
+	  valarray<double> aux2 = sinbeta * cosomegat;
+	  complex<double> x(2*aux1.sum() + M_SQRT2*cosalpha*cos(doppler_spread*t_aux),
+	                    2*aux2.sum() + M_SQRT2*sinalpha*cos(doppler_spread*t_aux));
+	  x *= 1.0 / sqrt(n_osc + .5);
+	  x = 1.0 / x;
+
+	  xabs = abs(x);
+
+	  return xabs;
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // class same_link                                                            //
@@ -527,7 +608,7 @@ END_PROF("Channel::stop_send_one")
 // Link constructor                                                           //
 ////////////////////////////////////////////////////////////////////////////////
 Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_model cm)
-          : terms(t), n_osc(ns), path_loss_mean(pl) {
+: terms(t), path_loss_mean(pl) {
 
 	switch(cm) {
 	case A:
@@ -556,32 +637,13 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 		break;
 	}
 
-	doppler_spread = 2*M_PI*fd;
-
-	time_last = timestamp(0);
-	time_diff_min = -1;
-
-	theta.resize(n_osc);
-
-	valarray<double> beta(M_PI/n_osc,n_osc);
-	for (unsigned index = 0; index < n_osc; ++index) {
-		beta[index] *= index+1.0;
-		theta[index] = r->uniform(0,2*M_PI);
+	taps_jks.clear();
+	for(unsigned k = 0; k < nTaps; ++k){
+		Jakes auxJks = Jakes(fd,ns,r);
+		taps_jks.push_back(auxJks);
 	}
-	double alpha = r->uniform(0,2*M_PI);
 
-	cosalpha = cos(alpha);
-	sinalpha = sin(alpha);
-
-	omega.resize(n_osc);
-	omega = doppler_spread * cos(beta * double(n_osc) / double(2*n_osc+1));
-
-	cosbeta.resize(n_osc);
-	sinbeta.resize(n_osc);
-	cosbeta = cos(beta);
-	sinbeta = sin(beta);
-
-	path_loss = fade_calc(timestamp(0));
+	path_loss = path_loss_mean + 2*to_dB(taps_jks[0].fade_calc(timestamp(0)));
 
 }
 
@@ -593,19 +655,9 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 ////////////////////////////////////////////////////////////////////////////////
 double Link::fade(timestamp t) {
 BEGIN_PROF("Link::fade")
-  double time_diff_new = double(t - time_last);
 
-  if (time_diff_new <= time_diff_min) {
-    return path_loss;
-  }
-
-  // if correlation is too large, channel does not change
-  if (bessel_j0(doppler_spread * time_diff_new) >= .9999) {
-    time_diff_min = time_diff_new;
-    return path_loss;
-  }
-
-  path_loss = fade_calc(t);
+  // Multiply by 2 since x is an amplitude value (20log10 instead of 10log10)
+  path_loss = path_loss_mean + 2*to_dB(taps_jks[0].fade_calc(t));
 
 
 #ifdef _SAVE_RATE_ADAPT
@@ -619,26 +671,6 @@ BEGIN_PROF("Link::fade")
 
 END_PROF("Link::fade")
   return path_loss;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// Link::fade                                                                 //
-//                                                                            //
-// calculates channel fading using Jakes' method		                      //
-////////////////////////////////////////////////////////////////////////////////
-double Link::fade_calc(timestamp t) {
-	  // calculate fading
-	  double t_aux = double(t);
-
-	  valarray<double> cosomegat = cos(omega*t_aux+theta);
-	  valarray<double> aux1 = cosbeta * cosomegat;
-	  valarray<double> aux2 = sinbeta * cosomegat;
-	  complex<double> x(2*aux1.sum() + M_SQRT2*cosalpha*cos(doppler_spread*t_aux),
-	                    2*aux2.sum() + M_SQRT2*sinalpha*cos(doppler_spread*t_aux));
-	  x *= 1.0 / sqrt(n_osc + .5);
-	  x = 1.0 / x;
-
-	  return path_loss_mean + 20*log10(abs(x));
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -71,6 +71,47 @@ public:
   friend ostream& operator << (ostream& os, const term_pair& t);
 };
 
+/*
+ * Jakes class
+ *
+ * Performs Jakes method
+ *
+ */
+class Jakes {
+
+	double doppler_spread;
+	valarray<double> cosbeta;
+	valarray<double> sinbeta;
+	valarray<double> omega;
+	valarray<double> theta;
+	double cosalpha;
+	double sinalpha;
+	unsigned n_osc;
+	double xabs;
+
+
+	double time_diff_min; // link gain is not updated if last update
+	// happened less than 'time_diff_min' seconds ago
+
+	timestamp time_last; // time of latest link gain update
+
+public:
+
+	Jakes();
+	Jakes(double fd, unsigned no, random* r);
+	double fade_calc(timestamp t);
+
+	double get_doppler_spread() const {return doppler_spread;};
+	valarray<double> get_cosbeta() const {return cosbeta;};
+	valarray<double> get_sinbeta() const {return sinbeta;};
+	valarray<double> get_omega()   const {return omega;};
+	valarray<double> get_theta()   const {return theta;};
+	double get_cosalpha() const {return cosalpha;};
+	double get_sinalpha() const {return sinalpha;};
+	unsigned get_n_osc() const {return n_osc;};
+
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 // class Link                                                                 //
 //                                                                            //
@@ -100,29 +141,13 @@ public:
 class Link {
   term_pair terms; // linked terminals
 
-  ////////////////////////////
-  // Jakes' model parameters
-  valarray<double> cosbeta;
-  valarray<double> sinbeta;
-  valarray<double> omega;
-  valarray<double> theta;
-  double cosalpha;
-  double sinalpha;
-
-  unsigned n_osc; // number of sine waves
+  vector<Jakes> taps_jks; // Jakes model class for path taps
 
   unsigned nTaps; // number of path taps
   valarray<double> taps_amps; // amplitude of taps
 
-  double doppler_spread; // maximum Doppler spread in Hz
-
   double path_loss;      // current average subcarrier path loss in dB
   double path_loss_mean; // average path loss (without fading) in dB 
-
-  double time_diff_min; // link gain is not updated if last update 
-                        // happened less than 'time_diff_min' seconds ago
-                        
-  timestamp time_last; // time of latest link gain update
 
 public:
   //Link() {}
@@ -135,7 +160,6 @@ public:
        );
 
   double fade(timestamp t); // returns the link gain amplitude at time 't' in dB
-  double fade_calc(timestamp t); // calculates link gain in dB at time 't' using Jakes' method
 
   bool belong(term_pair t) const {return t == terms;}
   // returns true if this link corresponds to 't', false otherwise
