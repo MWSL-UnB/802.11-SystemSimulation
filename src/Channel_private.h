@@ -141,6 +141,7 @@ class Link {
   valarray<double> taps_delays;  	// time delay for all taps
   valarray<double> taps_amps; 	    // amplitude of taps without Rayleigh fading
   valarray<double> taps_amps_fade;  // amplitude of taps with Rayleigh fading
+  valarray<double> samples;			// sampled and filtered impulse response
 
   double doppler_spread;
 
