@@ -82,6 +82,18 @@ private:
 	// The first dimension corresponds the channel model, the second to the guard interval,
 	// the third to the MCS and the fourth to the bandwidth
 
+	// Silent carriers
+	static int silent_20_a[12];
+	static int silent_20[8];
+	static int silent_40[14];
+	static int silent_80[14];
+	static int silent_160[28];
+	static int num_silent_20_a;
+	static int num_silent_20;
+	static int num_silent_40;
+	static int num_silent_80;
+	static int num_silent_160;
+
 	// Data rates
 	static double rates_a[8];
 	static double rates_n[2][8][2];
@@ -135,6 +147,8 @@ public:
 
 	static double tx_mode_to_double(transmission_mode tm);
 	static unsigned txMode_bits_per_symbol(transmission_mode tm);
+
+	static bool is_silent(int carr);
 };
 
 #endif /* STANDARD_H_ */

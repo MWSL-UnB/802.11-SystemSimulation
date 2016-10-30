@@ -635,7 +635,7 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 	taps_jks.clear();
 	for(unsigned k = 0; k < nTaps; ++k){
 		Jakes auxJks = Jakes(fd,ns,r);
-		taps_amps_fade[k] = taps_amps[k]*auxJks.fade_calc(timestamp(0));
+		taps_amps_fade[k] = sqrt(taps_amps[k])*auxJks.fade_calc(timestamp(0));
 		taps_jks.push_back(auxJks);
 	}
 
@@ -654,7 +654,8 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 	}
 	cout << endl;
 
-	cout << "FFT Samples: 		";
+	samplesFFT = to_dB(samplesFFT);
+	cout << "FFT Samples [dB]: 		";
 	for(unsigned k = 0; k < samplesFFT.size(); ++k) {
 		cout << " " << samplesFFT[k];
 	}
@@ -688,7 +689,7 @@ BEGIN_PROF("Link::fade")
 
   // Aplly fading to all taps
   for(unsigned k = 0; k < nTaps; ++k){
-	  taps_amps_fade[k] = taps_amps[k]*taps_jks[k].fade_calc(timestamp(t));
+	  taps_amps_fade[k] = sqrt(taps_amps[k])*taps_jks[k].fade_calc(timestamp(t));
   }
 
   //Resample
@@ -718,7 +719,7 @@ void Link::resample() {
 	unsigned max_samp = (unsigned)ceil(taps_delays[nTaps - 1]/sample_time);
 	valarray<double> samples;
 
-	int NFFT = (int)pow(2.0, ceil(log((double)max_samp)/log(2.0)));
+	unsigned NFFT = (unsigned)pow(2.0, ceil(log((double)max_samp)/log(2.0)));
 	if(NFFT < Standard::get_lengthFFT()) NFFT = Standard::get_lengthFFT();
 
 	//cout << "NFFT: " << NFFT << endl;
@@ -735,18 +736,43 @@ void Link::resample() {
 
 	}
 
-	samples = four1(samples,NFFT,1);
+	samples = four1(samples,NFFT,1); //Calculate the FFT
 
+	// Calculate abslute value of FFT
 	samplesFFT.resize(NFFT,0.0);
-	for(int k = 0; k < NFFT; k++) {
+	for(unsigned k = 0; k < NFFT; k++) {
 		samplesFFT[k] = myabs(samples[2*k+1],samples[2*k+2]);
 	}
 
-	/*cout << "FFT Samples: 		";
-	for(unsigned k = 0; k < fft_samp.size(); ++k) {
-		cout << " " << fft_samp[k];
+	// Take loss only at carriers indexes
+	unsigned len = Standard::get_lengthFFT();
+	unsigned skp = NFFT/len;
+	unsigned nSub = Standard::get_numSubcarriers();
+
+	valarray<double> auxVal;
+	auxVal.resize(len,0.0);
+	if(skp == 1) {
+		auxVal = samplesFFT;
+	}else {
+		unsigned j = 0;
+		for(unsigned k = 0; k < len; k++){
+			auxVal[k] = samplesFFT[j];
+			j += skp;
+			if(j == NFFT/2) j+= (skp - 1);
+		}
 	}
-	cout << endl;*/
+
+	// Ignore silent carriers
+	carrier_loss.resize(nSub,0.0);
+	unsigned last_silent = 0;
+	unsigned last_not_silent = 0;
+	for(unsigned k = 0; k < nSub; k++) {
+		while(Standard::is_silent(last_silent)){
+			last_silent++;
+		}
+		last_not_silent = last_silent + 1;
+		carrier_loss[k] = auxVal[last_not_silent];
+	}
 
 }
 

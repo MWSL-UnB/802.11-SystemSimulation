@@ -550,6 +550,18 @@ double Standard::coeff_high_ac_ah[2][4][10][2] = {{{{-1.604774,-1.394469},{0.879
 				{{-2.3974,-1.1580}, { 2.1138,-1.3738}, { 7.7079,-1.5347}, { 9.2576,-1.3244}, {11.3789,-1.1004}, {14.6479,-1.0454}, {20.0742,-1.2278}, {21.2886,-1.2977}, {18.1224,-0.9725}, {18.1224,-0.9725}}}};
 
 
+int Standard::silent_20_a[12] = { 0, 1, 2, 3, 4, 5, 58, 59, 60, 61, 62, 63};
+int Standard::silent_20[8] = { 0, 1, 2, 3, 60, 61, 62, 63};
+int Standard::silent_40[14] = { 0, 1, 2, 3, 4, 5, 63, 64, 122, 123, 124, 125, 126, 127};
+int Standard::silent_80[14] = { 0, 1, 2, 3, 4, 5, 126, 128, 250, 251, 252, 253};
+int Standard::silent_160[28] = { 0, 1, 2, 3, 4, 5, 127, 128, 129, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 382, 383, 384, 506, 507, 508, 509, 510, 511};
+int Standard::num_silent_20_a = 12;
+int Standard::num_silent_20 = 8;
+int Standard::num_silent_40 = 14;
+int Standard::num_silent_80 = 14;
+int Standard::num_silent_160 = 28;
+
+
 //////////////////////////////////
 // Standard setters and getters //
 //////////////////////////////////
@@ -719,6 +731,43 @@ unsigned Standard::txMode_bits_per_symbol(transmission_mode tm) {
 	default: throw (my_exception("Undefined Standard."));
 	}
 	return 0;
+}
+
+bool Standard::is_silent(int carr) {
+	if(currentStd == dot11a){
+		for(int k = 0; k < num_silent_20_a; k++) {
+			if(silent_20_a[k] == carr) return true;
+		}
+		return false;
+	}else {
+		switch(band) {
+		case MHz20:{
+			for(int k = 0; k < num_silent_20; k++) {
+				if(silent_20[k] == carr) return true;
+			}
+			return false;
+		}
+		case MHz40: {
+			for(int k = 0; k < num_silent_40; k++) {
+				if(silent_40[k] == carr) return true;
+			}
+			return false;
+		}
+		case MHz80: {
+			for(int k = 0; k < num_silent_80; k++) {
+				if(silent_80[k] == carr) return true;
+			}
+			return false;
+		}
+		case MHz160: {
+			for(int k = 0; k < num_silent_160; k++) {
+				if(silent_160[k] == carr) return true;
+			}
+			return false;
+		}
+		default: return false;
+		}
+	}
 }
 
 ////////////////////////
