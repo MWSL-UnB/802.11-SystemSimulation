@@ -72,7 +72,8 @@ private:
 	static double symbol_period;      //OFDM symbol period
 	static double rollof;
 	static channel_bandwidth maxBand;
-	static unsigned numSubcarriers;		// Number of OFDM subcarriers
+	static unsigned numSubcarriers;		// Number of OFDM data subcarriers
+	static unsigned lengthFFT;			// Length of OFDM fft
 
 	// Flags and holders
 	static channel_bandwidth band;
@@ -129,6 +130,7 @@ public:
 	static double get_rollof();
 	static channel_bandwidth get_maxBand();
 	static unsigned get_numSubcarriers();
+	static unsigned get_lengthFFT();
 	static double get_beta(transmission_mode tm, channel_model cm);
 
 	static double tx_mode_to_double(transmission_mode tm);

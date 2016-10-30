@@ -37,6 +37,7 @@ channel_bandwidth Standard::maxBand = MHz;
 channel_bandwidth Standard::band = MHz;
 bool Standard::shortGI = false;
 unsigned Standard::numSubcarriers = 52;
+unsigned Standard::lengthFFT = 64;
 
 //Indexes
 unsigned Standard::sgiIdx = 0;
@@ -590,16 +591,21 @@ void Standard::set_standard(dot11_standard st, channel_bandwidth bw, bool sgi) {
 
 	switch(bw){
 	case MHz20:
-		numSubcarriers = 52;
+		if(currentStd == dot11a)numSubcarriers = 52;
+		else numSubcarriers = 56;
+		lengthFFT = 64;
 		break;
 	case MHz40:
 		numSubcarriers = 108;
+		lengthFFT = 128;
 		break;
 	case MHz80:
 		numSubcarriers = 234;
+		lengthFFT = 256;
 		break;
 	case MHz160:
 		numSubcarriers = 468;
+		lengthFFT = 512;
 		break;
 	}
 
@@ -663,6 +669,9 @@ channel_bandwidth Standard::get_maxBand() {
 }
 unsigned Standard::get_numSubcarriers()	{
 	return numSubcarriers;
+}
+unsigned Standard::get_lengthFFT(){
+	return lengthFFT;
 }
 double Standard::get_beta(transmission_mode tm, channel_model cm) {
 

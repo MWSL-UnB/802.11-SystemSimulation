@@ -716,9 +716,12 @@ void Link::resample() {
 	double W = Standard::get_band_double();
 	double sample_time = 1/W;
 	unsigned max_samp = (unsigned)ceil(taps_delays[nTaps - 1]/sample_time);
+	valarray<double> fft_samp;
 
 	int NFFT = (int)pow(2.0, ceil(log((double)max_samp)/log(2.0)));
-	if(NFFT < Standard::get_numSubcarriers()) NFFT = Standard::get_numSubcarriers();
+	if(NFFT < Standard::get_lengthFFT()) NFFT = Standard::get_lengthFFT();
+
+	//cout << "NFFT: " << NFFT << endl;
 
 	samples.resize((2*NFFT+1),0.0);
 	double time = 0.0;
@@ -731,6 +734,14 @@ void Link::resample() {
 		}
 
 	}
+
+	fft_samp = four1(samples,NFFT,1);
+
+	/*cout << "FFT Samples: 		";
+	for(unsigned k = 0; k < fft_samp.size(); ++k) {
+		cout << " " << fft_samp[k];
+	}
+	cout << endl;*/
 
 }
 
