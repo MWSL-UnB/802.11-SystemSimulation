@@ -35,5 +35,6 @@ using namespace std;
 double bessel_j0 (double x);
 valarray<double> four1(valarray<double> indata, int nn, int isign);
 double invraisedcos(double t, double W, double rollof);
+double myabs(double r, double i);
 
 #endif

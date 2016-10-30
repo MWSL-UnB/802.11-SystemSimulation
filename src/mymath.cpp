@@ -152,3 +152,7 @@ double invraisedcos(double t, double W, double rollof) {
 	return y;
 
 }
+
+double myabs(double r, double i){
+	return sqrt(pow(r,2) + pow(i,2));
+}
