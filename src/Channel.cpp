@@ -614,26 +614,32 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 	case A:
 		nTaps = tapsPow_A.size();
 		taps_amps = from_dB(tapsPow_A);
+		taps_delays = tapDelay_A;
 		break;
 	case B:
 		nTaps = tapsPow_B.size();
 		taps_amps = from_dB(tapsPow_B);
+		taps_delays = tapDelay_B;
 		break;
 	case C:
 		nTaps = tapsPow_C.size();
 		taps_amps = from_dB(tapsPow_C);
+		taps_delays = tapDelay_C;
 		break;
 	case D:
 		nTaps = tapsPow_D.size();
 		taps_amps = from_dB(tapsPow_D);
+		taps_delays = tapDelay_D;
 		break;
 	case E:
 		nTaps = tapsPow_E.size();
 		taps_amps = from_dB(tapsPow_E);
+		taps_delays = tapDelay_E;
 		break;
 	case F:
 		nTaps = tapsPow_F.size();
 		taps_amps = from_dB(tapsPow_F);
+		taps_delays = tapDelay_F;
 		break;
 	}
 
