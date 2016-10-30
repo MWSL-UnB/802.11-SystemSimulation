@@ -720,14 +720,14 @@ void Link::resample() {
 	int NFFT = (int)pow(2.0, ceil(log((double)max_samp)/log(2.0)));
 	if(NFFT < Standard::get_numSubcarriers()) NFFT = Standard::get_numSubcarriers();
 
-	samples.resize(max_samp + 1,0.0);
+	samples.resize((2*NFFT+1),0.0);
 	double time = 0.0;
 	for(unsigned k = 0; k <= max_samp; ++k) {
 		time = k*sample_time;
 		double time_diff;
 		for(unsigned j = 0; j < nTaps; j++){
 			time_diff = time - taps_delays[j];
-			samples[k] += taps_amps_fade[j]*invraisedcos(time_diff,W,Standard::get_rollof());
+			samples[2*k + 1] += taps_amps_fade[j]*invraisedcos(time_diff,W,Standard::get_rollof());
 		}
 
 	}
