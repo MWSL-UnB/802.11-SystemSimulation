@@ -717,6 +717,9 @@ void Link::resample() {
 	double sample_time = 1/W;
 	unsigned max_samp = (unsigned)ceil(taps_delays[nTaps - 1]/sample_time);
 
+	int NFFT = (int)pow(2.0, ceil(log((double)max_samp)/log(2.0)));
+	if(NFFT < Standard::get_numSubcarriers()) NFFT = Standard::get_numSubcarriers();
+
 	samples.resize(max_samp + 1,0.0);
 	double time = 0.0;
 	for(unsigned k = 0; k <= max_samp; ++k) {

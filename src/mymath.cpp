@@ -65,11 +65,11 @@ double bessel_j0 (double x){
  FFT/IFFT routine.
 
  Inputs:
-	data[] : array of complex* data points of size 2*NFFT+1.
-		data[0] is unused,
+	indata[] : array of complex* data points of size 2*NFFT+1.
+		indata[0] is unused,
 		* the n'th complex number x(n), for 0 <= n <= length(x)-1, is stored as:
-			data[2*n+1] = real(x(n))
-			data[2*n+2] = imag(x(n))
+			indata[2*n+1] = real(x(n))
+			indata[2*n+2] = imag(x(n))
 		if length(Nx) < NFFT, the remainder of the array must be padded with zeros
 
 	nn : FFT order NFFT. This MUST be a power of 2 and >= length(x).
@@ -79,9 +79,9 @@ double bessel_j0 (double x){
 				computes Inverse FFT - in this case the output values have
 				to be manually normalized by multiplying with 1/NFFT.
  Outputs:
-	data[] : The FFT or IFFT results are stored in data, overwriting the input.
+	data[] : The FFT or IFFT results are stored in data
 
- Algorithm from
+ Algorithm adapted from
     "Numerical Methods in C",
     Press, Teukolsky, Vetterling, Flannery
 */
