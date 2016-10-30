@@ -25,7 +25,6 @@
 #include <complex>
 #include <algorithm>
 #include <iostream>
-//#include <stdlib.h>
 
 #include "Channel.h"
 #include "timestamp.h"
@@ -714,27 +713,29 @@ END_PROF("Link::fade")
 
 valarray<double> Link::resample() {
 
+	//CArray H;
+	valarray<double> smps;
+
 	double W = Standard::get_band_double();
 	double sample_time = 1/W;
 	unsigned max_samp = (unsigned)ceil(taps_delays[nTaps - 1]/sample_time);
 
-	valarray<double> samples;
-	samples.resize(max_samp + 1,0.0);
+	unsigned NFFT = (int)pow(2.0, ceil(log((double)max_samp)/log(2.0)));
+	if(NFFT < Standard::get_numSubcarriers()) NFFT = Standard::get_numSubcarriers();
+
+	smps.resize(max_samp,0.0);
 	double time = 0.0;
 	for(unsigned k = 0; k <= max_samp; ++k) {
 		time = k*sample_time;
 		double time_diff;
 		for(unsigned j = 0; j < nTaps; j++){
 			time_diff = time - taps_delays[j];
-			samples[k] += taps_amps_fade[j]*invraisedcos(time_diff,W,Standard::get_rollof());
+			smps[k] += taps_amps_fade[j]*invraisedcos(time_diff,W,Standard::get_rollof());
 		}
 
 	}
 
-	unsigned NFFT = (int)pow(2.0, ceil(log((double)max_samp)/log(2.0)));
-	if(NFFT < Standard::get_numSubcarriers()) NFFT = Standard::get_numSubcarriers();
-
-	return samples;
+	return smps;
 
 }
 
