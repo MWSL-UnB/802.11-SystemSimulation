@@ -735,7 +735,12 @@ void Link::resample() {
 
 	}
 
-	samplesFFT = four1(samples,NFFT,1);
+	samples = four1(samples,NFFT,1);
+
+	samplesFFT.resize(NFFT,0.0);
+	for(int k = 0; k < NFFT; k++) {
+		samplesFFT[k] = myabs(samples[2*k+1],samples[2*k+2]);
+	}
 
 	/*cout << "FFT Samples: 		";
 	for(unsigned k = 0; k < fft_samp.size(); ++k) {
