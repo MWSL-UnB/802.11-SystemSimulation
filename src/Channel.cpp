@@ -177,7 +177,6 @@ double Jakes::fade_calc(timestamp t) {
 	  complex<double> x(2*aux1.sum() + M_SQRT2*cosalpha*cos(doppler_spread*t_aux),
 	                    2*aux2.sum() + M_SQRT2*sinalpha*cos(doppler_spread*t_aux));
 	  x *= 1.0 / sqrt(n_osc + .5);
-	  x = 1.0 / x;
 
 	  xabs = abs(x);
 
@@ -640,8 +639,22 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 		taps_jks.push_back(auxJks);
 	}
 
+	cout << "Taps amps: 		";
+	for(unsigned k = 0; k < nTaps; ++k){
+		cout << " " << taps_amps[k];
+	}
+	cout << endl;
+
+	cout << "Taps amps fade: 	";
+	for(unsigned k = 0; k < nTaps; ++k){
+		cout << " " << taps_amps_fade[k];
+	}
+	cout << endl;
+
+	resample();
+
 	// Multiply by 2 since x is an amplitude value (20log10 instead of 10log10)
-	path_loss = path_loss_mean + 2*to_dB(taps_jks[6].fade_calc(timestamp(0)));
+	path_loss = path_loss_mean - 2*to_dB(taps_jks[0].fade_calc(timestamp(0)));
 
 }
 
@@ -670,8 +683,9 @@ BEGIN_PROF("Link::fade")
 	  taps_amps_fade[k] = taps_amps[k]*taps_jks[k].fade_calc(timestamp(t));
   }
 
+
   // Multiply by 2 since x is an amplitude value (20log10 instead of 10log10)
-  path_loss = path_loss_mean + 2*to_dB(taps_jks[6].fade_calc(t));
+  path_loss = path_loss_mean - 2*to_dB(taps_jks[0].fade_calc(t));
 
 
 #ifdef _SAVE_RATE_ADAPT
@@ -705,6 +719,12 @@ valarray<double> Link::resample() {
 		}
 
 	}
+
+	cout << "Samples: 		";
+	for(unsigned k = 0; k <= max_samp; ++k) {
+		cout << " " << samples[k];
+	}
+	cout << endl;
 
 	return samples;
 
