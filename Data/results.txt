@@ -3,3 +3,88 @@
 Iteration 1
     seed = 1 
 
+802.11ac
+Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+   0   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.7
+   1   ( 10;  0) 10.0  AC_VI     9.800        1.98    0.34    1225    1225  0.0000   0.0000     3.3     58.50      2.6
+
+ Total throughput = 9.79985 Mbps
+ Average transfer time = 0.00197861s
+ Average transmission time = 0.000337473s
+ Packet loss rate = 0
+ Overflow rate = 0
+
+
+Iteration 2
+    seed = 2 
+
+802.11ac
+Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+   2   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.7
+   3   ( 10;  0) 10.0  AC_VI    10.079        1.11    0.34    1260    1260  0.0000   0.0000     2.5     58.50      2.6
+
+ Total throughput = 10.0793 Mbps
+ Average transfer time = 0.00111279s
+ Average transmission time = 0.000338673s
+ Packet loss rate = 0
+ Overflow rate = 0
+
+
+Iteration 3
+    seed = 3 
+
+802.11ac
+Term Position   dist.  AC     throughput transfer_t tx_time packets kbytes pack_loss overflow queue_l tx_rate(PHY) tx_power
+        m        m      Mbps         ms      ms                                                 Mbps        mW
+   4   (  0;  0)  0.0  AC_VI     0.000         inf     inf       0       0     inf      inf     inf       nan      0.7
+   5   ( 10;  0) 10.0  AC_VI     9.635        0.61    0.35    1205    1205  0.0000   0.0000     1.7     58.50      2.6
+
+ Total throughput = 9.63467 Mbps
+ Average transfer time = 0.000612552s
+ Average transmission time = 0.00034783s
+ Packet loss rate = 0
+ Overflow rate = 0
+
+
+%%%% Final results %%%%
+
+
+
+
+Throughput (Mbps)
+mean           =      9.838 
+conf. interval =      0.967 
+
+Transfer time (ms)
+mean           =      1.235 
+conf. interval =      2.974 
+
+Standard deviation of transfer time (ms)
+mean           =      3.301 
+conf. interval =     12.232 
+
+Transmission time (ms)
+mean           =      0.341 
+conf. interval =      0.024 
+
+Standard deviation of transmission time (ms)
+mean           =      0.089 
+conf. interval =      0.020 
+
+Packet loss rate
+mean           =      0.000 
+conf. interval =      0.000 
+
+Queue overflow rate
+mean           =      0.000 
+conf. interval =      0.000 
+
+Average queue length
+mean           =      2.500 
+conf. interval =      3.370 
+
+Average transmission power (mW)
+mean           =      1.673 
+conf. interval =      0.103 
