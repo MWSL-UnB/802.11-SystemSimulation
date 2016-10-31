@@ -82,7 +82,7 @@ NoiseVariance_dBm = -95.0 % noise variance at receiver in dBm
 DopplerSpread_Hz = 5.0    % maximum Doppler spread in Hz
 NumberSinus = 20 % number of sinewaves to emulate Rayleigh fading.
                  % It should be >10 for good statistical properties.
-ChannelModel = B % Multipath channel model:
+ChannelModel = E % Multipath channel model:
 				 % 	A: Flat channel
 				 % 	B: Residential
 				 % 	C: Residential/Small Office
@@ -93,7 +93,7 @@ ChannelModel = B % Multipath channel model:
 %%%%%%%%%%%%%%%%%%
 % PHY Parameters
 
-Bandwidth = 20MHz %20MHz, 40MHz, 80MHz or 160MHz channels. Standard dependant
+Bandwidth = 160MHz %20MHz, 40MHz, 80MHz or 160MHz channels. Standard dependant
 shortGI = 0 % if 1 then short GI of 400ns will be used
 
 TxMode = MCS6 %MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9,OPT,SUBOPT

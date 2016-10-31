@@ -144,8 +144,6 @@ class Link {
 
   valarray<double> carrier_loss;    // loss for each subcarrier
 
-  valarray<double> samplesFFT;		// FFT of sampled and filtered impulse response
-
   double doppler_spread;
 
   double path_loss;      // current average subcarrier path loss in dB

@@ -608,15 +608,15 @@ void Standard::set_standard(dot11_standard st, channel_bandwidth bw, bool sgi) {
 		lengthFFT = 64;
 		break;
 	case MHz40:
-		numSubcarriers = 108;
+		numSubcarriers = 114;
 		lengthFFT = 128;
 		break;
 	case MHz80:
-		numSubcarriers = 234;
+		numSubcarriers = 242;
 		lengthFFT = 256;
 		break;
 	case MHz160:
-		numSubcarriers = 468;
+		numSubcarriers = 484;
 		lengthFFT = 512;
 		break;
 	}

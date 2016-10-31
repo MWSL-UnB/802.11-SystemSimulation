@@ -654,10 +654,10 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 	}
 	cout << endl;
 
-	samplesFFT = to_dB(samplesFFT);
-	cout << "FFT Samples [dB]: 		";
-	for(unsigned k = 0; k < samplesFFT.size(); ++k) {
-		cout << " " << samplesFFT[k];
+	carrier_loss = to_dB(carrier_loss);
+	cout << "Carrier losses [dB] = " << carrier_loss.size() << ":";
+	for(unsigned k = 0; k < carrier_loss.size(); ++k) {
+		cout << " " << carrier_loss[k];
 	}
 	cout << endl;
 
@@ -739,6 +739,7 @@ void Link::resample() {
 	samples = four1(samples,NFFT,1); //Calculate the FFT
 
 	// Calculate abslute value of FFT
+	valarray<double> samplesFFT;
 	samplesFFT.resize(NFFT,0.0);
 	for(unsigned k = 0; k < NFFT; k++) {
 		samplesFFT[k] = myabs(samples[2*k+1],samples[2*k+2]);
@@ -764,14 +765,13 @@ void Link::resample() {
 
 	// Ignore silent carriers
 	carrier_loss.resize(nSub,0.0);
-	unsigned last_silent = 0;
 	unsigned last_not_silent = 0;
 	for(unsigned k = 0; k < nSub; k++) {
-		while(Standard::is_silent(last_silent)){
-			last_silent++;
-		}
-		last_not_silent = last_silent + 1;
+		while(Standard::is_silent(last_not_silent)){
+			last_not_silent++;
+		};
 		carrier_loss[k] = auxVal[last_not_silent];
+		last_not_silent++;
 	}
 
 }
