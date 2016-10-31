@@ -383,7 +383,6 @@ void Channel::new_link(PHY* pt1, PHY* pt2) {
   
   Link newlink(tp, path_loss[tp], DopplerSpread_Hz, rand_gen, NumberSinus, cModel);
   links.push_back(newlink);
-  path_loss[tp] = newlink.fade(ptr2sch->now());
 
   if (logflag) *mylog << "Channel: New time-variant link created between "
                       << *pt1 << " and " << *pt2 << ", path_loss = " 
@@ -440,12 +439,12 @@ BEGIN_PROF("Channel::send_packet_all")
                     (void*)this, pack.get_id()));
 
   // update channel gain
-  if (DopplerSpread_Hz > 0) {
+  /*if (DopplerSpread_Hz > 0) {
     term_pair tp((pack.get_source())->get_phy(),(pack.get_target())->get_phy());
     vector<Link>::iterator itl = find_if(links.begin(), links.end(),
                                          same_link(tp));
     path_loss[tp] = itl->fade(ptr2sch->now());
-  }
+  }*/
 
   busy_channel_message (pack);
 END_PROF("Channel::send_packet_all")
@@ -476,13 +475,13 @@ BEGIN_PROF("Channel::send_packet_one")
                     (void*)&wrapper_to_stop_send_one,
                     (void*)this, pack.get_id()));
 
-    if (DopplerSpread_Hz > 0) {
+    /*if (DopplerSpread_Hz > 0) {
       term_pair tp((pack.get_source())->get_phy()
                    ,(pack.get_target())->get_phy());
       vector<Link>::iterator itl = find_if(links.begin(), links.end(),
                                           same_link(tp));
       path_loss[tp] = itl->fade(ptr2sch->now());
-    }
+    }*/
 
   busy_channel_message (pack);
 
@@ -509,8 +508,14 @@ BEGIN_PROF("Channel::stop_send_all")
   PHY* source = (pack.get_source())->get_phy();
   PHY* target = (pack.get_target())->get_phy();
 
+  term_pair tp(source,target);
+  valarray<double> pLoss;
+  timestamp t = ptr2sch->now() - pack.get_duration();
+
+  for(vector<Link>::iterator it = links.begin(); it != links.end(); ++it){
+    if(it->belong(tp)) pLoss = (it->fade(t));
+  }
   // send to target terminal
-  valarray<double> pLoss(path_loss[term_pair(source,target)],Standard::get_numSubcarriers());
   target->receive(pack, pLoss,it->interf_max);
 
   air_pack.erase(it);
@@ -560,7 +565,14 @@ BEGIN_PROF("Channel::stop_send_one")
   PHY* source = (pack.get_source())->get_phy();
   PHY* target = (pack.get_target())->get_phy();
 
-  valarray<double> pLoss(path_loss[term_pair(source,target)],Standard::get_numSubcarriers());
+  term_pair tp(source,target);
+  valarray<double> pLoss;
+  timestamp t = ptr2sch->now() - pack.get_duration();
+
+  for(vector<Link>::iterator it = links.begin(); it != links.end(); ++it){
+    if(it->belong(tp)) pLoss = it->fade(t);
+  }
+
   target->receive(pack, pLoss,it->interf_max);
 
   air_pack.erase(it);
@@ -654,15 +666,13 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 	}
 	cout << endl;
 
-	carrier_loss = to_dB(carrier_loss);
 	cout << "Carrier losses [dB] = " << carrier_loss.size() << ":";
 	for(unsigned k = 0; k < carrier_loss.size(); ++k) {
 		cout << " " << carrier_loss[k];
 	}
 	cout << endl;
 
-	// Multiply by 2 since x is an amplitude value (20log10 instead of 10log10)
-	path_loss = path_loss_mean - 2*to_dB(taps_jks[0].fade_calc(timestamp(0)));
+	path_loss = carrier_loss + path_loss_mean;
 
 }
 
@@ -672,7 +682,7 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 // updates channel fading,                                                    //
 // and returns the link gain amplitude at time 't' in dB                      //
 ////////////////////////////////////////////////////////////////////////////////
-double Link::fade(timestamp t) {
+valarray<double> Link::fade(timestamp t) {
 BEGIN_PROF("Link::fade")
 
   double time_diff_new = double(t - time_last);
@@ -695,8 +705,7 @@ BEGIN_PROF("Link::fade")
   //Resample
   resample();
 
-  // Multiply by 2 since x is an amplitude value (20log10 instead of 10log10)
-  path_loss = path_loss_mean - 2*to_dB(taps_jks[0].fade_calc(t));
+  path_loss = carrier_loss + path_loss_mean;
 
 
 #ifdef _SAVE_RATE_ADAPT
@@ -773,6 +782,8 @@ void Link::resample() {
 		carrier_loss[k] = auxVal[last_not_silent];
 		last_not_silent++;
 	}
+
+	carrier_loss = to_dB(carrier_loss);
 
 }
 

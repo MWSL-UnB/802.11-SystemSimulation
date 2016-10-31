@@ -146,7 +146,7 @@ class Link {
 
   double doppler_spread;
 
-  double path_loss;      // current average subcarrier path loss in dB
+  valarray<double> path_loss;      // current average subcarrier path loss in dB
   double path_loss_mean; // average path loss (without fading) in dB 
 
   double time_diff_min; // link gain is not updated if last update
@@ -164,7 +164,7 @@ public:
 	   channel_model cm  // multipath channel model
        );
 
-  double fade(timestamp t); // returns the link gain amplitude at time 't' in dB
+  valarray<double> fade(timestamp t); // returns the link gain amplitude at time 't' in dB
   void resample();
 
   bool belong(term_pair t) const {return t == terms;}
