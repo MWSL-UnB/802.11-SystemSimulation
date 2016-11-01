@@ -10,7 +10,7 @@ Confidence = .95 % for calculation of confidence interval (if more than one seed
 %Log = PHY  % log simulation events (SETUP,PHY,MAC,CHANNEL,ADAPT,TRAFFIC and/or SCHEDULER)
              % unlike the other parameters the simulation will not iterate over this parameter
              % , the log output will be a combination of the desired elements for all iterations
-partResults = 0 % if 1, then results file will contain partial results, for each iteration. If 0, 
+partResults = 1 % if 1, then results file will contain partial results, for each iteration. If 0, 
 			 % then only final results are presented
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,7 +78,7 @@ Radius = 10 % cell radius in meters
 
 LossExponent = 3.0 % path loss exponent
 RefLoss_dB = 46.7  % reference path loss at 1 m (according to Friis equation, Rappaport, pp. 72)
-NoiseVariance_dBm = -95.0 % noise variance at receiver in dBm
+NoiseDensity_dBm = -128.0 % noise variance at receiver in dBm
 DopplerSpread_Hz = 5.0    % maximum Doppler spread in Hz
 NumberSinus = 20 % number of sinewaves to emulate Rayleigh fading.
                  % It should be >10 for good statistical properties.

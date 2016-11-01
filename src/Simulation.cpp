@@ -358,7 +358,7 @@ void Simulation::init_terminals(){
 			sim_par.get_FragmentationThresh(), sim_par.get_QueueSize(),
 			sim_par.get_set_BA_agg());
 
-	PHY_struct phy(sim_par.get_NoiseVariance(), sim_par.get_CCASensitivity());
+	PHY_struct phy(sim_par.get_NoiseDensity(), sim_par.get_CCASensitivity());
 
 	traffic_struct tr_dl(sim_par.get_DataRateDL(), sim_par.get_PacketLength(),
 			sim_par.get_ArrivalTime());

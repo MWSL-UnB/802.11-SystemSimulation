@@ -58,7 +58,7 @@ PHY::PHY(Terminal* t,
     mylog = l;
     logflag = (*mylog)(log_type::phy);
     
-    NoiseVariance_dBm = ps.NoiseVar;
+    NoiseVariance_dBm = ps.NoiseDen - to_dB(Standard::get_band_double());
     CCASensitivity_dBm = ps.Sens;
 
     busy_begin = busy_end = timestamp(0);

@@ -213,7 +213,7 @@ class Parameters {
   // channel parameters
   param_vec_double LossExponent;
   param_vec_double RefLoss_dB;
-  param_vec_double NoiseVariance_dBm;
+  param_vec_double NoiseDensity_dBm;
   param_vec_double DopplerSpread_Hz;
   param_vec_unsigned NumberSinus;
   param_vec_model	ChannelModel;
@@ -266,7 +266,7 @@ public:
   vector<log_type>& get_Log() {return Log.get_vec();}
   double get_LossExponent() {return LossExponent.current();}
   timestamp get_MaxSimTime() {return MaxSimTime;}
-  double get_NoiseVariance() {return NoiseVariance_dBm.current();}
+  double get_NoiseDensity() {return NoiseDensity_dBm.current();}
   unsigned get_NumberAPs() {return NumberAPs.current();}
   unsigned get_NumberSinus() {return NumberSinus.current();}
   unsigned get_NumberStas() {return NumberStas.current();}

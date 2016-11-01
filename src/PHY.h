@@ -33,10 +33,10 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 struct PHY_struct {
-  double NoiseVar;  // noise variance at receiver in dBms
+  double NoiseDen;  // noise spectral density at receiver in dBms
   double Sens;      // carrier sensitivity level in dBms
 
-  PHY_struct(double N, double S): NoiseVar(N), Sens(S) {}
+  PHY_struct(double N, double S): NoiseDen(N), Sens(S) {}
 };
 
 
