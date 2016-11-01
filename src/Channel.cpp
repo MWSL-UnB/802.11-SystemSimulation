@@ -654,7 +654,7 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 	// Resample
 	resample();
 
-	cout << "Taps amps: 		";
+	/*cout << "Taps amps: 		";
 	for(unsigned k = 0; k < nTaps; ++k){
 		cout << " " << taps_amps[k];
 	}
@@ -670,7 +670,7 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_mo
 	for(unsigned k = 0; k < carrier_loss.size(); ++k) {
 		cout << " " << carrier_loss[k];
 	}
-	cout << endl;
+	cout << endl;*/
 
 	path_loss = carrier_loss + path_loss_mean;
 

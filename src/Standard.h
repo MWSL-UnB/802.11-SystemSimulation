@@ -106,8 +106,8 @@ private:
 
 	// Error model constants
 	static double beta_a[6][8];
-	static double beta_n[6][2][8][2];
-	static double beta_ac_ah[6][2][10][4];
+	static double beta_n[6][2][2][8];
+	static double beta_ac_ah[6][2][4][10];
 
 	static double min_thresh_a[8];
 	static double max_thresh_a[8];
