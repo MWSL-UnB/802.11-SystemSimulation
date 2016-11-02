@@ -403,6 +403,7 @@ void Parameters::default_config () {
   TxMode.init("transmit mode",MCS0);
   AdaptMode.init("adaptation mode",RATE);
   Bandwidth.init("bandwidth",MHz20);
+  shortGI.init("Guard Interval",false);
 
   TargetPER.init("target PER",.1);
 

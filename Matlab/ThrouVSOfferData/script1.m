@@ -93,7 +93,7 @@ axis tight;
 hold off;
 legend([h1_i h2_i h3_i],{'AC_VI com agregação','AC_VI sem agregação','AC_BE'},...
     'Location','NorthWest','Interpreter','none')
-axis([0 65 0 60]);
+axis([0 65 0 65]);
 print('-dpng','thrVSOffer');
 
 %% Save data

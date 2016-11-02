@@ -4,12 +4,12 @@ close all
 
 %%
 
-kmax = 2000;
-kmin = 10;
+kmax = 110;
+kmin = 2.5;
 
 fid = fopen('nums.txt','w');
 for k = kmin:kmin:kmax
-    fprintf(fid,'%d',k);
+    fprintf(fid,'%.1f',k);
     if k <kmax
        fprintf(fid,',');
     end
