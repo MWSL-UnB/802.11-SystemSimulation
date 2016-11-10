@@ -33,10 +33,10 @@ Standard = 802.11n
 % If the sum of proportions is more than 1 the low priority ACs' proportions
 % will be reduced so that the new sum equals 1. 
 
-ppAC_BK = 0
-ppAC_BE = 0
-ppAC_VI = 1
-ppAC_VO = 0
+ppAC_BK = 00.25
+ppAC_BE = 0.25
+ppAC_VI = 0.25
+ppAC_VO = 0.25
 ppLegacy = 0
 
 %% set_BA_agg: if 1 all stations will perform Block ACK and MPDU aggregation
@@ -58,8 +58,8 @@ set_BA_agg = 1;
 % No terminal movement supported so far.
 
 NumberAPs = 1 % number of access points
-NumberStas = 1 % number of mobile terminals 
-Radius = 10 % cell radius in meters
+NumberStas = 4 % number of mobile terminals 
+Radius = 20 % cell radius in meters
 
 
 % if NumberAPs > 1
@@ -82,7 +82,7 @@ NoiseDensity_dBm = -168.0 % noise variance at receiver in dBm
 DopplerSpread_Hz = 6.0    % maximum Doppler spread in Hz
 NumberSinus = 20 % number of sinewaves to emulate Rayleigh fading.
                  % It should be >10 for good statistical properties.
-ChannelModel = A % Multipath channel model:
+ChannelModel = A,B,E % Multipath channel model:
 				 % 	A: Flat channel
 				 % 	B: Residential
 				 % 	C: Residential/Small Office
@@ -94,7 +94,7 @@ ChannelModel = A % Multipath channel model:
 % PHY Parameters
 
 Bandwidth = 20MHz %20MHz, 40MHz, 80MHz or 160MHz channels. Standard dependant
-shortGI = 1,0 % if 1 then short GI of 400ns will be used
+shortGI = 0 % if 1 then short GI of 400ns will be used
 
 TxMode = MCS7 %MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9,OPT,SUBOPT
           % MCS0,MCS1,MCS2,MCS3,MCS4,MCS5,MCS6,MCS7,MCS8,MCS9: no link adaptation, always transmit at fixed rate with maximum power

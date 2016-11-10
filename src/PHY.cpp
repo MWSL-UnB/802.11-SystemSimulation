@@ -348,7 +348,7 @@ BEGIN_PROF("PHY::receive")
     if (rand_gen->uniform() > pack_error_prob) {
 
       if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term 
-                          << " (PHY) : SNIReff = " << SNIReff << ", PER = "
+                          << " (PHY) : SNIReff = " << SNIReff << "dB, PER = "
                           << pack_error_prob << ", " << pck << " received " 
                           << endl;
 

@@ -161,7 +161,17 @@ Jakes::Jakes(double fd, unsigned no, random* r) {
 	cosbeta = cos(beta);
 	sinbeta = sin(beta);
 
-	xabs = 0.0;
+	// calculate fading
+	double t_aux = 0.0;
+
+	valarray<double> cosomegat = cos(omega*t_aux+theta);
+	valarray<double> aux1 = cosbeta * cosomegat;
+	valarray<double> aux2 = sinbeta * cosomegat;
+	complex<double> x(2*aux1.sum() + M_SQRT2*cosalpha*cos(doppler_spread*t_aux),
+			2*aux2.sum() + M_SQRT2*sinalpha*cos(doppler_spread*t_aux));
+	x *= 1.0 / sqrt(n_osc + .5);
+
+	xabs = abs(x);
 
 };
 
