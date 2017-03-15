@@ -500,9 +500,9 @@ void Simulation::run() {
 		n_it++;
 
 		if(sim_par.get_partResults()) {
-			cout << "\n\nIteration " << n_it << "\n    " << sim_par << "\n" << endl;
 			out << "\n\nIteration " << n_it << "\n    " << sim_par << "\n" << endl;
 		}
+		cout << "\n\nIteration " << n_it << "\n    " << sim_par << "\n" << endl;
 
 		if (log(log_type::setup))
 			log << "\n\nIteration " << n_it << "\n\t" << sim_par << "\n"
