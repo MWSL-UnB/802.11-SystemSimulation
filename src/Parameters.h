@@ -133,6 +133,7 @@ typedef param_vec_<log_type> param_vec_log_type;
 typedef param_vec_<Position> param_vec_Position;
 typedef param_vec_<dot11_standard> param_vec_dot11_standard;
 typedef param_vec_<channel_bandwidth> param_vec_bandwidth;
+typedef param_vec_<channel_model> param_vec_model;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -212,9 +213,10 @@ class Parameters {
   // channel parameters
   param_vec_double LossExponent;
   param_vec_double RefLoss_dB;
-  param_vec_double NoiseVariance_dBm;
+  param_vec_double NoiseDensity_dBm;
   param_vec_double DopplerSpread_Hz;
   param_vec_unsigned NumberSinus;
+  param_vec_model	ChannelModel;
 
   /////////////////////////
   // IEEE 802.11 MAC parameters
@@ -264,7 +266,7 @@ public:
   vector<log_type>& get_Log() {return Log.get_vec();}
   double get_LossExponent() {return LossExponent.current();}
   timestamp get_MaxSimTime() {return MaxSimTime;}
-  double get_NoiseVariance() {return NoiseVariance_dBm.current();}
+  double get_NoiseDensity() {return NoiseDensity_dBm.current();}
   unsigned get_NumberAPs() {return NumberAPs.current();}
   unsigned get_NumberSinus() {return NumberSinus.current();}
   unsigned get_NumberStas() {return NumberStas.current();}
@@ -294,6 +296,7 @@ public:
   dot11_standard get_standard() {return standard.current();}
   channel_bandwidth get_bandwidth() {return Bandwidth.current();}
   bool get_shortGI() {return shortGI.current();}
+  channel_model get_channelModel() {return ChannelModel.current();}
 
   Position get_APPosition(unsigned which_ap);
   // returns position of AP number 'which_ap'

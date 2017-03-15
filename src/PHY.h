@@ -33,10 +33,10 @@
 //                                                                            //
 ////////////////////////////////////////////////////////////////////////////////
 struct PHY_struct {
-  double NoiseVar;  // noise variance at receiver in dBms
+  double NoiseDen;  // noise spectral density at receiver in dBms
   double Sens;      // carrier sensitivity level in dBms
 
-  PHY_struct(double N, double S): NoiseVar(N), Sens(S) {}
+  PHY_struct(double N, double S): NoiseDen(N), Sens(S) {}
 };
 
 
@@ -113,7 +113,7 @@ public:
   void cancel_notify_free_channel();
   // MAC cancels notification request.
 
-  void receive(MPDU p, double path_loss, double interf = 0);
+  void receive(MPDU p, valarray<double> path_loss, double interf = 0);
   // a packet 'p' is received with path loss 'path_loss' dB and interference level
   // 'interf' mW. If packet is received correctly, forward it to MAC layer.
 
@@ -140,5 +140,11 @@ public:
   
   friend ostream& operator << (ostream& os, const PHY& p);
 };
+
+valarray<double> to_dB(valarray<double> linArray);
+double to_dB(double linArray);
+
+valarray<double> from_dB(valarray<double> linArray);
+double from_dB(double linArray);
 
 #endif

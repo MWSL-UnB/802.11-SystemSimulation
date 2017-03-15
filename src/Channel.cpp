@@ -34,7 +34,26 @@
 #include "myexception.h"
 #include "PHY.h"
 #include "Terminal.h"
+#include "Standard.h"
 
+// Channel model parameters
+valarray<double> tapsPow_A{ 0.000000};
+valarray<double> tapDelay_A{ 000000};
+
+valarray<double> tapsPow_B{ 0.000000, -5.400000, -2.504133, -5.876886, -9.151515, -12.500000, -15.600000, -18.700000, -21.800000};
+valarray<double> tapDelay_B{ 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 4.000000e-08, 5.000000e-08, 6.000000e-08, 7.000000e-08, 8.000000e-08};
+
+valarray<double> tapsPow_C{ 0.000000, -2.100000, -4.300000, -6.500000, -8.600000, -10.800000, -4.361080, -6.561080, -8.661080, -10.861080, -13.700000, -15.800000, -18.000000, -20.200000};
+valarray<double> tapDelay_C{ 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 4.000000e-08, 5.000000e-08, 6.000000e-08, 7.000000e-08, 8.000000e-08, 9.000000e-08, 1.100000e-07, 1.400000e-07, 1.700000e-07, 2.000000e-07};
+
+valarray<double> tapsPow_D{ 0.000000, -0.900000, -1.700000, -2.600000, -3.500000, -4.300000, -5.200000, -6.100000, -6.900000, -7.800000, -4.625981, -7.216430, -9.816430, -12.416430, -13.652351, -17.950897, -22.337110, -26.700000};
+valarray<double> tapDelay_D{ 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 4.000000e-08, 5.000000e-08, 6.000000e-08, 7.000000e-08, 8.000000e-08, 9.000000e-08, 1.100000e-07, 1.400000e-07, 1.700000e-07, 2.000000e-07, 2.400000e-07, 2.900000e-07, 3.400000e-07, 3.900000e-07};
+
+valarray<double> tapsPow_E{ -2.600000, -3.000000, -3.500000, -3.900000, 0.066829, -1.225981, -2.525981, -3.825981, -3.354724, -5.534855, -7.642636, -4.890378, -12.042636, -14.214719, -15.328471, -18.336614, -20.700000, -24.600000};
+valarray<double> tapDelay_E{ 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 5.000000e-08, 8.000000e-08, 1.100000e-07, 1.400000e-07, 1.800000e-07, 2.300000e-07, 2.800000e-07, 3.300000e-07, 3.800000e-07, 4.300000e-07, 4.900000e-07, 5.600000e-07, 6.400000e-07, 7.300000e-07};
+
+valarray<double> tapsPow_F{ -3.300000, -3.600000, -3.900000, -4.200000, 0.032150, -0.862241, -1.633171, -2.533171, -1.453111, -2.941635, -4.316104, -5.863526, -5.242057, -7.863674, -9.353570, -13.164859, -16.300000, -21.200000};
+valarray<double> tapDelay_F{ 000000, 1.000000e-08, 2.000000e-08, 3.000000e-08, 5.000000e-08, 8.000000e-08, 1.100000e-07, 1.400000e-07, 1.800000e-07, 2.300000e-07, 2.800000e-07, 3.300000e-07, 4.000000e-07, 4.900000e-07, 6.000000e-07, 7.300000e-07, 8.800000e-07, 1.050000e-06};
 
 //////////////////////////////////////////////////////////////////////////////// 
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,7 +117,80 @@ void recalc_interference::operator() (pack_struct& ps) {
       ps.interf_max = ps.interf;
     }
   }
-}
+};
+
+/*
+ * Jakes class
+ *
+ * Performs Jakes' method
+ */
+Jakes::Jakes() {
+	doppler_spread = 0.0;
+	cosbeta.resize(1,0.0);
+	sinbeta.resize(1,0.0);
+	omega.resize(1,0.0);
+	theta.resize(1,0.0);
+	cosalpha = 0.0;
+	sinalpha = 0.0;
+	n_osc = 0;
+	xabs = 0.0;
+};
+Jakes::Jakes(double fd, unsigned no, random* r) {
+
+	n_osc = no;
+
+	doppler_spread = 2*M_PI*fd;
+
+	theta.resize(n_osc);
+
+	valarray<double> beta(M_PI/n_osc,n_osc);
+	for (unsigned index = 0; index < n_osc; ++index) {
+		beta[index] *= index+1.0;
+		theta[index] = r->uniform(0,2*M_PI);
+	}
+	double alpha = r->uniform(0,2*M_PI);
+
+	cosalpha = cos(alpha);
+	sinalpha = sin(alpha);
+
+	omega.resize(n_osc);
+	omega = doppler_spread * cos(beta * double(n_osc) / double(2*n_osc+1));
+
+	cosbeta.resize(n_osc);
+	sinbeta.resize(n_osc);
+	cosbeta = cos(beta);
+	sinbeta = sin(beta);
+
+	// calculate fading
+	double t_aux = 0.0;
+
+	valarray<double> cosomegat = cos(omega*t_aux+theta);
+	valarray<double> aux1 = cosbeta * cosomegat;
+	valarray<double> aux2 = sinbeta * cosomegat;
+	complex<double> x(2*aux1.sum() + M_SQRT2*cosalpha*cos(doppler_spread*t_aux),
+			2*aux2.sum() + M_SQRT2*sinalpha*cos(doppler_spread*t_aux));
+	x *= 1.0 / sqrt(n_osc + .5);
+
+	xabs = abs(x);
+
+};
+
+double Jakes::fade_calc(timestamp t) {
+
+	  // calculate fading
+	  double t_aux = double(t);
+
+	  valarray<double> cosomegat = cos(omega*t_aux+theta);
+	  valarray<double> aux1 = cosbeta * cosomegat;
+	  valarray<double> aux2 = sinbeta * cosomegat;
+	  complex<double> x(2*aux1.sum() + M_SQRT2*cosalpha*cos(doppler_spread*t_aux),
+	                    2*aux2.sum() + M_SQRT2*sinalpha*cos(doppler_spread*t_aux));
+	  x *= 1.0 / sqrt(n_osc + .5);
+
+	  xabs = abs(x);
+
+	  return xabs;
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // class same_link                                                            //
@@ -187,6 +279,7 @@ Channel::Channel(Scheduler *s, random *r, channel_struct p, log_file *l){
   RefLoss_dB = p.ref_loss;
   DopplerSpread_Hz = p.doppler_spread;
   NumberSinus = p.number_sines;
+  cModel = p.model;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -263,19 +356,16 @@ BEGIN_PROF("Channel::get_interf_dBm")
 // returns path loss in dB between two given PHYs                             //
 ////////////////////////////////////////////////////////////////////////////////
 double Channel::get_path_loss (PHY *t1, PHY *t2) {
-BEGIN_PROF("Channel::get_path_loss")
-  /////////////////////////////////////////////////////
-  // update channel fading before returning path loss
-  
-  if (DopplerSpread_Hz > 0) {
-    vector<Link>::iterator it = find_if(links.begin(), links.end(),
-                                        same_link(term_pair(t1,t2)));
-    if (it != links.end())
-      path_loss[term_pair(t1,t2)] = it->fade(ptr2sch->now());
-  }
-
   return path_loss[term_pair(t1,t2)];
-END_PROF("Channel::get_path_loss")
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Channel::get_channel_model                                                 //
+//                                                                            //
+// returns current channel model					                          //
+////////////////////////////////////////////////////////////////////////////////
+channel_model Channel::get_channel_model() {
+	return cModel;
 }
 
 
@@ -301,9 +391,8 @@ void Channel::new_link(PHY* pt1, PHY* pt2) {
     if (it->belong(tp)) return;
   }
   
-  Link newlink(tp, path_loss[tp], DopplerSpread_Hz, rand_gen, NumberSinus);
+  Link newlink(tp, path_loss[tp], DopplerSpread_Hz, rand_gen, NumberSinus, cModel);
   links.push_back(newlink);
-  path_loss[tp] = newlink.fade(ptr2sch->now());
 
   if (logflag) *mylog << "Channel: New time-variant link created between "
                       << *pt1 << " and " << *pt2 << ", path_loss = " 
@@ -360,12 +449,12 @@ BEGIN_PROF("Channel::send_packet_all")
                     (void*)this, pack.get_id()));
 
   // update channel gain
-  if (DopplerSpread_Hz > 0) {
+  /*if (DopplerSpread_Hz > 0) {
     term_pair tp((pack.get_source())->get_phy(),(pack.get_target())->get_phy());
     vector<Link>::iterator itl = find_if(links.begin(), links.end(),
                                          same_link(tp));
     path_loss[tp] = itl->fade(ptr2sch->now());
-  }
+  }*/
 
   busy_channel_message (pack);
 END_PROF("Channel::send_packet_all")
@@ -396,13 +485,13 @@ BEGIN_PROF("Channel::send_packet_one")
                     (void*)&wrapper_to_stop_send_one,
                     (void*)this, pack.get_id()));
 
-    if (DopplerSpread_Hz > 0) {
+    /*if (DopplerSpread_Hz > 0) {
       term_pair tp((pack.get_source())->get_phy()
                    ,(pack.get_target())->get_phy());
       vector<Link>::iterator itl = find_if(links.begin(), links.end(),
                                           same_link(tp));
       path_loss[tp] = itl->fade(ptr2sch->now());
-    }
+    }*/
 
   busy_channel_message (pack);
 
@@ -429,9 +518,15 @@ BEGIN_PROF("Channel::stop_send_all")
   PHY* source = (pack.get_source())->get_phy();
   PHY* target = (pack.get_target())->get_phy();
 
+  term_pair tp(source,target);
+  valarray<double> pLoss;
+  timestamp t = ptr2sch->now() - pack.get_duration();
+
+  for(vector<Link>::iterator it = links.begin(); it != links.end(); ++it){
+    if(it->belong(tp)) pLoss = (it->fade(t));
+  }
   // send to target terminal
-  target->receive(pack, path_loss[term_pair(source,target)],
-                               it->interf_max);
+  target->receive(pack, pLoss,it->interf_max);
 
   air_pack.erase(it);
 
@@ -441,7 +536,8 @@ BEGIN_PROF("Channel::stop_send_all")
        term_it != term_list.end(); ++term_it) {
     if (*term_it != target && *term_it != source) {
 
-      (*term_it)->receive(pack, path_loss[term_pair(source,*term_it)]);
+      valarray<double> pLoss(path_loss[term_pair(source,*term_it)],Standard::get_numSubcarriers());
+      (*term_it)->receive(pack, pLoss);
     }
   }
 
@@ -479,8 +575,15 @@ BEGIN_PROF("Channel::stop_send_one")
   PHY* source = (pack.get_source())->get_phy();
   PHY* target = (pack.get_target())->get_phy();
 
-  target->receive(pack, path_loss[term_pair(source,target)],
-                               it->interf_max);
+  term_pair tp(source,target);
+  valarray<double> pLoss;
+  timestamp t = ptr2sch->now() - pack.get_duration();
+
+  for(vector<Link>::iterator it = links.begin(); it != links.end(); ++it){
+    if(it->belong(tp)) pLoss = it->fade(t);
+  }
+
+  target->receive(pack, pLoss,it->interf_max);
 
   air_pack.erase(it);
   free_channel_message(pack);
@@ -508,44 +611,78 @@ END_PROF("Channel::stop_send_one")
 ////////////////////////////////////////////////////////////////////////////////
 // Link constructor                                                           //
 ////////////////////////////////////////////////////////////////////////////////
-Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns)
-          : terms(t), n_osc(ns), path_loss_mean(pl) {
+Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns, channel_model cm)
+: terms(t), path_loss_mean(pl) {
 
-  doppler_spread = 2*M_PI*fd;
+	time_last = timestamp(0);
+	time_diff_min = -1;
+	doppler_spread = 2*M_PI*fd;
 
-  time_last = timestamp(0);
-  time_diff_min = -1;
+	switch(cm) {
+	case A:
+		nTaps = tapsPow_A.size();
+		taps_amps = from_dB(tapsPow_A);
+		taps_delays = tapDelay_A;
+		break;
+	case B:
+		nTaps = tapsPow_B.size();
+		taps_amps = from_dB(tapsPow_B);
+		taps_delays = tapDelay_B;
+		break;
+	case C:
+		nTaps = tapsPow_C.size();
+		taps_amps = from_dB(tapsPow_C);
+		taps_delays = tapDelay_C;
+		break;
+	case D:
+		nTaps = tapsPow_D.size();
+		taps_amps = from_dB(tapsPow_D);
+		taps_delays = tapDelay_D;
+		break;
+	case E:
+		nTaps = tapsPow_E.size();
+		taps_amps = from_dB(tapsPow_E);
+		taps_delays = tapDelay_E;
+		break;
+	case F:
+		nTaps = tapsPow_F.size();
+		taps_amps = from_dB(tapsPow_F);
+		taps_delays = tapDelay_F;
+		break;
+	}
 
-  theta.resize(n_osc);
+	taps_amps_fade.resize(nTaps,0.0);
 
-  valarray<double> beta(M_PI/n_osc,n_osc);
-  for (unsigned index = 0; index < n_osc; ++index) {
-    beta[index] *= index+1.0;
-    theta[index] = r->uniform(0,2*M_PI);
-  }
-  double alpha = r->uniform(0,2*M_PI);
+	// Apply fading to all taps
+	taps_jks.clear();
+	for(unsigned k = 0; k < nTaps; ++k){
+		Jakes auxJks = Jakes(fd,ns,r);
+		taps_amps_fade[k] = sqrt(taps_amps[k])*auxJks.fade_calc(timestamp(0));
+		taps_jks.push_back(auxJks);
+	}
 
-  cosalpha = cos(alpha);
-  sinalpha = sin(alpha);
+	// Resample
+	resample();
 
-  omega.resize(n_osc);
-  omega = doppler_spread * cos(beta * double(n_osc) / double(2*n_osc+1));
+	/*cout << "Taps amps: 		";
+	for(unsigned k = 0; k < nTaps; ++k){
+		cout << " " << taps_amps[k];
+	}
+	cout << endl;
 
-  cosbeta.resize(n_osc);
-  sinbeta.resize(n_osc);
-  cosbeta = cos(beta);
-  sinbeta = sin(beta);
+	cout << "Taps amps fade: 	";
+	for(unsigned k = 0; k < nTaps; ++k){
+		cout << " " << taps_amps_fade[k];
+	}
+	cout << endl;
 
-  // calculate fading
-  valarray<double> cosomegat = cos(theta);
-  valarray<double> aux1 = cosbeta * cosomegat;
-  valarray<double> aux2 = sinbeta * cosomegat;
-  complex<double> x(2*aux1.sum() + M_SQRT2*cosalpha,
-                    2*aux2.sum() + M_SQRT2*sinalpha);
-  x *= 1.0 / sqrt(n_osc + .5);
-  x = 1.0 / x;
+	cout << "Carrier losses [dB] = " << carrier_loss.size() << ":";
+	for(unsigned k = 0; k < carrier_loss.size(); ++k) {
+		cout << " " << carrier_loss[k];
+	}
+	cout << endl;*/
 
-  path_loss = path_loss_mean + 20*log10(abs(x));
+	path_loss = carrier_loss + path_loss_mean;
 
 }
 
@@ -555,32 +692,30 @@ Link::Link(term_pair t, double pl, double fd, random* r, unsigned ns)
 // updates channel fading,                                                    //
 // and returns the link gain amplitude at time 't' in dB                      //
 ////////////////////////////////////////////////////////////////////////////////
-double Link::fade(timestamp t) {
+valarray<double> Link::fade(timestamp t) {
 BEGIN_PROF("Link::fade")
+
   double time_diff_new = double(t - time_last);
 
   if (time_diff_new <= time_diff_min) {
-    return path_loss;
+	  return path_loss;
   }
 
-  // if correlation is too large, channel does not change
+			  // if correlation is too large, channel does not change
   if (bessel_j0(doppler_spread * time_diff_new) >= .9999) {
-    time_diff_min = time_diff_new;
-    return path_loss;
+	time_diff_min = time_diff_new;
+	return path_loss;
   }
 
-  // calculate fading
-  double t_aux = double(t);
+  // Aplly fading to all taps
+  for(unsigned k = 0; k < nTaps; ++k){
+	  taps_amps_fade[k] = sqrt(taps_amps[k])*taps_jks[k].fade_calc(timestamp(t));
+  }
 
-  valarray<double> cosomegat = cos(omega*t_aux+theta);
-  valarray<double> aux1 = cosbeta * cosomegat;
-  valarray<double> aux2 = sinbeta * cosomegat;
-  complex<double> x(2*aux1.sum() + M_SQRT2*cosalpha*cos(doppler_spread*t_aux),
-                    2*aux2.sum() + M_SQRT2*sinalpha*cos(doppler_spread*t_aux));
-  x *= 1.0 / sqrt(n_osc + .5);
-  x = 1.0 / x;
+  //Resample
+  resample();
 
-  path_loss = path_loss_mean + 20*log10(abs(x));
+  path_loss = carrier_loss + path_loss_mean;
 
 
 #ifdef _SAVE_RATE_ADAPT
@@ -596,6 +731,72 @@ END_PROF("Link::fade")
   return path_loss;
 }
 
+void Link::resample() {
+
+	double W = Standard::get_band_double();
+	double sample_time = 1/W;
+	unsigned max_samp = (unsigned)ceil(taps_delays[nTaps - 1]/sample_time);
+	valarray<double> samples;
+
+	unsigned NFFT = (unsigned)pow(2.0, ceil(log((double)max_samp)/log(2.0)));
+	if(NFFT < Standard::get_lengthFFT()) NFFT = Standard::get_lengthFFT();
+
+	//cout << "NFFT: " << NFFT << endl;
+
+	samples.resize((2*NFFT+1),0.0);
+	double time = 0.0;
+	for(unsigned k = 0; k <= max_samp; ++k) {
+		time = k*sample_time;
+		double time_diff;
+		for(unsigned j = 0; j < nTaps; j++){
+			time_diff = time - taps_delays[j];
+			samples[2*k + 1] += taps_amps_fade[j]*invraisedcos(time_diff,W,Standard::get_rollof());
+		}
+
+	}
+
+	samples = four1(samples,NFFT,1); //Calculate the FFT
+
+	// Calculate abslute value of FFT
+	valarray<double> samplesFFT;
+	samplesFFT.resize(NFFT,0.0);
+	for(unsigned k = 0; k < NFFT; k++) {
+		samplesFFT[k] = myabs(samples[2*k+1],samples[2*k+2]);
+	}
+
+	// Take loss only at carriers indexes
+	unsigned len = Standard::get_lengthFFT();
+	unsigned skp = NFFT/len;
+	unsigned nSub = Standard::get_numSubcarriers();
+
+	valarray<double> auxVal;
+	auxVal.resize(len,0.0);
+	if(skp == 1) {
+		auxVal = samplesFFT;
+	}else {
+		unsigned j = 0;
+		for(unsigned k = 0; k < len; k++){
+			auxVal[k] = samplesFFT[j];
+			j += skp;
+			if(j == NFFT/2) j+= (skp - 1);
+		}
+	}
+
+	// Ignore silent carriers
+	carrier_loss.resize(nSub,0.0);
+	unsigned last_not_silent = 0;
+	for(unsigned k = 0; k < nSub; k++) {
+		while(Standard::is_silent(last_not_silent)){
+			last_not_silent++;
+		};
+		carrier_loss[k] = auxVal[last_not_silent];
+		last_not_silent++;
+	}
+
+	carrier_loss = to_dB(carrier_loss);
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // output operator <<                                                         //
 ////////////////////////////////////////////////////////////////////////////////
@@ -607,3 +808,35 @@ ostream& operator << (ostream& os, const Link& l) {
 ////////////////////////////////////////////////////////////////////////////////
 
 
+////////////////////////
+// output operator<<  //
+////////////////////////
+ostream& operator<< (ostream& os, const channel_model& cm) {
+  switch(cm) {
+    case A : return os << "A";
+    case B : return os << "B";
+    case C : return os << "C";
+    case D : return os << "D";
+    case E : return os << "E";
+    case F : return os << "F";
+    default: return os << "unknown Model.";
+  }
+}
+
+///////////////////////
+// input operator >> //
+///////////////////////
+istream& operator>> (istream& is, channel_model& cm) {
+  string str;
+  is >> str;
+
+  if (str == "A") cm = A;
+  else if (str == "B") cm = B;
+  else if (str == "C") cm = C;
+  else if (str == "D") cm = D;
+  else if (str == "E") cm = E;
+  else if (str == "F") cm = F;
+  else is.clear(ios::failbit);
+
+  return is;
+}

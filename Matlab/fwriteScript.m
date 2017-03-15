@@ -4,7 +4,7 @@ close all
 
 %%
 
-kmax = 50;
+kmax = 110;
 kmin = 2.5;
 
 fid = fopen('nums.txt','w');

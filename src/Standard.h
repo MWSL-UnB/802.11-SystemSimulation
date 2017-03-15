@@ -26,6 +26,7 @@
 #include <iostream>
 
 #include "Packet.h"
+#include "Channel.h"
 
 using namespace std;
 
@@ -69,18 +70,34 @@ private:
 	static dot11_standard currentStd;
 	static transmission_mode maxMCS;
 	static double symbol_period;      //OFDM symbol period
+	static double rollof;
 	static channel_bandwidth maxBand;
+	static unsigned numSubcarriers;		// Number of OFDM data subcarriers
+	static unsigned lengthFFT;			// Length of OFDM fft
 
 	// Flags and holders
 	static channel_bandwidth band;
 	static bool shortGI;
 
+	// The first dimension corresponds the channel model, the second to the guard interval,
+	// the third to the MCS and the fourth to the bandwidth
+
+	// Silent carriers
+	static int silent_20_a[12];
+	static int silent_20[8];
+	static int silent_40[14];
+	static int silent_80[14];
+	static int silent_160[28];
+	static int num_silent_20_a;
+	static int num_silent_20;
+	static int num_silent_40;
+	static int num_silent_80;
+	static int num_silent_160;
+
 	// Data rates
 	static double rates_a[8];
 	static double rates_n[2][8][2];
 	static double rates_ac_ah[2][10][4];
-	// The first dimension corresponds to guard interval, the second to the MCS and the third
-	// to the bandwidth
 
 	// Bits per OFDM symbol
 	static unsigned bits_per_symb_a[8];
@@ -88,20 +105,28 @@ private:
 	static unsigned bits_per_symb_ac_ah[10][4];
 
 	// Error model constants
+	static double beta_a[6][8];
+	static double beta_n[6][2][2][8];
+	static double beta_ac_ah[6][2][4][10];
+
 	static double min_thresh_a[8];
 	static double max_thresh_a[8];
 	static double coeff_a[8][5];
 	static double coeff_high_a[8][2];
 
-	static double min_thresh_n[8];
-	static double max_thresh_n[8];
-	static double coeff_n[8][5];
-	static double coeff_high_n[8][2];
+	static double min_thresh_n[2][2][8];
+	static double max_thresh_n[2][2][8];
+	static double coeff_n[2][2][8][5];
+	static double coeff_high_n[2][2][8][2];
 
-	static double min_thresh_ac_ah[10];
-	static double max_thresh_ac_ah[10];
-	static double coeff_ac_ah[10][5];
-	static double coeff_high_ac_ah[10][2];
+	static double min_thresh_ac_ah[2][4][10];
+	static double max_thresh_ac_ah[2][4][10];
+	static double coeff_ac_ah[2][4][10][5];
+	static double coeff_high_ac_ah[2][4][10][2];
+
+	// Indexes
+	static unsigned sgiIdx;
+	static unsigned bandIdx;
 
 public:
 	static void set_standard(dot11_standard st, channel_bandwidth bw, bool sgi);
@@ -113,10 +138,17 @@ public:
 	static double get_coeff(int idx, int i);
 	static double get_coeff_high(int idx, int i);
 	static channel_bandwidth get_band();
+	static double get_band_double();
+	static double get_rollof();
 	static channel_bandwidth get_maxBand();
+	static unsigned get_numSubcarriers();
+	static unsigned get_lengthFFT();
+	static double get_beta(transmission_mode tm, channel_model cm);
 
 	static double tx_mode_to_double(transmission_mode tm);
 	static unsigned txMode_bits_per_symbol(transmission_mode tm);
+
+	static bool is_silent(int carr);
 };
 
 #endif /* STANDARD_H_ */

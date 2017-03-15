@@ -3,7 +3,7 @@ clear all
 close all
 %% General
 
-offeData = 0.5;
+offeData = 10;
 simTime = 1.1;
 
 %% Get Results
@@ -60,33 +60,66 @@ conf_noTXOP = conf(3*maxSta+1:4*maxSta);
 %fitted_BA = fit(sta,1e3*avgThr_BA,'smoothingspline');
 %h1 = plot(fitted_BA,'k-');
 %set(h1,'LineWidth',2);
-plot(sta,1e3*avgThr_BA,'k-o','LineWidth',2);
+plot(sta,avgThr_BA,'k-o','LineWidth',2);
 hold on;
 
 % fitted_noBA = fit(sta,1e3*avgThr_noBA,'smoothingspline');
 % h2 = plot(fitted_noBA,'b-');
 % set(h2,'LineWidth',2);
-plot(sta,1e3*avgThr_noBA,'b*--','LineWidth',2);
+plot(sta,avgThr_noBA,'b*--','LineWidth',2);
 hold on;
 
 % fitted_noTXOP = fit(sta,1e3*avgThr_noTXOP,'smoothingspline');
 % h3 = plot(fitted_noTXOP,'r-');
 % set(h3,'LineWidth',2);
-plot(sta,1e3*avgThr_noTXOP,'r-.+','LineWidth',2);
+plot(sta,avgThr_noTXOP,'r-.+','LineWidth',2);
 hold on;
 
 legend off
-axis([1 20 150 550]);
+axis([1 20 0 12]);
 xlabel('Número de estações');
-ylabel('Throughput Médio [kbps]')
+ylabel('Throughput Médio [Mbps]')
 % legend([h1 h2 h3],'Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP',...
 %     'Location','SouthWest');
-legend('Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP',...
-    'Location','SouthWest');
+legend({'AC_VI com agregação','AC_VI sem agregação','AC_BE'},...
+    'Location','SouthWest','Interpreter','none');
 set(gca,'xtick',1:50);
 grid on;
 hold off;
 print('-dbmp','thrVSSta');
+
+%% Plot
+
+%fitted_BA = fit(sta,avgThr_BA./offeData,'smoothingspline');
+%h1 = plot(fitted_BA,'k-');
+%set(h1,'LineWidth',2);
+plot(sta,avgThr_BA./offeData,'k-o','LineWidth',2);
+hold on;
+
+% fitted_noBA = fit(sta,avgThr_noBA./offeData,'smoothingspline');
+% h2 = plot(fitted_noBA,'b-');
+% set(h2,'LineWidth',2);
+plot(sta,avgThr_noBA./offeData,'b*--','LineWidth',2);
+hold on;
+
+% fitted_noTXOP = fit(sta,avgThr_noTXOP./offeData,'smoothingspline');
+% h3 = plot(fitted_noTXOP,'r-');
+% set(h3,'LineWidth',2);
+plot(sta,avgThr_noTXOP./offeData,'r-.+','LineWidth',2);
+hold on;
+
+legend off
+axis([1 20 0 1.2]);
+xlabel('Número de estações');
+ylabel('Throughput Médio [Mbps]')
+% legend([h1 h2 h3],'Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP',...
+%     'Location','SouthWest');
+legend({'AC_VI com agregação','AC_VI sem agregação','AC_BE'},...
+    'Location','SouthWest','Interpreter','none');
+set(gca,'xtick',1:50);
+grid on;
+hold off;
+print('-dbmp','thrVSSta_norm');
 
 %% Save data
 

@@ -358,7 +358,7 @@ void Simulation::init_terminals(){
 			sim_par.get_FragmentationThresh(), sim_par.get_QueueSize(),
 			sim_par.get_set_BA_agg());
 
-	PHY_struct phy(sim_par.get_NoiseVariance(), sim_par.get_CCASensitivity());
+	PHY_struct phy(sim_par.get_NoiseDensity(), sim_par.get_CCASensitivity());
 
 	traffic_struct tr_dl(sim_par.get_DataRateDL(), sim_par.get_PacketLength(),
 			sim_par.get_ArrivalTime());
@@ -500,9 +500,9 @@ void Simulation::run() {
 		n_it++;
 
 		if(sim_par.get_partResults()) {
-			cout << "\n\nIteration " << n_it << "\n    " << sim_par << "\n" << endl;
 			out << "\n\nIteration " << n_it << "\n    " << sim_par << "\n" << endl;
 		}
+		cout << "\n\nIteration " << n_it << "\n    " << sim_par << "\n" << endl;
 
 		if (log(log_type::setup))
 			log << "\n\nIteration " << n_it << "\n\t" << sim_par << "\n"
@@ -523,14 +523,16 @@ void Simulation::run() {
 
 		randgent.seed(sim_par.get_Seed());
 
-		Standard::set_standard(sim_par.get_standard(),sim_par.get_bandwidth(),sim_par.get_shortGI());
+		Standard::set_standard(sim_par.get_standard(),sim_par.get_bandwidth(),
+				sim_par.get_shortGI());
 		if(sim_par.get_TxMode() > Standard::get_maxMCS())
 			throw (my_exception("MCS not supported by standard."));
 
 		channel_struct ch_par(sim_par.get_LossExponent(),
 				sim_par.get_RefLoss(),
 				sim_par.get_DopplerSpread(),
-				sim_par.get_NumberSinus());
+				sim_par.get_NumberSinus(),
+				sim_par.get_channelModel());
 
 		ch = new Channel(&main_sch, &randgent, ch_par, &log);
 

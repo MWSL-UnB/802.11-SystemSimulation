@@ -58,7 +58,7 @@ PHY::PHY(Terminal* t,
     mylog = l;
     logflag = (*mylog)(log_type::phy);
     
-    NoiseVariance_dBm = ps.NoiseVar;
+    NoiseVariance_dBm = ps.NoiseDen + to_dB(Standard::get_band_double());
     CCASensitivity_dBm = ps.Sens;
 
     busy_begin = busy_end = timestamp(0);
@@ -68,49 +68,77 @@ PHY::PHY(Terminal* t,
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// PHY_private::calculate_ber                                                 //
+// PHY_private::calculate_per                                                 //
 //                                                                            //
-// returns bit error rate for a given transmission rate and sinal-to-noise    //
-// ratio 'SNR' dB. The bit error rate is calculated based on a polynomial     //
-// approximation of the function log10(BER) x SNR.                            //
+// returns packet error rate for a given transmission rate and sinal-to-noise //
+// ratio 'SNR' dB. The pack error rate is calculated based on a polynomial    //
+// approximation of the function log10(PER) x SNR.                            //
 // Depending on the SNR, one of three different polynomials is used.          //
 ////////////////////////////////////////////////////////////////////////////////
-double PHY_private::calculate_ber(transmission_mode mode, double SNR) const {
-BEGIN_PROF("PHY::calculate_ber")
+double PHY_private::calculate_per(transmission_mode mode, double SNR) const {
+BEGIN_PROF("PHY::calculate_per")
 
-  double ber;
+  double per;
 
   unsigned index = mode - MCS0;
 
   if (SNR < Standard::get_min_thresh(index)) {
     // if SNR is low, then consider BER = 0.5
-    ber = .5;
+    per = 1;
 
   } else if (SNR > Standard::get_max_thresh(index)) {
+
     // if SNR is high then use polynomial of order 'n_coeff_high - 1'
-    double berlog = 0;
+    double perlog = 0;
 
     double auxpow = 1.0;
     for (int i = 0; i < n_coeff_high; i++) {
-      berlog += auxpow * Standard::get_coeff_high(index,i);
+      perlog += auxpow * Standard::get_coeff_high(index,i);
       auxpow = auxpow * SNR;
     }
-    ber = pow(10.0,berlog);
+    per = pow(10.0,perlog);
 
   } else {
+
+	  if (logflag) *mylog << "\n!!!!!" << ptr2sch->now() << "sec., " << *term << ": "
+			  << "using oder 4 polynomial." << endl;
+
     // if SNR is medium then use polynomial of order 'n_coeff - 1'
-    double berlog = 0;
+    double perlog = 0;
 
     double auxpow = 1.0;
     for (int i = 0; i < n_coeff; i++) {
-      berlog += auxpow * Standard::get_coeff(index,i);
+      perlog += auxpow * Standard::get_coeff(index,i);
       auxpow = auxpow * SNR;
     }
-    ber = pow(10.0,berlog);
+    per = pow(10.0,perlog);
   }
+  if(per > 1.0) per = 1.0; // Polynomial approximations might hand out a PER greated than one
 
-END_PROF("PHY::calculate_ber")
-return ber;
+END_PROF("PHY::calculate_per")
+return per;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// PHY_private::calculate_SNReff                                              //
+//                                                                            //
+// returns effective SNR for given subcarriers SNRs (SNRps), calculated using //
+// the exponential method and beta parameter given.							  //
+////////////////////////////////////////////////////////////////////////////////
+double PHY_private::calculate_SNReff(valarray<double> SNRps, double beta) const {
+	BEGIN_PROF("PHY::calculate_SNReff")
+
+	unsigned Np = Standard::get_numSubcarriers();
+
+	valarray<double> auxVal = from_dB(SNRps);
+	auxVal = exp(-auxVal/beta);
+
+	double SNReff = auxVal.sum();
+	SNReff = SNReff/(double)Np;
+	SNReff = to_dB(-beta*log(SNReff));
+
+	END_PROF("PHY::calculate_SNReff")
+	return SNReff;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -223,8 +251,7 @@ BEGIN_PROF("PHY::opt_mode")
   for(;;) {
     if (mode == MCS0) break;
 
-    double ber = calculate_ber(mode, SNR);
-    double per = 1.0 - pow(1.0 - ber/double(burst_length), int(nbits));
+    double per = calculate_per(mode, SNR);
 
     if (per <= per_target) break;
     else --mode;
@@ -256,8 +283,7 @@ BEGIN_PROF("PHY::opt_power")
   
     if (power >= pmax) break;
 
-    double ber = calculate_ber(mode, SNR);
-    double per = 1.0 - pow(1.0 - ber/double(burst_length), int(nbits));
+    double per = calculate_per(mode, SNR);
 
     if (per <= per_target) break;
     else power += pstep;
@@ -275,10 +301,14 @@ END_PROF("PHY::opt_mode")
 // level 'interf' mW. If packet is received correctly, forward it to MAC      //
 // layer.                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
-void PHY::receive(MPDU pck, double path_loss, double interf) {
+void PHY::receive(MPDU pck, valarray<double> path_loss, double interf) {
 BEGIN_PROF("PHY::receive")
 
-  double rx_pow = pck.get_power() - path_loss;
+  double Np = (double)Standard::get_numSubcarriers();
+  valarray<double> rx_sub = (pck.get_power() - to_dB(Np)) - path_loss;
+
+  valarray<double> auxVal = from_dB(rx_sub);
+  double rx_pow = to_dB(auxVal.sum());
 
   if (rx_pow < CCASensitivity_dBm) {
 
@@ -309,23 +339,22 @@ BEGIN_PROF("PHY::receive")
                                              pow(10.0,NoiseVariance_dBm/10.0))
                                       : NoiseVariance_dBm;
 
-    double SNIR = rx_pow - NoiseInterfVar;
-    double bit_error_prob = calculate_ber(pck.get_mode(), SNIR);
+    valarray<double> SNIRps = rx_sub - (NoiseInterfVar - to_dB(Np));
 
+    double SNIReff = calculate_SNReff(SNIRps,Standard::get_beta(pck.get_mode(),ch->get_channel_model()));
 
-    double pack_error_prob = 1 - pow((1-bit_error_prob/burst_length),
-                                     int(pck.get_nbits()));
+    double pack_error_prob = calculate_per(pck.get_mode(), SNIReff);
 
     if (rand_gen->uniform() > pack_error_prob) {
 
       if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term 
-                          << " (PHY) : SNIR = " << SNIR << ", PER = " 
+                          << " (PHY) : SNIReff = " << SNIReff << "dB, PER = "
                           << pack_error_prob << ", " << pck << " received " 
                           << endl;
 
       mymac->phyRxEndInd(pck);
     } else if (logflag) *mylog << "\n" << ptr2sch->now() << "sec., " << *term 
-                               << " (PHY) : SNIR = " << SNIR  << "dB, PER = " 
+                               << " (PHY) : SNIReff = " << SNIReff  << "dB, PER = "
                                << pack_error_prob << ", " << pck 
                                << " not received " << endl;
   }
@@ -364,4 +393,20 @@ ostream& operator << (ostream& os, const PHY& p) {
     return os << *(p.term);
 }
 
-
+////////////////////////////////////////////////////////////////////////////////
+// Conversion from and to dB                                                  //
+////////////////////////////////////////////////////////////////////////////////
+valarray<double> to_dB(valarray<double> linArray) {
+	return 10*log10(linArray);
+}
+double to_dB(double linVal) {
+	return 10*log10(linVal);
+}
+valarray<double> from_dB(valarray<double> dbArray) {
+	  valarray<double> auxVal(10,dbArray.size());
+	  valarray<double> auxVal2 = dbArray/10.0;
+	  return pow(auxVal,auxVal2);
+}
+double from_dB(double dbVal) {
+	return pow(10.0,(dbVal/10.0));
+}

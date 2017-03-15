@@ -23,9 +23,18 @@
 #ifndef _mymath_h
 #define _mymath_h 1
 
+#include <valarray>
+
+using namespace std;
+
 //#define M_SQRT2 1.41421356237310
 #define M_1_SQRT2 0.70710678118655
+#define PI	M_PI
+#define TWOPI	(2.0*PI)
 
 double bessel_j0 (double x);
+valarray<double> four1(valarray<double> indata, int nn, int isign);
+double invraisedcos(double t, double W, double rollof);
+double myabs(double r, double i);
 
 #endif

@@ -1,6 +1,10 @@
 clc
 clear all
 close all
+
+clc
+clear all
+close all
 %% General
 
 offeData = 0.5;
@@ -67,36 +71,17 @@ conf_noTXOP = conf(3*maxPck+1:4*maxPck);
 
 %% Plot
 
-dtPt = 3;
-
-fitted_BA = fit(pck,1e3*avgThr_BA,'smoothingspline');
-h1 = plot(fitted_BA,'k-');
-set(h1,'LineWidth',2);
+plot(offeDataBA,m_perStaBA,'k-o','LineWidth',2);
 hold on;
-% plot(pck(1:dtPt:end),1e3*avgThr_BA(1:dtPt:end),'ko');
-
-fitted_noBA = fit(pck,1e3*avgThr_noBA,'smoothingspline');
-h2 = plot(fitted_noBA,'b--');
-set(h2,'LineWidth',2);
+plot(offeData,m_perSta,'b--*','LineWidth',2);
 hold on;
-% plot(pck(1:dtPt:end),1e3*avgThr_noBA(1:dtPt:end),'b+');
-
-fitted_noTXOP = fit(pck,1e3*avgThr_noTXOP,'smoothingspline');
-h3 = plot(fitted_noTXOP,'r-.');
-set(h3,'LineWidth',2);
-hold on;
-% plot(pck(1:dtPt:end),1e3*avgThr_noTXOP(1:dtPt:end),'r.','LineWidth',2);
-
-legend off;
-xlabel('Dados por pacote [Bytes]');
-ylabel('Throughput Médio [kbps]');
-grid on;
-axis tight;
+plot(offeDataNT,m_perStaNT,'r-.+','LineWidth',2);
 hold off;
-legend([h1 h2 h3],'Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP',...
-    'Location','SouthEast')
-axis([0 2000 0 350]);
-print('-dbmp','thrVSPckSz');
+grid on;
+xlabel('Taxa de dados oferecida a MAC [Mbps]');
+ylabel('Throughput [Mbps]');
+legend('Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP','Location','SouthEast');
+print('-dbmp','thrVSOffer');
 
 %% Save data
 

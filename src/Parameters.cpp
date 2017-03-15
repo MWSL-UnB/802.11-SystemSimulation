@@ -207,9 +207,9 @@ bool Parameters::assign (string s1,string s2) {
   } else if (!s1.compare("MaxSimTime")) {
     MaxSimTime = timestamp(atof(s2.c_str()));
 
-  } else if (!s1.compare("NoiseVariance_dBm")){
-    which_param = &NoiseVariance_dBm;
-    if (!NoiseVariance_dBm.read_vec(s2)) return false;
+  } else if (!s1.compare("NoiseDensity_dBm")){
+    which_param = &NoiseDensity_dBm;
+    if (!NoiseDensity_dBm.read_vec(s2)) return false;
 
   } else if (!s1.compare("NumberAPs")){
     which_param = &NumberAPs;
@@ -345,6 +345,10 @@ bool Parameters::assign (string s1,string s2) {
   	  which_param = &shortGI;
   	  if (!shortGI.read_vec(s2)) return false;
 
+  } else if (!s1.compare("ChannelModel")) {
+    	  which_param = &ChannelModel;
+    	  if (!ChannelModel.read_vec(s2)) return false;
+
   } else {
     return false;
   }
@@ -386,9 +390,10 @@ void Parameters::default_config () {
   // channel parameters
   LossExponent.init("path loss exponent",3.0);
   RefLoss_dB.init("path loss at 1m",47.0,"dB");
-  NoiseVariance_dBm.init("noise variance",-95.0,"dBm");
+  NoiseDensity_dBm.init("noise density",-168.0,"dBm");
   DopplerSpread_Hz.init("Doppler spread",0,"Hz");
   NumberSinus.init("Number of sinusoidals",20);
+  ChannelModel.init("Channel Multipath Model",A);
 
   // PHY parameters
   TxPowerMax_dBm.init("maximum transmit power",0,"dBm");
@@ -398,6 +403,7 @@ void Parameters::default_config () {
   TxMode.init("transmit mode",MCS0);
   AdaptMode.init("adaptation mode",RATE);
   Bandwidth.init("bandwidth",MHz20);
+  shortGI.init("Guard Interval",false);
 
   TargetPER.init("target PER",.1);
 

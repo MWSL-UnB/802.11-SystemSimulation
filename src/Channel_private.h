@@ -38,6 +38,18 @@
 
 class PHY;
 
+typedef enum{
+	A,
+	B,
+	C,
+	D,
+	E,
+	F
+} channel_model;
+
+ostream& operator<< (ostream& os, const channel_model& cm);
+istream& operator>> (istream& is, channel_model& cm);
+
 ////////////////////////////////////////////////////////////////////////////////
 // class term_pair                                                            //
 //                                                                            //
@@ -57,6 +69,41 @@ public:
   bool operator== (const term_pair& p) const;
 
   friend ostream& operator << (ostream& os, const term_pair& t);
+};
+
+/*
+ * Jakes class
+ *
+ * Performs Jakes method
+ *
+ */
+class Jakes {
+
+	double doppler_spread;
+	valarray<double> cosbeta;
+	valarray<double> sinbeta;
+	valarray<double> omega;
+	valarray<double> theta;
+	double cosalpha;
+	double sinalpha;
+	unsigned n_osc;
+	double xabs;
+
+public:
+
+	Jakes();
+	Jakes(double fd, unsigned no, random* r);
+	double fade_calc(timestamp t);
+
+	double get_doppler_spread() const {return doppler_spread;};
+	valarray<double> get_cosbeta() const {return cosbeta;};
+	valarray<double> get_sinbeta() const {return sinbeta;};
+	valarray<double> get_omega()   const {return omega;};
+	valarray<double> get_theta()   const {return theta;};
+	double get_cosalpha() const {return cosalpha;};
+	double get_sinalpha() const {return sinalpha;};
+	unsigned get_n_osc() const {return n_osc;};
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -88,25 +135,23 @@ public:
 class Link {
   term_pair terms; // linked terminals
 
-  ////////////////////////////
-  // Jakes' model parameters
-  valarray<double> cosbeta;
-  valarray<double> sinbeta;
-  valarray<double> omega;
-  valarray<double> theta;
-  double cosalpha;
-  double sinalpha;
+  vector<Jakes> taps_jks; // Jakes model class for path taps
 
-  unsigned n_osc; // number of sine waves
+  unsigned nTaps; 					// number of path taps
+  valarray<double> taps_delays;  	// time delay for all taps
+  valarray<double> taps_amps; 	    // amplitude of taps without Rayleigh fading
+  valarray<double> taps_amps_fade;  // amplitude of taps with Rayleigh fading
 
-  double doppler_spread; // maximum Doppler spread in Hz
+  valarray<double> carrier_loss;    // loss for each subcarrier
 
-  double path_loss;      // current path loss in dB
+  double doppler_spread;
+
+  valarray<double> path_loss;      // current average subcarrier path loss in dB
   double path_loss_mean; // average path loss (without fading) in dB 
 
-  double time_diff_min; // link gain is not updated if last update 
-                        // happened less than 'time_diff_min' seconds ago
-                        
+  double time_diff_min; // link gain is not updated if last update
+  // happened less than 'time_diff_min' seconds ago
+
   timestamp time_last; // time of latest link gain update
 
 public:
@@ -115,13 +160,17 @@ public:
        double path_loss, // mean path loss in dB
        double fd,        // maximum Doppler spread in Hz
        random* r,        // pointer to random number generator
-       unsigned ns       // number of sinewaves in Jakes' model
+       unsigned ns,      // number of sinewaves in Jakes' model
+	   channel_model cm  // multipath channel model
        );
 
-  double fade(timestamp t); // returns the link gain amplitude at time 't' in dB
+  valarray<double> fade(timestamp t); // returns the link gain amplitude at time 't' in dB
+  void resample();
 
   bool belong(term_pair t) const {return t == terms;}
   // returns true if this link corresponds to 't', false otherwise
+
+  //valarray<double> get_carrier_loss() const {return carrier_loss;};
 
   friend ostream& operator << (ostream& os, const Link& l);
   // output operator
@@ -166,6 +215,7 @@ protected:
   double RefLoss_dB;
   double DopplerSpread_Hz;
   unsigned NumberSinus;
+  channel_model cModel;
 
   vector<PHY*> term_list; // list of all active terminals
   vector<Link> links;     // list of all active links

@@ -1,87 +1,102 @@
 clc
 clear all
 close all
+%% General
 
-%% With BA & Aggregation
+offeData = 0.5;
+simTime = 1.1;
+numSta = 1;
 
-offeDataBA = [1 5 10 15 20 21 22 23 24 25 30 35 40 45 50];
-thrBA = [1.81333 2.10667 1.89333 2.15111 1.93788 ;... % 1
-       10.0238 9.91897 9.53575 10.2559 9.59894 ;... % 5
-       19.8463 20.0639 19.7679 20.7671 19.798  ;... % 10
-       29.615  29.6627 29.1193 30.6381 30.4381 ;... % 15
-       39.0716 40.1352 39.9977 39.924  39.3587 ;... % 20
-       41.1904 42.0238 41.1149 40.0462 40.9511 ;... % 21
-       43.2828 43.8076 43.1972 40.0079 43.2054 ;... % 22
-       43.8987 44.5011 44.1497 40.0909 43.4036 ;... % 23
-       43.8792 44.5587 44.3546 39.8434 43.5799 ;... % 24
-       43.9161 44.5009 44.6459 39.942  43.6942 ;... % 25
-       44.0834 44.568  44.5829 39.9178 43.6238 ;... % 30
-       44.0074 44.5914 44.5676 39.9062 43.6149 ;... % 35
-       44.0389 44.5914 44.543  40.0156 43.7151 ;... % 40
-       44.1066 44.5675 44.5498 40.0704 43.5346 ;... % 45
-       43.9981 44.5937 44.6694 39.8545 43.5227 ];   % 50
-   
-m_thrBA = mean(thrBA,2);
-m_perStaBA = m_thrBA./2;
+%% Get Results
 
-%% Without BA & Aggregation
+resFile = fileread('results.txt');
+resNum = strfind(resFile,'%%%% Final results %%%%');
+resStr = resFile(resNum:end);
+clear resFile;
 
-offeData = [1 5 10 12 14 15 16 18 20 21 25 30 35 40 45 50];
-thr = [1.82423 1.77001 1.89376 2.09239 1.79777 ;... % 1
-       9.84788 10.1833 10.1437 10.2557 9.72475 ;... % 5
-       19.9668 20.3197 19.9438 20.0468 19.5835 ;... % 10
-       23.6206 24.7004 21.9756 24.0547 24.2843 ;... % 12
-       27.4442 28.1588 27.6714 27.4685 27.6435 ;... % 14
-       28.8639 30.5745 29.3034 27.3113 29.8472 ;... % 15
-       30.3986 30.7514 30.653  27.5593 30.1359 ;... % 16
-       30.3468 30.7838 30.8766 27.4396 30.0476 ;... % 18
-       30.4628 30.7198 30.8381 27.4874 30.2851 ;... % 20
-       30.3498 30.9752 30.8775 27.4154 30.0466 ;... % 21
-       30.3674 30.799  30.8239 27.2719 30.0109 ;... % 25
-       30.5518 30.8793 30.7511 27.608  30.079  ;... % 30
-       30.4528 30.7437 30.751  27.3982 30.1509 ;... % 35
-       30.366  30.7189 30.8431 27.6602 30.3034 ;... % 40
-       30.3422 30.7275 30.8457 27.4475 30.1636 ;... % 45
-       30.4158 30.8558 30.7906 27.5591 30.1198 ];   % 50
-       
-m_thr = mean(thr,2);
-m_perSta = m_thr./2;
+offNum = strfind(resStr,'data rate      =');
+offLen = length('data rate      =');
+thrNum = strfind(resStr,'Throughput (Mbps)');
+thrLen = length('Throughput (Mbps)');
+meanNum = strfind(resStr,'mean           =');
+meanNum = meanNum(1);
+meanLen = length('mean           =');
+confNum = strfind(resStr,'conf. interval =');
+confNum = confNum(1);
+confLen = length('conf. interval =');
+tranNum = strfind(resStr,'Transfer time (ms)');
 
-%% Without TXOP
+offInt = [offNum+offLen thrNum-1];
+thrInt = [meanNum+meanLen confNum-1];
+confInt = [confNum+confLen tranNum-1];
 
-offeDataNT = [1 5 10 11 12 14 15 20 25 30 35 40 45 50];
-thrNT = [1.73624 1.89316 1.89611 2.20425 2.00601;... % 1
-         10.0591 10.2471 9.92712 9.88978 10.0877;... % 5
-         19.7998 19.9093 19.4876 20.4537 20.0617;... % 10
-         21.752  22.4477 21.5548 21.0633 21.7407;... % 11
-         23.0796 23.4312 23.3115 21.0285 22.72  ;... % 12
-         23.1838 23.4073 23.4959 21.0955 22.9966;... % 14
-         23.1035 23.4465 23.398  21.0623 22.9836;... % 15
-         23.1664 23.3997 23.4954 21.031  23.0054;... % 20
-         23.2071 23.4557 23.3662 20.9979 22.9839;... % 25
-         23.1352 23.4397 23.4073 21.0476 23.0062;... % 30
-         23.1678 23.421  23.4716 21.1274 23.0223;... % 35
-         23.1514 23.4314 23.445  21.0635 22.959 ;... % 40
-         23.0718 23.4236 23.3914 20.991  22.9587;... % 45
-         23.1357 23.4631 23.5436 20.9999 22.9838];   % 50
-       
-m_thrNT = mean(thrNT,2);
-m_perStaNT = m_thrNT./2;
+offStr = resStr(offInt(1):offInt(2));
+thrStr = resStr(thrInt(1):thrInt(2));
+confStr = resStr(confInt(1):confInt(2));
+
+off = textscan(offStr,'%f');
+off = off{1};
+thr = textscan(thrStr,'%f');
+thr = thr{1};
+conf = textscan(confStr,'%f');
+conf = conf{1};
+
+[~,maxOff] = max(off);
+off = off(1:maxOff);
+
+%With BA and Aggregation
+thr_BA = thr(1:maxOff);
+avgThr_BA = thr_BA/numSta;
+conf_BA = conf(1:maxOff);
+%Without BA and Aggregation
+thr_noBA = thr(maxOff+1:2*maxOff);
+avgThr_noBA = thr_noBA/numSta;
+conf_noBA = conf(maxOff+1:2*maxOff);
+%Without TXOP
+thr_noTXOP = thr(3*maxOff+1:4*maxOff);
+avgThr_noTXOP = thr_noTXOP/numSta;
+conf_noTXOP = conf(3*maxOff+1:4*maxOff);
 
 %% Plot
 
-plot(offeDataBA,m_perStaBA,'k-o','LineWidth',2);
+dtPt = 2;
+
+fitted_BA = fit(off,avgThr_BA,'smoothingspline');
+% h1 = plot(fitted_BA,'k-');
+% set(h1,'LineWidth',2);
 hold on;
-plot(offeData,m_perSta,'b--*','LineWidth',2);
+% plot(off(1:dtPt:end),avgThr_BA(1:dtPt:end),'*k','LineWidth',2);
+h1_i = plot(off,avgThr_BA,'*k-','LineWidth',2);
+% set(h1_i,'Visible','off');
+
+fitted_noBA = fit(off,avgThr_noBA,'smoothingspline');
+% h2 = plot(fitted_noBA,'b--');
+% set(h2,'LineWidth',2);
 hold on;
-plot(offeDataNT,m_perStaNT,'r-.+','LineWidth',2);
-hold off;
-grid on;
-xlabel('Taxa de dados oferecida a MAC [Mbps]');
+% plot(off(1:dtPt:end),avgThr_noBA(1:dtPt:end),'ob','LineWidth',2);
+h2_i = plot(off,avgThr_noBA,'ob--','LineWidth',2);
+% set(h2_i,'Visible','off');
+
+fitted_noTXOP = fit(off,avgThr_noTXOP,'smoothingspline');
+% h3 = plot(fitted_noTXOP,'r-.');
+% set(h3,'LineWidth',2);
+hold on;
+% plot(off(1:dtPt:end),avgThr_noTXOP(1:dtPt:end),'+r','LineWidth',2);
+h3_i = plot(off,avgThr_noTXOP,'+r-.','LineWidth',2);
+% set(h3_i,'Visible','off');
+
+legend off;
+xlabel('Dados oferecidos [Mbps]');
 ylabel('Throughput [Mbps]');
-legend('Com agregação e TXOP','Sem agregação, com TXOP','Sem agregação e sem TXOP','Location','SouthEast');
-print('-dbmp','thrVSOffer');
+grid on;
+axis tight;
+hold off;
+legend([h1_i h2_i h3_i],{'AC_VI com agregação','AC_VI sem agregação','AC_BE'},...
+    'Location','NorthWest','Interpreter','none')
+axis([0 65 0 65]);
+print('-dpng','thrVSOffer');
 
 %% Save data
 
 save data1
+
